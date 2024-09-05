@@ -17,5 +17,5 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DIVISY_1717 }}
-          projectId: divisy-1717
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_EXURYIO }}
+          projectId: exury-dev
