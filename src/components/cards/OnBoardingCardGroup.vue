@@ -14,7 +14,7 @@ const frames = ref([
   {
     title: "1. Protege Tu Cuenta: Regístrate y Verifícate",
     description: "Regístrate en 5 minutos y completa tu verificación KYC.",
-    image: "src/assets/how-it-works/Howitworksecury_white-01.svg",
+    image: "assets/how-it-works/Howitworksecury_white-01.svg",
   },
   {
     title: "2. Negocia en Persona: \n" +
