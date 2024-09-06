@@ -37,24 +37,9 @@ const frames = ref([
 
 const setFrame = (index: number) => {
   currentFrame.value = index;
-  // arrangeStack();
+  //^_arrangeStack();
 };
 
-const arrangeStack = () => {
-  const container = cardWrapper.value;
-  if (container) {
-    const cards = Array.from(container.children) as HTMLElement[];
-    cards.forEach((card, i) => {
-      if (i > currentFrame.value) {
-        card.style.transform = `translateX(${(i - currentFrame.value) * 20}px) scale(${1 - (i - currentFrame.value) * 0.05})`;
-        card.style.zIndex = `${cards.length - i}`;
-      } else {
-        card.style.transform = "translateX(0) scale(1)";
-        card.style.zIndex = "1";
-      }
-    });
-  }
-};
 
 const nextFrame = () => {
   if (currentFrame.value < frames.value.length - 1) {
