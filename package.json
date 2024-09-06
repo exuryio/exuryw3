@@ -1,5 +1,5 @@
 {
-  "name": "@hathorexury/exuryw3",
+  "name": "@exuryio/exuryw3",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,7 @@
   },
   "license": "MIT",
   "author": {
-    "name": "Hathorexury"
+    "name": "exuryio"
   },
   "dependencies": {
     "@mdi/font": "6.2.95",
@@ -26,6 +26,7 @@
   "devDependencies": {
     "@babel/types": "^7.24.0",
     "@graphql-codegen/add": "^5.0.3",
+    "@graphql-codegen/typescript-resolvers": "4.1.0",
     "@types/node": "^20.11.25",
     "@types/three": "^0.167.1",
     "@vitejs/plugin-vue": "^5.0.4",
