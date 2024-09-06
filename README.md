@@ -60,3 +60,21 @@ yarn dev
 - `components/`: Componentes reutilizables de Vue.
 - `router/`: Configuración del enrutador de Vue.
 - `styles/`: Archivos de estilos y temas.
+
+## 🚀 Contribuye al Proyecto
+
+¡Nos encantaría contar con tu ayuda para mejorar Exury! Aquí te dejamos algunas formas en las que puedes contribuir:
+
+- **Ideas y Nuevas Características**: Si tienes una idea para una nueva característica o mejora, abre un [issue](https://github.com/exuryio/exuryw3/issues) para compartirla con nosotros.
+- **Corrección de Errores**: Revisa la sección de [issues](https://github.com/exuryio/exuryw3/issues) para encontrar errores que necesitan ser corregidos.
+- **Desarrollo de Nuevas Funcionalidades**: Si quieres contribuir con código, por favor, sigue estos pasos:
+  1. Prepara un email a direccion@exury.io
+  2. Comentanos cual es tu proposito al colaborar con nosotros
+  3. Realiza una breve descripcion de tu experiencia y sobre ti.
+  4. Estaremos encantados de conocerte!
+
+## 💬 Contacto
+
+Si tienes preguntas o necesitas ayuda, escribenos a direccion@exury.io o contactarnos a través de nuestras redes sociales.
+
+¡Gracias por tu interés en contribuir a Exury!
