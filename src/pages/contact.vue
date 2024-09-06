@@ -22,13 +22,13 @@ const contents = [
     title: 'Whatsapp',
     description: '¿Necesitas ayuda o quieres hacer una operarción? Escríbenos y te asistiremos al instante.',
     button: '¡Chatea con Nosotros!',
-    image: '/src/assets/contact/Contactusexury-01.svg'
+    image: '/assets/contact/Contactusexury-01.svg'
   },
   {
     title: 'Email',
     description: 'Para consultas escríbenos al email contact@exury.io Responderemos rapido con la informacion solicitada',
     button: '¡Escribenos ahora!',
-    image: '/src/assets/contact/Contactusexury-02.svg'
+    image: '/assets/contact/Contactusexury-02.svg'
   }
 ]
 </script>

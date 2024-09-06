@@ -1,8 +1,8 @@
 <template>
   <v-container class="d-flex justify-center align-center fill-height">
     <div class="coin">
-      <div class="face front" :style="`background-image: url('/src/assets/coins/${imgSrc}')`"></div>
-      <div class="face back" :style="`background-image: url('/src/assets/coins/${imgSrc}')`"></div>
+      <div class="face front" :style="`background-image: url('/assets/coins/${imgSrc}')`"></div>
+      <div class="face back" :style="`background-image: url('/assets/coins/${imgSrc}')`"></div>
       <div class="edge"></div>
       <div class="edge"></div>
       <div class="edge"></div>

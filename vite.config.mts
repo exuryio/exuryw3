@@ -7,6 +7,7 @@ import Vue from "@vitejs/plugin-vue";
 import VueRouter from "unplugin-vue-router/vite";
 import Vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 
+
 // Utilities
 import { defineConfig } from "vite";
 import { fileURLToPath, URL } from "node:url";
@@ -61,6 +62,18 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name && (assetInfo.name.endsWith('.png') || assetInfo.name.endsWith('.svg'))) {
+            return 'assets/[name].[hash][extname]';
+          }
+          return 'assets/[name].[hash][extname]';
+        },
+      },
+    },
   },
   server: {
     port: 3000,

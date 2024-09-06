@@ -14,24 +14,24 @@ const frames = ref([
   {
     title: "1. Protege Tu Cuenta: Regístrate y Verifícate",
     description: "Regístrate en 5 minutos y completa tu verificación KYC.",
-    image: "src/assets/how-it-works/Howitworksecury_white-01.svg",
+    image: "assets/how-it-works/Howitworksecury_white-01.svg",
   },
   {
     title: "2. Negocia en Persona: \n" +
       "Define tu operación",
     description: "Tras verificarte, serás dirigido a nuestro WhatsApp corporativo para definir los detalles de tu operación.",
-    image: "src/assets/how-it-works/Howitworksecury_white-02.svg",
+    image: "assets/how-it-works/Howitworksecury_white-02.svg",
   },
   {
     title: "3. Envía con Confianza: \nTransferencia Segura de Fondos",
     description: "Transfiere tus fondos sin preocupaciones. Ya sea en criptomonedas o euros, el proceso es seguro y rápido.",
-    image: "src/assets/how-it-works/Howitworksecury_white-03.svg",
+    image: "assets/how-it-works/Howitworksecury_white-03.svg",
   },
   {
     title: "4. Recibe con Tranquilidad: \n" +
       "Confirmación y Envío Final",
     description: "Indica tu wallet para cripto o cuenta bancaria para euros. EXURY finalizara tu transacción de forma rápida y sencilla.",
-    image: "src/assets/how-it-works/Howitworksecury_white-04.svg",
+    image: "assets/how-it-works/Howitworksecury_white-04.svg",
   },
 ]);
 
