@@ -33,6 +33,8 @@ npm -v # debería mostrar `10.7.0`
 
 npm install --global yarn
 
+
+
 ## 🛠️ Instalación del Proyecto
 
 Clona el repositorio:
@@ -52,7 +54,7 @@ Inicia el entorno de desarrollo:
 
 ```bash
 yarn dev
-
+```
 ## 🗂️ Estructura del Proyecto
 
 - `src/`: Contiene todo el código fuente de la aplicación.
