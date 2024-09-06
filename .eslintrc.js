@@ -16,16 +16,14 @@ module.exports = {
     "plugin:@typescript-eslint/recommended", // Agrega esta línea para incluir las reglas recomendadas de TypeScript
   ],
   parserOptions: {
-    parser: "@typescript-eslint/parser", // Asegúrate de utilizar el parser correcto
+    parser: "@typescript-eslint/parser", 
   },
   plugins: [
     "@typescript-eslint", // Añade el plugin de TypeScript
   ],
   rules: {
     "vue/multi-word-component-names": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "warn", // Puedes ajustar esto a "error" si prefieres que sea un error
-      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
-    ],
+    "no-unused-vars": "off",
+
   },
 };
