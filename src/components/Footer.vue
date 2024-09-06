@@ -44,7 +44,7 @@
     <hr />
     <div class="footer-bottom">
       <div class="social-icons">
-        <img class="icon" src="/src/assets/social/x.svg" />
+        <img class="icon" src="/assets/social/x.svg" />
         <v-icon class="icon instagram" icon="mdi-instagram"></v-icon>
         <v-icon class="icon whatsapp" icon="mdi-whatsapp"></v-icon>
       </div>

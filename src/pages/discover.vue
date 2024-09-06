@@ -30,45 +30,45 @@ const contents = [
       'Con EXURY, tu decides dónde recibir tus criptomonedas, respaldado por la seguridad de un socio humano, no un algoritmo.',
     listDescription: [],
     button: 'How it works',
-    image: 'src/assets/discover-us/DiscoverUs_exury-01.svg'},
+    image: '/assets/discover-us/DiscoverUs_exury-01.svg'},
   {
     title: 'Seguridad Total y Sin Custodia',
     description: 'Al no custodiar tus fondos, eliminamos el riesgo de pérdida o robo. Disfruta de transacciones seguras y protegidas con encriptacion.',
     listDescription: [],
     button: 'How it works',
-    image: 'src/assets/discover-us/DiscoverUs_exury-02.svg'},
+    image: '/assets/discover-us/DiscoverUs_exury-02.svg'},
   {
     title: 'Optimiza Tu Cartera con Consultoría Premium',
     description: 'Mas que una plataforma de intercambio, accede y recibe:',
     listDescription: ['Una consultoria gratuita y personalizada con nuestros expertos en criptomonedas.', 'Un analisis detallado de tu cartera.', 'Estrategias efectivas para potenciar tus inversiones', 'Este bono de alto costo en el mercado, esta incluido sin cargo adicional, para impulsar tus resultados financieros'],
     button: 'Buy Crypto',
-    image: 'src/assets/discover-us/DiscoverUs_exury-03.svg'},
+    image: 'assets/discover-us/DiscoverUs_exury-03.svg'},
   {
     title: 'Satisfación Asegurada',
     description: 'Si no estás completamente satisfecho con tu intercambio, te ofrecemos un descuento asegurado en tu próxima transacción.',
     listDescription: [],
     button: 'Buy Crypto',
-    image: 'src/assets/discover-us/DiscoverUs_exury-04.svg'},
+    image: 'assets/discover-us/DiscoverUs_exury-04.svg'},
   {
     title: '¡Sé de los Primeros 100, Maximiza tus Beneficios!',
     description: 'Esta oferta exclusiva es para los primeros 100 usuarios que realicen un intercambio en nuestra plataforma. ¡Aprovecha antes de que termine!',
     listDescription: [],
     button: 'Buy Crypto',
-    image: 'src/assets/discover-us/DiscoverUs_exury-05.svg'},
+    image: 'assets/discover-us/DiscoverUs_exury-05.svg'},
   {
     title: 'Intercambia con la Tranquilidad y Protección que\n' +
       'Solo un Proveedor Regulado Puede Ofrecer',
     description: 'En EXURY estamos regulados por el Banco de España, asegurando la protección en cada transacción.',
     listDescription: ['Respaldo Oficial: Cumplimos con las estrictas normativas de seguridad del Banco de España y la Union Europea.', "Seguridad Garantizada: Cada transaccion esta protegida bajo normas AML/FT 'Anti Money Laundering & Financial Terrorism'"],
     button: 'Buy Crypto',
-    image: 'src/assets/discover-us/DiscoverUs_exury-06.svg'},
+    image: 'assets/discover-us/DiscoverUs_exury-06.svg'},
   {
     title: 'Únete a la Revolución Financiera con EXURY',
-    description: 'Imagina un mundo donde tus inversiones están protegidas y tienes libertad de escoger donde recibir tus criptomonedas. \n\n' +
+    description: 'Imagina un mundo donde tus inversiones están protegidas y tienes libertad de escoger donde recibir tus criptomonedas.\n\n' +
       'Te invitamos a ser parte de algo más grande que un simple intercambio de criptomonedas; te invitamos a formar parte de una revolución en la forma en que manejas tu dinero.',
     listDescription: [],
     button: 'Register now',
-    image: 'src/assets/discover-us/DiscoverUs_exury-07.svg'}
+    image: 'assets/discover-us/DiscoverUs_exury-07.svg'}
 ];
 
 const formatText = (text: string) => {
