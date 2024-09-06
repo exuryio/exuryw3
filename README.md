@@ -70,8 +70,8 @@ yarn dev
 - **Ideas y Nuevas Características**: Si tienes una idea para una nueva característica o mejora, abre un [issue](https://github.com/exuryio/exuryw3/issues) para compartirla con nosotros.
 - **Corrección de Errores**: Revisa la sección de [issues](https://github.com/exuryio/exuryw3/issues) para encontrar errores que necesitan ser corregidos.
 - **Desarrollo de Nuevas Funcionalidades**: Si quieres contribuir con código, por favor, sigue estos pasos:
-  1. Prepara un email a direccion@exury.io
-  2. Comentanos cual es tu proposito al colaborar con nosotros
+  1. Prepara un email a direccion@exury.io.
+  2. Comentanos como nos conociste y cual es tu proposito al colaborar con nosotros.
   3. Realiza una breve descripcion de tu experiencia y sobre ti.
   4. Estaremos encantados de conocerte!
 
