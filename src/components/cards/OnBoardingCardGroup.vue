@@ -20,7 +20,7 @@ const frames = ref([
     title: "2. Negocia en Persona: \n" +
       "Define tu operación",
     description: "Tras verificarte, serás dirigido a nuestro WhatsApp corporativo para definir los detalles de tu operación.",
-    image: "src/assets/how-it-works/Howitworksecury_white-02.svg",
+    image: "assets/how-it-works/Howitworksecury_white-02.svg",
   },
   {
     title: "3. Envía con Confianza: \nTransferencia Segura de Fondos",
