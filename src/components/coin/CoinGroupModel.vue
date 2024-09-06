@@ -1,8 +1,8 @@
 <template>
   <v-container class="d-flex justify-center align-center fill-height">
     <div class="coin-group">
-      <div v-for="n in 6" :key="n" class="coin-wrapper">
-        <CoinModel />
+      <div v-for="(coin, index) in coins" :key="index" class="coin-wrapper">
+        <CoinModel :imgSrc="coin.imgSrc" />
       </div>
     </div>
   </v-container>
@@ -10,6 +10,14 @@
 
 <script setup lang="ts">
 import CoinModel from "./CoinModel.vue";
+const coins = [
+  { imgSrc: "coinsfrontview_bitcoin.png" },
+  { imgSrc: "coinsfrontview_BNB.png" },
+  { imgSrc: "coinsfrontview_ETH.png" },
+  { imgSrc: "coinsfrontview_euro.png" },
+  { imgSrc: "coinsfrontview_solaris.png" },
+  { imgSrc: "coinsfrontview_USDT.png" }
+];
 </script>
 
 <style lang="scss" scoped>

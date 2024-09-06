@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 // import CoinModel from "@/components/coin/CoinModel.vue";
-// import CoinGroupModel from "@/components/coin/CoinGroupModel.vue";
+import CoinGroupModel from "@/components/coin/CoinGroupModel.vue";
 // import CoinScene from "@/components/coin/CoinScene.vue";
 //const appStore = useAppStore();
 </script>
 <template>
   <div class="home-wrapper">
+
     <div class="main-content">
 <!--      <img-->
 <!--        class="image-coins"-->
@@ -14,15 +15,15 @@
 <!--      />-->
       <div class="coins-wrapper">
 <!--        <CoinModel></CoinModel>-->
-<!--        <CoinGroupModel></CoinGroupModel>-->
-        <CoinScene />
+        <CoinGroupModel></CoinGroupModel>
+<!--        <CoinScene />-->
       </div>
       <div class="content-wrapper">
         <div class="title-wrapper">
           <p class="title-top">
             Gana más, arriesga menos.
           </p>
-          <span class="title-accent">¡Descubre el 1er
+          <span class="title-accent">¡Descubre el 1<sup>er</sup>
             exchange sin custodia!</span>
         </div>
         <div class="paragraph-wrapper">
@@ -155,7 +156,7 @@
   position: absolute;
   margin: 0 !important;
   top: -50px;
-  right: 70px;
+  right: 90px;
   height: 623px;
   object-fit: cover;
   z-index: 0;
@@ -190,8 +191,8 @@
 }
 .coins-wrapper {
   position: absolute;
-  top: -10px;
-  right: 0;
+  top: -80px;
+  right: 50px;
   width: fit-content;
   height: 100%;
   display: flex;
@@ -199,10 +200,13 @@
 }
 @media (max-width: $screen-md) {
   .home-wrapper {
+    .content-wrapper {
+      margin-top: -100px;
+    }
     .coins-wrapper {
       position: absolute;
-      top: -160px;
-      left: 0;
+      top: -200px;
+      right: 0;
     }
   }
 }
@@ -219,13 +223,14 @@
       .coins-wrapper {
         position: relative;
         top: -100px;
-        left: -150px;
+        right: 50px;
         width: fit-content;
         height: fit-content;
       }
       .content-wrapper {
         position: relative;
         top: -40%;
+        margin-top: 150px;
         .title-wrapper {
           padding: 0 16px;
           width: 100%;
@@ -292,7 +297,7 @@
         top: -120px;
       }
       .content-wrapper {
-        top: -200px;
+        top: -150px;
       }
       .sponsorship-wrapper{
         margin-top: -200px;

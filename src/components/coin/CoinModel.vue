@@ -1,8 +1,8 @@
 <template>
   <v-container class="d-flex justify-center align-center fill-height">
     <div class="coin">
-      <div class="face front"></div>
-      <div class="face back"></div>
+      <div class="face front" :style="`background-image: url('/src/assets/coins/${imgSrc}')`"></div>
+      <div class="face back" :style="`background-image: url('/src/assets/coins/${imgSrc}')`"></div>
       <div class="edge"></div>
       <div class="edge"></div>
       <div class="edge"></div>
@@ -17,7 +17,11 @@
   </v-container>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+defineProps({
+  imgSrc: String,
+});
+</script>
 
 <style lang="scss" scoped>
 @import "./coin.scss";
@@ -28,7 +32,7 @@
   transform-style: preserve-3d;
   animation: spin $animation-single-duration linear infinite;
   //transform: rotateZ(45deg);
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  //box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
   perspective: 1000px;
 }
 
@@ -36,7 +40,7 @@
   position: absolute;
   width: $coin-width;
   height: $coin-height;
-  background-color: gold;
+  background-color: $coin-base-color;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -44,11 +48,11 @@
 }
 
 .front {
-  background-image: url("/assets/coin_front_face.png");
-  background-size: 230px;
+  //background-image: url("/assets/coin_front_face.png");
+  background-size: 250px;
   background-position: center;
-  background-color: #3dff9b;
-  background-blend-mode: multiply;
+  //background-color: #3dff9b;
+  //background-blend-mode: multiply;
   transform: translateZ(-2px);
 }
 
@@ -56,11 +60,11 @@
   position: absolute;
   top: -1px;
   left: -1px;
-  background-image: url("/assets/coin_front_face.png");
+  //background-image: url("/assets/coin_front_face.png");
   background-size: 230px;
   background-position: center;
-  background-color: #3dff9b;
-  background-blend-mode: multiply;
+  //background-color: #3dff9b;
+  //background-blend-mode: multiply;
   transform: rotateY(180deg) translateZ(10px);
 }
 
@@ -155,21 +159,21 @@
   transform: translateZ(-9px);
 }
 
-.mask {
-  position: absolute;
-  width: $coin-width;
-  height: $coin-height;
-  border-radius: 50%;
-  background-image: radial-gradient(
-    circle,
-    transparent 70%,
-    rgba(3, 61, 31, 0.67) 60%
-  );
-  border: 1px solid rgba(70, 201, 133, 0.43);
-  top: 0;
-  left: 0;
-  pointer-events: none;
-}
+//.mask {
+//  position: absolute;
+//  width: $coin-width;
+//  height: $coin-height;
+//  border-radius: 50%;
+//  background-image: radial-gradient(
+//    circle,
+//    transparent 70%,
+//    rgba(3, 61, 31, 0.67) 60%
+//  );
+//  border: 1px solid rgba(70, 201, 133, 0.43);
+//  top: 0;
+//  left: 0;
+//  pointer-events: none;
+//}
 @keyframes spin {
   0% {
     transform: rotateY(0deg);
