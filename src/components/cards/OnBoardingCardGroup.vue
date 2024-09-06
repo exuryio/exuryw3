@@ -37,7 +37,7 @@ const frames = ref([
 
 const setFrame = (index: number) => {
   currentFrame.value = index;
-  // arrangeStack();
+  //_arrangeStack();
 };
 
 const arrangeStack = () => {
