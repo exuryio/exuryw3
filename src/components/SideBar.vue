@@ -59,7 +59,7 @@ const goToBuyCrypto = (): void => {
     permanent
   >
     <v-list dense>
-      <v-list-item class="btn-menu-wrapper justify-center py-3 ml-2 mb-6">
+      <v-list-item class="btn-menu-wrapper justify-center pt-2 pb-3 ml-2 mb-6">
         <v-btn icon="" @click="toggle" class="menu-fab">
           <v-icon>mdi-menu</v-icon>
         </v-btn>
@@ -163,7 +163,7 @@ const goToBuyCrypto = (): void => {
 .nav-item {
   margin-left: 18px;
   padding: 16px 24px 16px 16px;
-  width: calc(100% - 40px);
+  width: calc(100% - 36px);
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
   }

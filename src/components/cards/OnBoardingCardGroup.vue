@@ -1,75 +1,96 @@
 <script lang="ts" setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import OnBoardingCard from "@/components/cards/OnBoardingCard.vue";
 
+const initialTouchPosition = ref(0);
+const finalTouchPosition = ref(0);
+const isScrolling = ref(false);
 const currentFrame = ref(0);
 const isInsideCardGroup = ref(false);
 const cardWrapper = ref<HTMLElement | null>(null);
-const scrollPosition = ref(0);
+const isMobile = ref(false);
 
 const frames = ref([
   {
-    title: "Header",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Non tellus consectetur auctor risus orci ut mollis. Tincidunt dictum ut aliquet lacus id vitae. Rutrum sit sed pretium quam condimentum elit a. Et id eleifend faucibus et mi ut amet massa vitae. Ultricies rhoncus habitasse erat vel id sapien.",
-    image: "/image5.png",
+    title: "1. Protege Tu Cuenta: Regístrate y Verifícate",
+    description: "Regístrate en 5 minutos y completa tu verificación KYC.",
+    image: "assets/how-it-works/Howitworksecury_white-01.svg",
   },
   {
-    title: "Header 2",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Non tellus consectetur auctor risus orci ut mollis. Tincidunt dictum ut aliquet lacus id vitae. Rutrum sit sed pretium quam condimentum elit a. Et id eleifend faucibus et mi ut amet massa vitae. Ultricies rhoncus habitasse erat vel id sapien.",
-    image: "/image5.png",
+    title: "2. Negocia en Persona: \n" +
+      "Define tu operación",
+    description: "Tras verificarte, serás dirigido a nuestro WhatsApp corporativo para definir los detalles de tu operación.",
+    image: "assets/how-it-works/Howitworksecury_white-02.svg",
   },
   {
-    title: "Header 3",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Non tellus consectetur auctor risus orci ut mollis. Tincidunt dictum ut aliquet lacus id vitae. Rutrum sit sed pretium quam condimentum elit a. Et id eleifend faucibus et mi ut amet massa vitae. Ultricies rhoncus habitasse erat vel id sapien.",
-    image: "/image5.png",
+    title: "3. Envía con Confianza: \nTransferencia Segura de Fondos",
+    description: "Transfiere tus fondos sin preocupaciones. Ya sea en criptomonedas o euros, el proceso es seguro y rápido.",
+    image: "assets/how-it-works/Howitworksecury_white-03.svg",
   },
   {
-    title: "Header 3",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Non tellus consectetur auctor risus orci ut mollis. Tincidunt dictum ut aliquet lacus id vitae. Rutrum sit sed pretium quam condimentum elit a. Et id eleifend faucibus et mi ut amet massa vitae. Ultricies rhoncus habitasse erat vel id sapien.",
-    image: "/image5.png",
+    title: "4. Recibe con Tranquilidad: \n" +
+      "Confirmación y Envío Final",
+    description: "Indica tu wallet para cripto o cuenta bancaria para euros. EXURY finalizara tu transacción de forma rápida y sencilla.",
+    image: "assets/how-it-works/Howitworksecury_white-04.svg",
   },
 ]);
 
 const setFrame = (index: number) => {
   currentFrame.value = index;
+  //^_arrangeStack();
 };
 
+
 const nextFrame = () => {
-  scrollToRight();
-  // if (currentFrame.value >= 1) {
-  //   scrollToRight();
-  // }
-  currentFrame.value = (currentFrame.value + 1) % frames.value.length;
+  if (currentFrame.value < frames.value.length - 1) {
+    currentFrame.value++;
+    scrollToFrame(currentFrame.value, "right");
+  }
 };
 
 const prevFrame = () => {
-  if (
-    currentFrame.value <= frames.value.length - 1 &&
-    currentFrame.value >= 1
-  ) {
-    scrollToLeft();
-  }
-  currentFrame.value =
-    (currentFrame.value - 1 + frames.value.length) % frames.value.length;
-};
-
-const scrollToRight = () => {
-  const container = document.querySelector(".cards-transition-group");
-  const card = document.querySelector(".card-selected") as HTMLElement;
-  if (container && card) {
-    container.scrollBy({ left: (card.offsetWidth - 46), behavior: "smooth" });
+  console.log("prevFrame");
+  if (currentFrame.value > 0) {
+    currentFrame.value--;
+    scrollToFrame(currentFrame.value, "left");
   }
 };
 
-const scrollToLeft = () => {
-  const container = document.querySelector(".cards-transition-group");
-  const card = document.querySelector(".card-selected") as HTMLElement;
+const scrollToFrame = (index: number, side: "left" | "right") => {
+  const container = cardWrapper.value;
+  const card = container?.children[index] as HTMLElement;
   if (container && card) {
-    container.scrollBy({ left: -card.offsetWidth + 46, behavior: "smooth" });
+    const scrollPosition = card.offsetLeft - (side === "right" ? 30 : 5);
+    container.scrollTo({
+      left: scrollPosition,
+      behavior: "smooth",
+    });
+  }
+};
+
+const handleTouchStart = (event: TouchEvent) => {
+  if (event.touches.length === 1) {
+    isScrolling.value = true;
+    initialTouchPosition.value = event.touches[0].clientX;
+  }
+};
+
+const handleTouchMove = (event: TouchEvent) => {
+  if (isScrolling.value && event.touches.length === 1) {
+    finalTouchPosition.value = event.touches[0].clientX;
+    console.log("moving");
+  }
+};
+
+const handleTouchEnd = () => {
+  isScrolling.value = false;
+  const difference = finalTouchPosition.value - initialTouchPosition.value;
+  console.log(difference);
+
+  if (difference < 0) {
+    nextFrame();
+  } else if (difference > 0) {
+    prevFrame();
   }
 };
 
@@ -82,40 +103,27 @@ const mouseLeaveCardGroup = () => {
 };
 
 onMounted(() => {
-  if (window.innerWidth < 500) {
+  // if (window.innerWidth < 500) {
+  //
+  // }
+  isMobile.value = true;
+  if (isMobile.value) {
     cardWrapper.value = document.querySelector(".cards-transition-group");
     if (cardWrapper.value) {
-      cardWrapper.value.addEventListener("scroll", handleScroll);
+      cardWrapper.value.addEventListener("touchstart", handleTouchStart);
+      cardWrapper.value.addEventListener("touchmove", handleTouchMove);
+      cardWrapper.value.addEventListener("touchend", handleTouchEnd);
     }
   }
 });
 
-const handleScroll = () => {
+onUnmounted(() => {
   if (cardWrapper.value) {
-    scrollPosition.value = cardWrapper.value.scrollLeft;
-  }
-};
-
-watch(scrollPosition, () => {
-  if (window.innerWidth < 600) {
-    checkCurrentFrame(scrollPosition.value);
+    cardWrapper.value.removeEventListener("touchstart", handleTouchStart);
+    cardWrapper.value.removeEventListener("touchmove", handleTouchMove);
+    cardWrapper.value.removeEventListener("touchend", handleTouchEnd);
   }
 });
-
-const checkCurrentFrame = (value: number) => {
-  if (value <= 180) {
-    currentFrame.value = 0;
-  }
-  if (value >= 180 && value <= 420) {
-    currentFrame.value = 1;
-  }
-  if (value >= 420 && value <= 650) {
-    currentFrame.value = 2;
-  }
-  if (value >= 650) {
-    currentFrame.value = 3;
-  }
-};
 </script>
 
 <template>
@@ -135,6 +143,7 @@ const checkCurrentFrame = (value: number) => {
         :frame="frame"
         :isSelected="index === currentFrame"
         :index="index"
+        :currentFrame="currentFrame"
         @select="setFrame"
       />
     </transition-group>
@@ -165,6 +174,7 @@ const checkCurrentFrame = (value: number) => {
 
 <style lang="scss" scoped>
 @import "@/styles/variables.scss";
+
 .cards-wrapper {
   margin-top: 15px;
   position: relative;
@@ -179,34 +189,39 @@ const checkCurrentFrame = (value: number) => {
   max-height: fit-content;
   width: 100%;
   max-width: 100%;
+
   .cards-transition-group::-webkit-scrollbar {
     display: none;
   }
+
   .cards-transition-group {
     display: flex;
     flex-direction: row;
-    align-items: start;
+    align-items: center;
     justify-content: flex-start;
     gap: 8px;
     padding: 20px 30px 20px 0;
     height: fit-content;
     width: 100%;
     max-width: 100%;
-    overflow: scroll;
+    overflow: hidden;
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
   .card-left-navigation-wrapper {
     position: absolute;
     top: calc(40% - 20px);
     left: 10px;
   }
+
   .card-right-navigation-wrapper {
     position: absolute;
     top: calc(40% - 20px);
     right: 10px;
   }
 }
+
 .dotActive {
   width: 24px;
   position: relative;
@@ -217,6 +232,7 @@ const checkCurrentFrame = (value: number) => {
   background-color: #1cba75;
   cursor: pointer;
 }
+
 .dotInactive {
   width: 8px;
   position: relative;
@@ -227,6 +243,7 @@ const checkCurrentFrame = (value: number) => {
   background-color: #ededed;
   cursor: pointer;
 }
+
 .dotItem {
   position: absolute;
   height: 100%;
@@ -235,6 +252,7 @@ const checkCurrentFrame = (value: number) => {
   right: 0;
   left: 0;
 }
+
 .dotParent {
   position: relative;
   width: 100%;
@@ -246,6 +264,7 @@ const checkCurrentFrame = (value: number) => {
   gap: 4px;
   z-index: 100;
 }
+
 @media (max-width: $screen-md) {
   .cards-wrapper {
     min-height: 520px;
@@ -257,9 +276,11 @@ const checkCurrentFrame = (value: number) => {
       min-height: 500px;
       max-height: 500px;
     }
+
     .card-left-navigation-wrapper {
       display: none;
     }
+
     .card-right-navigation-wrapper {
       display: none;
     }
@@ -268,12 +289,18 @@ const checkCurrentFrame = (value: number) => {
 
 @media (max-width: $screen-sm) {
   .cards-wrapper {
+    top: 0;
     margin-top: -20px;
+    max-height: fit-content;
+    overflow: hidden;
     .cards-transition-group {
-      margin-top: 24px;
-      padding: 20px 20px 0 20px;
+      min-height: 550px;
+      max-height: 550px;
+      margin-top: 38px;
+      padding: 20px 20px 0 10px;
     }
   }
+
   .dotParent {
     position: absolute;
     top: 0;

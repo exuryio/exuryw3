@@ -1,5 +1,5 @@
 <template>
-  <div class="discover-wrapper">
+  <div class="how-it-works-wrapper">
     <div class="title-wrapper">
       <div class="title" @click="onStart">
         <b class="card-title">How it works?</b>
@@ -33,7 +33,7 @@ const onStart = () => {
 
 <style lang="scss" scoped>
 @import "@/styles/variables.scss";
-.discover-wrapper {
+.how-it-works-wrapper {
   position: relative;
   height: fit-content;
   width: 100%;
@@ -92,7 +92,8 @@ const onStart = () => {
   }
 }
 @media (max-width: $screen-sm) {
-  .discover-wrapper {
+  .how-it-works-wrapper {
+    height: fit-content;
     .title-wrapper {
       padding: 0 0 0 16px;
       margin-top: 24px;

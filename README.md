@@ -1,54 +1,82 @@
-# exury - Tech excersice by Jose Ruiz
+# Exury - Plataforma Fiat On-Ramp
 
-## Material UI - Vite.js in TypeScript example
+## 🖥️ Descripción
 
-The main goal of the test is to build a side menu bar by having in count the following requirements:
+Exury es una plataforma fiat on-ramp desarrollada con **Material UI** y **Vite.js** en **TypeScript**. Su objetivo es ayudar a los usuarios a adquirir criptomonedas de manera fácil, sencilla y con calidez humana, brindando una experiencia amigable y accesible para todos los niveles de conocimiento.
 
-1. Must be full height but should not be fixed - completed
-2. Needs to be implemented with Material UI components - completed
-3. Must have a transition between collapsed and expanded - completed
-4. Each link should route to a different route - completed
-5. On each route the user must to have a different title on tab of the browser - completed
-6. Mark as selected the actual active route - completed
+## 🚀 Tecnologías Utilizadas
 
-### How should looks like
+- **Vite.js**: Herramienta rápida de desarrollo para aplicaciones web modernas.
+- **TypeScript**: Tipado estático para JavaScript.
+- **Vue 3**: Framework progresivo de JavaScript para construir interfaces de usuario.
+- **Vuetify**: Framework de componentes UI basado en Material Design.
+- **Material UI**: Conjunto de componentes basados en Material Design.
+- **Vue Router**: Sistema de enrutamiento oficial para Vue.js.
+- **Sass**: Preprocesador CSS.
+- **Pinia**: Manejador de estado para Vue.js.
 
-Expanded:
+## 🛠️ Instalación y Configuración
 
-![Menu expanded](menu-expanded.png?raw=true "Menu expanded")
+### Prerrequisitos
 
-- [reference to figma](https://www.figma.com/design/BybcTFgHhMMIOeS8ni3OAq/Exury?node-id=348-1807&t=1LdN9DZI4tOVChzC-4)
-
-Collapsed
-
-![Menu collapsed](menu-collapsed.png?raw=true "Menu collapsed")
-
-- [reference to figma](https://www.figma.com/design/BybcTFgHhMMIOeS8ni3OAq/Exury?node-id=357-49912&t=1LdN9DZI4tOVChzC-4)
-
-### How to use
-
-This project uses node to run, so you must have node installed with npm avaible locally, here a reference how to [make it run](https://nodejs.org/en/download/package-manager). Runs with v16 or higher versions of node.
+Asegúrate de tener **Node.js** (v16 o superior) instalado en tu máquina. Puedes instalarlo siguiendo las instrucciones de [Node.js](https://nodejs.org/en/download/package-manager).
 
 ```bash
-# installs nvm (Node Version Manager)
+# Instala nvm (Node Version Manager)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-# download and install Node.js (you may need to restart the terminal)
+# Descarga e instala Node.js (podrías necesitar reiniciar la terminal)
 nvm install 20
-# verifies the right Node.js version is in the environment
-node -v # should print `v20.15.0`
-# verifies the right NPM version is in the environment
-npm -v # should print `10.7.0`
-```
+# Verifica la versión de Node.js
+node -v # debería mostrar `v20.15.0`
+# Verifica la versión de NPM
+npm -v # debería mostrar `10.7.0`
 
-Once you got node installed, just install the project and you're ready to start coding:
+npm install --global yarn
+
+
+
+## 🛠️ Instalación del Proyecto
+
+Clona el repositorio:
+
+```bash
+git clone https://github.com/exuryio/exuryw3.git
+cd exuryw3
+
+## 🛠️ Configuración del Proyecto
+
+Instala las dependencias:
 
 ```bash
 yarn
+
+Inicia el entorno de desarrollo:
+
+```bash
 yarn dev
 ```
+## 🗂️ Estructura del Proyecto
 
-### Some hints
+- `src/`: Contiene todo el código fuente de la aplicación.
+- `public/`: Archivos estáticos como imágenes y fuentes.
+- `components/`: Componentes reutilizables de Vue.
+- `router/`: Configuración del enrutador de Vue.
+- `styles/`: Archivos de estilos y temas.
 
-- Icons are already installed part of [material ui](https://mui.com/material-ui/material-icons/)
-- For routing we recommend `vue router`
-- There is no need for any state management
+## 🚀 Contribuye al Proyecto
+
+¡Nos encantaría contar con tu ayuda para mejorar Exury! Aquí te dejamos algunas formas en las que puedes contribuir:
+
+- **Ideas y Nuevas Características**: Si tienes una idea para una nueva característica o mejora, abre un [issue](https://github.com/exuryio/exuryw3/issues) para compartirla con nosotros.
+- **Corrección de Errores**: Revisa la sección de [issues](https://github.com/exuryio/exuryw3/issues) para encontrar errores que necesitan ser corregidos.
+- **Desarrollo de Nuevas Funcionalidades**: Si quieres contribuir con código, por favor, sigue estos pasos:
+  1. Prepara un email a direccion@exury.io.
+  2. Comentanos como nos conociste y cual es tu proposito al colaborar con nosotros.
+  3. Realiza una breve descripcion de tu experiencia y sobre ti.
+  4. Estaremos encantados de conocerte!
+
+## 💬 Contacto
+
+Si tienes preguntas o necesitas ayuda, escribenos a direccion@exury.io o contactarnos a través de nuestras redes sociales.
+
+¡Gracias por tu interés en contribuir a Exury!

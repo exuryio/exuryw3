@@ -12,6 +12,7 @@ declare module 'vue' {
     CoinGroupModel: typeof import('./components/coin/CoinGroupModel.vue')['default']
     CoinModel: typeof import('./components/coin/CoinModel.vue')['default']
     CoinScene: typeof import('./components/coin/CoinScene.vue')['default']
+    Footer: typeof import('./components/Footer.vue')['default']
     OnBoardingCard: typeof import('./components/cards/OnBoardingCard.vue')['default']
     OnBoardingCardGroup: typeof import('./components/cards/OnBoardingCardGroup.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

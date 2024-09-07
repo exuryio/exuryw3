@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 666.06 711">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        mask: url(#mask);
+      }
+
+      .cls-3 {
+        filter: url(#luminosity-noclip);
+      }
+
+      .cls-4 {
+        fill: url(#linear-gradient-5);
+      }
+
+      .cls-5 {
+        fill: url(#linear-gradient-2);
+      }
+
+      .cls-6 {
+        fill: url(#linear-gradient-3);
+        mix-blend-mode: multiply;
+      }
+
+      .cls-7 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-8 {
+        fill: #4cc992;
+        opacity: .79;
+      }
+
+      .cls-9 {
+        fill: #dbf4e9;
+        opacity: .16;
+      }
+
+      .cls-10 {
+        fill: #34c184;
+        opacity: .89;
+      }
+
+      .cls-11 {
+        mask: url(#mask-1);
+      }
+
+      .cls-12 {
+        fill: #b7e9d3;
+        opacity: .32;
+      }
+
+      .cls-13 {
+        fill: #64d0a1;
+        opacity: .68;
+      }
+
+      .cls-14 {
+        fill: url(#linear-gradient-4);
+      }
+
+      .cls-14, .cls-15 {
+        opacity: .8;
+      }
+
+      .cls-16 {
+        fill: #58cc99;
+        opacity: .74;
+      }
+
+      .cls-17 {
+        fill: #abe6cc;
+        opacity: .37;
+      }
+
+      .cls-18, .cls-19 {
+        fill: #fff;
+      }
+
+      .cls-19 {
+        opacity: 0;
+      }
+
+      .cls-20 {
+        fill: #93debe;
+        opacity: .47;
+      }
+
+      .cls-21 {
+        fill: #c3eddb;
+        opacity: .26;
+      }
+
+      .cls-22 {
+        fill: #28be7c;
+        opacity: .95;
+      }
+
+      .cls-23 {
+        fill: #1cba75;
+      }
+
+      .cls-24 {
+        fill: #7cd7af;
+        opacity: .58;
+      }
+
+      .cls-25 {
+        fill: #70d3a8;
+        opacity: .63;
+      }
+
+      .cls-26 {
+        fill: #88dbb6;
+        opacity: .53;
+      }
+
+      .cls-27 {
+        fill: #e7f8f0;
+        opacity: .11;
+      }
+
+      .cls-28 {
+        fill: #f3fbf8;
+        opacity: .05;
+      }
+
+      .cls-29 {
+        fill: #cff0e2;
+        opacity: .21;
+      }
+
+      .cls-30 {
+        fill: #9fe2c5;
+        opacity: .42;
+      }
+
+      .cls-31 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-32 {
+        fill: #40c58b;
+        opacity: .84;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="504.99" y1="205.37" x2="256.53" y2="417.87" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#004645"/>
+      <stop offset="1" stop-color="#00bb72" stop-opacity=".5"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="252.31" y1="361.65" x2="395.35" y2="361.65" gradientTransform="translate(685.48 37.82) rotate(90)" xlink:href="#linear-gradient"/>
+    <clipPath id="clippath">
+      <path class="cls-1" d="M459.02,417.1c0,12.81-10.39,23.2-23.2,23.2h-160.63c-2.32,0-2.93-3.2-.77-4.05h0c6.53-2.59,10.81-8.89,10.81-15.91v-70.03c0-12.81,10.39-23.2,23.2-23.2h127.4c12.81,0,23.2,10.39,23.2,23.2v66.8Z"/>
+    </clipPath>
+    <filter id="luminosity-noclip" x="273.09" y="327.11" width="185.93" height="113.19" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-color="#fff" result="bg"/>
+      <feBlend in="SourceGraphic" in2="bg"/>
+    </filter>
+    <filter id="luminosity-noclip-2" x="273.09" y="-8547" width="185.93" height="32766" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-color="#fff" result="bg"/>
+      <feBlend in="SourceGraphic" in2="bg"/>
+    </filter>
+    <mask id="mask-1" x="273.09" y="-8547" width="185.93" height="32766" maskUnits="userSpaceOnUse"/>
+    <linearGradient id="linear-gradient-3" x1="366.06" y1="440.29" x2="366.06" y2="327.11" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#595959"/>
+      <stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+    <mask id="mask" x="273.09" y="327.11" width="185.93" height="113.19" maskUnits="userSpaceOnUse">
+      <g class="cls-3">
+        <g class="cls-11">
+          <path class="cls-6" d="M459.02,417.1c0,12.81-10.39,23.2-23.2,23.2h-160.63c-2.32,0-2.93-3.2-.77-4.05h0c6.53-2.59,10.81-8.89,10.81-15.91v-70.03c0-12.81,10.39-23.2,23.2-23.2h127.4c12.81,0,23.2,10.39,23.2,23.2v66.8Z"/>
+        </g>
+      </g>
+    </mask>
+    <linearGradient id="linear-gradient-4" x1="366.06" y1="440.29" x2="366.06" y2="327.11" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f2f8ff"/>
+      <stop offset="1" stop-color="#1cba75"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-5" x1="366.06" y1="440.66" x2="366.06" y2="326.75" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6f1ff"/>
+      <stop offset="1" stop-color="#f7fbff"/>
+    </linearGradient>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.6.0, SVG Export Plug-In . SVG Version: 1.2.0 Build 709)  -->
+  <g>
+    <g id="Layer_1">
+      <circle class="cls-7" cx="321.06" cy="362.67" r="195.67"/>
+      <g>
+        <path class="cls-5" d="M239.61,290.13h168.45c12.69,0,23,10.31,23,23v97.04c0,12.69-10.31,23-23,23h-168.45c-12.69,0-23-10.31-23-23v-97.04c0-12.69,10.31-23,23-23Z" transform="translate(-37.82 685.48) rotate(-90)"/>
+        <g class="cls-31">
+          <g>
+            <rect class="cls-19" x="239.8" y="232.3" width="168.06" height="249.08" rx="35.51" ry="35.51"/>
+            <path class="cls-28" d="M275.31,232.95h97.04c19.23,0,34.85,15.62,34.85,34.85v178.07c0,19.23-15.62,34.85-34.85,34.85h-97.04c-19.23,0-34.85-15.62-34.85-34.85v-178.07c0-19.23,15.62-34.85,34.85-34.85Z"/>
+            <rect class="cls-27" x="241.12" y="233.61" width="165.42" height="246.45" rx="34.19" ry="34.19"/>
+            <rect class="cls-9" x="241.78" y="234.27" width="164.11" height="245.13" rx="33.53" ry="33.53"/>
+            <path class="cls-29" d="M275.31,234.93h97.04c18.14,0,32.87,14.73,32.87,32.87v178.07c0,18.14-14.73,32.87-32.87,32.87h-97.04c-18.14,0-32.87-14.73-32.87-32.87v-178.07c0-18.14,14.73-32.87,32.87-32.87Z"/>
+            <rect class="cls-21" x="243.1" y="235.59" width="161.47" height="242.5" rx="32.22" ry="32.22"/>
+            <rect class="cls-12" x="243.75" y="236.25" width="160.16" height="241.18" rx="31.56" ry="31.56"/>
+            <path class="cls-17" d="M275.31,236.9h97.04c17.05,0,30.9,13.85,30.9,30.9v178.07c0,17.05-13.85,30.9-30.9,30.9h-97.04c-17.05,0-30.9-13.85-30.9-30.9v-178.07c0-17.05,13.85-30.9,30.9-30.9Z"/>
+            <rect class="cls-30" x="245.07" y="237.56" width="157.52" height="238.55" rx="30.24" ry="30.24"/>
+            <rect class="cls-20" x="245.73" y="238.22" width="156.21" height="237.23" rx="29.58" ry="29.58"/>
+            <path class="cls-26" d="M275.31,238.88h97.04c15.96,0,28.92,12.96,28.92,28.92v178.07c0,15.96-12.96,28.92-28.92,28.92h-97.04c-15.96,0-28.92-12.96-28.92-28.92v-178.07c0-15.96,12.96-28.92,28.92-28.92Z"/>
+            <path class="cls-24" d="M275.31,239.54h97.04c15.6,0,28.27,12.67,28.27,28.27v178.07c0,15.6-12.67,28.27-28.27,28.27h-97.04c-15.6,0-28.27-12.67-28.27-28.27v-178.07c0-15.6,12.67-28.27,28.27-28.27Z"/>
+            <rect class="cls-25" x="247.7" y="240.2" width="152.26" height="233.28" rx="27.61" ry="27.61"/>
+            <path class="cls-13" d="M275.31,240.85h97.04c14.87,0,26.95,12.08,26.95,26.95v178.07c0,14.87-12.08,26.95-26.95,26.95h-97.04c-14.87,0-26.95-12.08-26.95-26.95v-178.07c0-14.87,12.08-26.95,26.95-26.95Z"/>
+            <rect class="cls-16" x="249.02" y="241.51" width="149.62" height="230.65" rx="26.29" ry="26.29"/>
+            <rect class="cls-8" x="249.68" y="242.17" width="148.31" height="229.34" rx="25.63" ry="25.63"/>
+            <path class="cls-32" d="M275.31,242.83h97.04c13.78,0,24.97,11.19,24.97,24.97v178.07c0,13.78-11.19,24.97-24.97,24.97h-97.04c-13.78,0-24.97-11.19-24.97-24.97v-178.07c0-13.78,11.19-24.97,24.97-24.97Z"/>
+            <path class="cls-10" d="M275.31,243.49h97.04c13.42,0,24.32,10.9,24.32,24.32v178.07c0,13.42-10.9,24.32-24.32,24.32h-97.04c-13.42,0-24.32-10.9-24.32-24.32v-178.07c0-13.42,10.9-24.32,24.32-24.32Z"/>
+            <rect class="cls-22" x="251.65" y="244.15" width="144.36" height="225.39" rx="23.66" ry="23.66"/>
+            <path class="cls-23" d="M275.31,244.8h97.04c12.69,0,23,10.31,23,23v178.07c0,12.69-10.31,23-23,23h-97.04c-12.69,0-23-10.31-23-23v-178.07c0-12.69,10.31-23,23-23Z"/>
+          </g>
+        </g>
+        <g class="cls-15">
+          <g class="cls-2">
+            <path class="cls-14" d="M459.02,417.1c0,12.81-10.39,23.2-23.2,23.2h-160.63c-2.32,0-2.93-3.2-.77-4.05h0c6.53-2.59,10.81-8.89,10.81-15.91v-70.03c0-12.81,10.39-23.2,23.2-23.2h127.4c12.81,0,23.2,10.39,23.2,23.2v66.8Z"/>
+          </g>
+        </g>
+        <path class="cls-18" d="M428.42,362.02h-116.9c-3.73,0-6.75-3.02-6.75-6.75h0c0-3.73,3.02-6.75,6.75-6.75h116.9c3.73,0,6.75,3.02,6.75,6.75h0c0,3.73-3.02,6.75-6.75,6.75Z"/>
+        <path class="cls-18" d="M389.14,387.16h-77.62c-3.73,0-6.75-3.02-6.75-6.75h0c0-3.73,3.02-6.75,6.75-6.75h77.62c3.73,0,6.75,3.02,6.75,6.75h0c0,3.73-3.02,6.75-6.75,6.75Z"/>
+        <path class="cls-4" d="M435.83,440.66h-160.63c-1.41,0-2.23-1-2.42-2-.19-1,.2-2.23,1.51-2.75,6.43-2.55,10.58-8.66,10.58-15.58v-70.03c0-12.99,10.57-23.56,23.56-23.56h127.4c12.99,0,23.56,10.57,23.56,23.56v66.8c0,12.99-10.57,23.56-23.56,23.56ZM308.43,327.47c-12.59,0-22.84,10.24-22.84,22.84v70.03c0,7.21-4.33,13.59-11.04,16.25-.99.39-1.19,1.29-1.07,1.94.12.65.65,1.41,1.71,1.41h160.63c12.59,0,22.84-10.24,22.84-22.84v-66.8c0-12.59-10.24-22.84-22.84-22.84h-127.4Z"/>
+      </g>
+    </g>
+  </g>
+</svg>

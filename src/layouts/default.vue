@@ -47,61 +47,11 @@
               <router-view />
             </transition>
           </div>
-          <div class="footer-wrapper">
-            <hr />
-            <p class="footer-top">La inversión en criptoactivos no está regulada, puede no ser adecuada para inversores minoristas y perderse la totalidad del importe invertido Es importante leer y comprender los riesgos de esta inversión que se explican detalladamente en esta ubicación.</p>
-            <div class="footer-mid">
-              <div>
-                <img
-                  class="logo-footer"
-                  alt=""
-                  src="/LogoExury1.png"
-                />
-                <p>Calle Hermosilla 48, 1. dcha.
-                  Madrid, Spain</p>
-                <p>contact@exury.io</p>
-              </div>
-              <div>
-                <h2>Seguridad & Legal</h2>
-                <ul>
-                  <li>Politica de Privacidad</li>
-                  <li>Terminos y Condiciones</li>
-                  <li>Cookies</li>
-                  <li>Licencias</li>
-                </ul>
-              </div><div>
-                <h2>Tendencias</h2>
-                <ul>
-                  <li>Tendencia 1</li>
-                  <li>Tendencia 2</li>
-                  <li>Tendencia 3</li>
-                  <li>Tendencia 4</li>
-                </ul>
-              </div>
-              <div>
-                <h2 class="newsletter">Newsletter</h2>
-                <v-text-field
-                  append-inner-icon="mdi-email-outline"
-                  label="Email"
-                  variant="outlined"
-                ></v-text-field>
-                <v-btn rounded color="primary" class="btn-subscribe text-capitalize">Suscribirse</v-btn>
-              </div>
-            </div>
-            <hr />
-            <div class="footer-bottom">
-              <div class="social-icons">
-                <v-icon icon="mdi-whatsapp"></v-icon>
-                <v-icon icon="mdi-instagram"></v-icon>
-                <v-icon icon="mdi-twitter"></v-icon>
-              </div>
-              <div>
-                <p>A product of </p>
-              </div>
-              <div>
-                <p>© 2024 Exury. All rights reserved</p>
-              </div>
-            </div>
+          <Footer />
+        </div>
+        <div id="whatsapp-wrapper">
+          <div id="stateLayer">
+            <v-icon id="maskGroupIcon" icon="mdi-whatsapp"></v-icon>
           </div>
         </div>
         <img
@@ -109,11 +59,6 @@
           alt=""
           src="/LogoExury1.png"
         />
-        <div id="whatsapp-wrapper">
-          <div id="stateLayer">
-            <v-icon id="maskGroupIcon" icon="mdi-whatsapp"></v-icon>
-          </div>
-        </div>
       </div>
     </v-main>
   </v-app>
@@ -202,74 +147,8 @@
   overflow-y: auto;
   overflow-x: hidden;
   .page-view {
+    margin-top: 78px;
     height: fit-content;
-  }
-  .footer-wrapper{
-    width: 100%;
-    height: fit-content;
-    padding: 0 16px 0 0;
-    margin-top: 60px;
-    .footer-top {
-      padding: 14px 16px;
-      background: #e1ece7;
-      font-style: normal;
-      font-weight: 400;
-      font-size: 14px;
-      color: #323836;
-      border-radius: 4px;
-      margin-bottom: 50px;
-      margin-top: 64px;
-    }
-    .footer-mid {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 64px;
-
-      .btn-subscribe {
-        width: 250px;
-      }
-      .logo-footer {
-        margin-bottom: 30px;
-        width: 147px;
-      }
-      input {
-        background: red;
-        width: 200px;
-        height: 40px;
-      }
-      div:nth-child(1){
-        width: 250px;
-        p {
-          margin-bottom: 5px;
-        }
-      }
-      h2 {
-        color: #E6E1E3;
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 28px;
-        margin-bottom: 24px;
-      }
-      ul li {
-        color: #E6E1E3;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-        opacity: 0.65;
-        list-style: none;
-        margin-bottom: 16px;
-      }
-    }
-    .footer-bottom {
-      padding: 23px 0 0 0;
-      display: flex;
-      justify-content: space-between;
-      .social-icons > * {
-        margin-right: 16px;
-      }
-    }
   }
 }
 #icon {
@@ -306,43 +185,66 @@
   align-items: center;
   justify-content: flex-start;
   min-width: 360px;
-  max-width: 720px;
 }
 .searchBarWrapper {
+  position: relative;
+  margin-top: 10px;
+  left: 230px;
   border: none;
   flex: 1;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: start;
+  width: fit-content;
 }
 .btn-search {
   display: none;
 }
-#iconButtonParent {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-}
+
 .top-bar-wrapper {
+  position: fixed;
+  top: -17px;
+  right: 0;
   width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  padding-right: 16px;
+  padding: 20px 16px 10px 0;
+  z-index: 1000;
+  transition: transform 0.5s ease;
+  #iconButtonParent {
+    position: relative;
+    right: 0;
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    gap: 16px;
+  }
+}
+.top-bar-wrapper.scrolling {
+  padding: 20px 16px 10px 0;
+  background-color: rgba(10, 17, 14, 0.86);
+  backdrop-filter: blur(4px);
+  transform: translateY(0);
+}
+#logoExury.scrolling {
+  top: 26px;
+  z-index: 1000;
 }
 #logoExury {
   width: 103px;
   position: absolute;
   margin: 0 !important;
-  top: 28px;
+  top: 26px;
   left: 98px;
   height: 35.2px;
   object-fit: cover;
   z-index: 1000;
+  transition: top 0.3s ease;
 }
 #maskGroupIcon {
   width: 24px;
@@ -358,6 +260,12 @@
         position: relative;
         left: -220px;
         min-width: calc(100% - 16px);
+        .top-bar-wrapper.scrolling {
+          padding: 20px 16px 10px 0;
+          background-color: rgba(10, 17, 14, 0.86);
+          backdrop-filter: blur(4px);
+          transform: translateY(0);
+        }
         .top-bar-wrapper {
           .searchBarWrapper {
             width: 56px;
@@ -369,78 +277,6 @@
               display: block;
               background: transparent;
               box-shadow: none;
-            }
-          }
-        }
-        .footer-wrapper{
-          width: 100%;
-          height: fit-content;
-          padding: 0 16px;
-          margin-top: 64px;
-          .footer-top {
-            padding: 14px 16px;
-            background: #e1ece7;
-            font-style: normal;
-            font-weight: 400;
-            font-size: 14px;
-            color: #323836;
-            border-radius: 4px;
-            margin-bottom: 50px;
-            margin-top: 64px;
-          }
-          .footer-mid {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            margin-bottom: 64px;
-            gap: 48px;
-            .btn-subscribe {
-              width: 100%;
-              padding: 24px 10px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            }
-            .logo-footer {
-              margin-bottom: 30px;
-              width: 147px;
-            }
-            div:nth-child(1){
-              width: 250px;
-              p {
-                margin-bottom: 5px;
-              }
-            }
-            h2 {
-              color: #E6E1E3;
-              font-size: 18px;
-              font-style: normal;
-              font-weight: 700;
-              line-height: 28px;
-            }
-            ul li {
-              color: #E6E1E3;
-              font-size: 16px;
-              font-style: normal;
-              font-weight: 400;
-              line-height: normal;
-              opacity: 0.65;
-              list-style: none;
-              margin-bottom: 16px;
-            }
-            .newsletter {
-              margin-bottom: 25px;
-            }
-          }
-          .footer-bottom {
-            padding: 23px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            gap: 48px;
-            .social-icons > * {
-              margin-right: 16px;
             }
           }
         }
@@ -467,6 +303,12 @@
         position: relative;
         left: 0;
         min-width: 100%;
+        .top-bar-wrapper.scrolling {
+          padding: 20px 16px 10px 0;
+          background-color: rgba(10, 17, 14, 0.86);
+          backdrop-filter: blur(4px);
+          transform: translateY(0);
+        }
         .top-bar-wrapper {
           margin-top: 16px;
           width: 100%;
@@ -475,6 +317,7 @@
           align-items: center;
           justify-content: flex-end;
           padding-right: 16px;
+          transition: padding 0.3s ease;
           .searchBarWrapper {
             width: 56px;
             max-width: 56px;
@@ -485,78 +328,6 @@
               display: block;
               background: transparent;
               box-shadow: none;
-            }
-          }
-        }
-        .footer-wrapper{
-          width: 100%;
-          height: fit-content;
-          padding: 0 16px;
-          margin-top: 50px;
-          .footer-top {
-            padding: 14px 16px;
-            background: #e1ece7;
-            font-style: normal;
-            font-weight: 400;
-            font-size: 14px;
-            color: #323836;
-            border-radius: 4px;
-            margin-bottom: 50px;
-            margin-top: 64px;
-          }
-          .footer-mid {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            margin-bottom: 64px;
-            gap: 48px;
-            .btn-subscribe {
-              width: 100%;
-              padding: 24px 10px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            }
-            .logo-footer {
-              margin-bottom: 30px;
-              width: 147px;
-            }
-            div:nth-child(1){
-              width: 250px;
-              p {
-                margin-bottom: 5px;
-              }
-            }
-            h2 {
-              color: #E6E1E3;
-              font-size: 18px;
-              font-style: normal;
-              font-weight: 700;
-              line-height: 28px;
-            }
-            ul li {
-              color: #E6E1E3;
-              font-size: 16px;
-              font-style: normal;
-              font-weight: 400;
-              line-height: normal;
-              opacity: 0.65;
-              list-style: none;
-              margin-bottom: 16px;
-            }
-            .newsletter {
-              margin-bottom: 25px;
-            }
-          }
-          .footer-bottom {
-            padding: 23px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            gap: 48px;
-            .social-icons > * {
-              margin-right: 16px;
             }
           }
         }
@@ -683,9 +454,33 @@
 <script lang="ts" setup>
 //
 import AvatarMenu from "@/components/AvatarMenu.vue";
-import { ref } from "vue";
+import Footer from "@/components/Footer.vue";
+import { ref, onMounted } from "vue";
 const searchQuery = ref("");
 const onSearch = (value: string) => {
   console.log(value);
 };
+onMounted(() => {
+  console.log("mounted");
+  setTimeout(() => {
+    const listInnerElement = document.querySelector(".listInner");
+    console.log(listInnerElement);
+    if (listInnerElement) {
+      listInnerElement.addEventListener("scroll", () => {
+        const topBarWrapper = document.querySelector(".top-bar-wrapper");
+        const logoExury = document.querySelector("#logoExury");
+        if (topBarWrapper && logoExury) {
+          if (listInnerElement.scrollTop > 10) {
+            topBarWrapper.classList.add("scrolling");
+            logoExury.classList.add("scrolling");
+          } else {
+            topBarWrapper.classList.remove("scrolling");
+            logoExury.classList.remove("scrolling");
+          }
+        }
+      });
+    }
+  }, 1000);
+
+});
 </script>

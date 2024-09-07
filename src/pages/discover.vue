@@ -1,357 +1,245 @@
-<script lang="ts" setup>
-import { ref } from "vue";
-
-const currentFrame = ref(0);
-const isInsideCardGroup = ref(false);
-
-const frames = [
-  {
-    title: "Header",
-    description:
-        "Lorem ipsum dolor sit amet consectetur. Ullamcorpermalesuada vel platea vehicula libero.",
-    image: "/image5.png",
-  },
-  {
-    title: "Header 2",
-    description:
-        "Lorem ipsum dolor sit amet consectetur. Non tellus consectetur auctor risus orci ut mollis. Tincidunt dictum ut aliquet lacus id vitae. Rutrum sit sed pretium quam condimentum elit a. Et id eleifend faucibus et mi ut amet massa vitae. Ultricies rhoncus habitasse erat vel id sapien.",
-    image: "/image5.png",
-  },
-  {
-    title: "Header 3",
-    description:
-        "Lorem ipsum dolor sit amet consectetur. Non tellus consectetur auctor risus orci ut mollis. Tincidunt dictum ut aliquet lacus id vitae. Rutrum sit sed pretium quam condimentum elit a. Et id eleifend faucibus et mi ut amet massa vitae. Ultricies rhoncus habitasse erat vel id sapien.",
-    image: "/image5.png",
-  },
-  {
-    title: "Header 3",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Non tellus consectetur auctor risus orci ut mollis. Tincidunt dictum ut aliquet lacus id vitae. Rutrum sit sed pretium quam condimentum elit a. Et id eleifend faucibus et mi ut amet massa vitae. Ultricies rhoncus habitasse erat vel id sapien.",
-    image: "/image5.png",
-  },
-];
-
-const nextFrame = () => {
-  if (currentFrame.value >= 1) {
-    scrollToRight();
-  }
-  currentFrame.value = (currentFrame.value + 1) % frames.length;
-};
-
-const prevFrame = () => {
-  if (currentFrame.value <= frames.length - 1 && currentFrame.value >= 1) {
-    scrollToLeft();
-  }
-  currentFrame.value = (currentFrame.value - 1 + frames.length) % frames.length;
-};
-
-const setFrame = (index: number) => {
-  currentFrame.value = index;
-};
-
-const scrollToRight = () => {
-  const container = document.querySelector('.cards-transition-group');
-  const card = document.querySelector('.card-selected') as HTMLElement;
-  if (container && card) {
-    container.scrollBy({ left: card.offsetWidth, behavior: 'smooth' });
-  }
-}
-
-const scrollToLeft = () => {
-  const container = document.querySelector('.cards-transition-group');
-  const card = document.querySelector('.card-selected') as HTMLElement;
-  if (container && card) {
-    container.scrollBy({ left: (-card.offsetWidth + 100), behavior: 'smooth' });
-  }
-}
-
-const mouseEnterCardGroup = () => {
-  isInsideCardGroup.value = true;
-}
-
-const mouseLeaveCardGroup = () => {
-  isInsideCardGroup.value = false;
-}
-</script>
-
 <template>
-  <div class="discover-wrapper">
+  <div class="discover-us-wrapper">
     <div class="title-wrapper">
-      <div class="title">
-        <b class="card-title">Header</b>
-        <div class="subtitle">
-          Lorem ipsum dolor sit amet consectetur. Ullamcorpermalesuada vel
-          platea vehicula libero.
-        </div>
-      </div>
-      <div class="button-wrapper">
-        <v-btn rounded color="primary" class="text-capitalize">Label</v-btn>
-      </div>
+      <h2 class="title">Discover us</h2>
+      <p class="paragraph">Explora cómo EXURY transforma el intercambio de criptomonedas con seguridad respaldada por el Banco de España y un toque humano inigualable. Unete a la 1ra plataforma SIN CUSTODIA del mercado.</p>
     </div>
-    <div class="cards-wrapper" @mouseenter="mouseEnterCardGroup" @mouseleave="mouseLeaveCardGroup">
-      <transition-group
-          name="slide-fade"
-          tag="div"
-          class="cards-transition-group"
-      >
-        <div
-            v-for="(frame, index) in frames"
-            :key="index"
-            :class="
-            index === currentFrame ? 'card-selected' : 'card'
-          "
-        >
-          <div class="card-content">
-            <img class="card-image" alt="" :src="frame.image" />
-            <div class="card-text-wrapper">
-              <b class="card-title">{{ frame.title }}</b>
-              <div
-                  :class="
-                  index === currentFrame
-                    ? 'description-selected'
-                    : 'description'
-                "
-              >
-                {{ frame.description }}
-              </div>
-            </div>
-          </div>
+    <div class="discover-content-wrapper">
+      <div v-for="(content, index) in contents" :key="index" class="box-wrapper">
+        <div class="image">
+          <img :src="content.image" :alt="content.image"/>
         </div>
-      </transition-group>
-      <div class="dotParent">
-        <div
-            v-for="(_frame, index) in frames"
-            :key="index"
-            :class="
-            index === currentFrame ? 'dotActive' : 'dotInactive'
-          "
-            @click="setFrame(index)"
-        >
-          <div class="dotItem" />
+        <div class="box-text-wrapper">
+          <h3>{{ content.title }}</h3>
+          <p v-html="formatText(content.description)"></p>
+          <ul v-if="content.listDescription.length">
+            <li v-for="(item, index) in content.listDescription" :key="index"><v-icon class="icon">mdi-check-circle-outline</v-icon><p>{{ item }}</p></li>
+          </ul>
+          <v-btn rounded variant="outlined" class="box-btn-action text-capitalize">{{ content.button }}</v-btn>
         </div>
-      </div>
-      <div class="card-left-navigation-wrapper" v-if="isInsideCardGroup">
-        <v-btn icon="mdi-chevron-left" @click="prevFrame" v-if="currentFrame > 0">
-        </v-btn>
-      </div>
-      <div class="card-right-navigation-wrapper" v-if="isInsideCardGroup">
-        <v-btn
-          icon="mdi-chevron-right"
-          @click="nextFrame"
-          v-if="currentFrame < frames.length - 1"
-        >
-        </v-btn>
       </div>
     </div>
   </div>
 </template>
+<script setup lang="ts">
+const contents = [
+  {
+    title: '¡Libertad Financiera Total!',
+    description: '¿Cansado de plataformas que te quitan el control de tus activos?\n' +
+      '\n' +
+      'Con EXURY, tu decides dónde recibir tus criptomonedas, respaldado por la seguridad de un socio humano, no un algoritmo.',
+    listDescription: [],
+    button: 'How it works',
+    image: '/assets/discover-us/DiscoverUs_exury-01.svg'},
+  {
+    title: 'Seguridad Total y Sin Custodia',
+    description: 'Al no custodiar tus fondos, eliminamos el riesgo de pérdida o robo. Disfruta de transacciones seguras y protegidas con encriptacion.',
+    listDescription: [],
+    button: 'How it works',
+    image: '/assets/discover-us/DiscoverUs_exury-02.svg'},
+  {
+    title: 'Optimiza Tu Cartera con Consultoría Premium',
+    description: 'Mas que una plataforma de intercambio, accede y recibe:',
+    listDescription: ['Una consultoria gratuita y personalizada con nuestros expertos en criptomonedas.', 'Un analisis detallado de tu cartera.', 'Estrategias efectivas para potenciar tus inversiones', 'Este bono de alto costo en el mercado, esta incluido sin cargo adicional, para impulsar tus resultados financieros'],
+    button: 'Buy Crypto',
+    image: 'assets/discover-us/DiscoverUs_exury-03.svg'},
+  {
+    title: 'Satisfación Asegurada',
+    description: 'Si no estás completamente satisfecho con tu intercambio, te ofrecemos un descuento asegurado en tu próxima transacción.',
+    listDescription: [],
+    button: 'Buy Crypto',
+    image: 'assets/discover-us/DiscoverUs_exury-04.svg'},
+  {
+    title: '¡Sé de los Primeros 100, Maximiza tus Beneficios!',
+    description: 'Esta oferta exclusiva es para los primeros 100 usuarios que realicen un intercambio en nuestra plataforma. ¡Aprovecha antes de que termine!',
+    listDescription: [],
+    button: 'Buy Crypto',
+    image: 'assets/discover-us/DiscoverUs_exury-05.svg'},
+  {
+    title: 'Intercambia con la Tranquilidad y Protección que\n' +
+      'Solo un Proveedor Regulado Puede Ofrecer',
+    description: 'En EXURY estamos regulados por el Banco de España, asegurando la protección en cada transacción.',
+    listDescription: ['Respaldo Oficial: Cumplimos con las estrictas normativas de seguridad del Banco de España y la Union Europea.', "Seguridad Garantizada: Cada transaccion esta protegida bajo normas AML/FT 'Anti Money Laundering & Financial Terrorism'"],
+    button: 'Buy Crypto',
+    image: 'assets/discover-us/DiscoverUs_exury-06.svg'},
+  {
+    title: 'Únete a la Revolución Financiera con EXURY',
+    description: 'Imagina un mundo donde tus inversiones están protegidas y tienes libertad de escoger donde recibir tus criptomonedas.\n\n' +
+      'Te invitamos a ser parte de algo más grande que un simple intercambio de criptomonedas; te invitamos a formar parte de una revolución en la forma en que manejas tu dinero.',
+    listDescription: [],
+    button: 'Register now',
+    image: 'assets/discover-us/DiscoverUs_exury-07.svg'}
+];
 
-<style lang="scss" scoped>
-.discover-wrapper {
-  align-self: stretch;
-  flex: 1;
-  overflow-y: hidden;
-  height: 100%;
-  width: 100%;
-  max-width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 10px;
-  z-index: 1;
-  font-size: 2.5em;
+const formatText = (text: string) => {
+  return text.replace(/\n/g, '<br />');
 }
-.title-wrapper {
-  align-self: stretch;
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  height: fit-content;
-  overflow-y: scroll;
-  margin-top: 20px;
-  .subtitle {
-    align-self: stretch;
-    position: relative;
-    font-size: 0.45em;
-    letter-spacing: 0.5px;
-    margin-bottom: 0;
-    width: 90%;
-  }
-  .title {
-    align-self: stretch;
+</script>
+<style lang="scss">
+@import "@/styles/variables.scss";
+  .discover-us-wrapper {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 8px;
-  }
-  .button-wrapper {
-    display: flex;
-    align-items: end;
-    justify-content: end;
-    margin: 0 16px 20px 0;
-  }
-}
-.cards-wrapper {
-  position: relative;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  justify-content: start;
-  gap: 10px;
-  font-size: 25.03px;
-  color: #1cba75;
-  height: 50%;
-  max-height: 50%;
-  overflow: hidden;
-  width: 100%;
-  max-width: 100%;
-  .cards-transition-group::-webkit-scrollbar {
-    display: none;
-  }
-  .cards-transition-group {
-    display: flex;
-    flex-direction: row;
-    align-items: start;
-    justify-content: flex-start;
-    gap: 10px;
-    padding: 20px 30px 20px 0;
-    height: 100%;
-    width: 100%;
-    max-width: 100%;
-    overflow: scroll;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    .card {
-      border-radius: 28px;
-      background-color: #0d1513;
-      border: 1px solid #2d4740;
-      box-sizing: border-box;
-      height: calc(60vh - 100px);
-      width: calc((60vh - 120px) * 0.75);
-      min-width: calc((60vh - 120px) * 0.75);
-      overflow: hidden;
+    margin-top: 32px;
+    gap: 48px;
+    .title-wrapper {
+      .title {
+        font-size: 40px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        letter-spacing: -0.8px;
+      }
+      .paragraph {
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-top: 8px;
+      }
+    }
+    .discover-content-wrapper {
       display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: flex-start;
-      padding: 36px;
-      opacity: 0.7;
-      transition: transform 0.3s, opacity 0.3s;
-    }
-    .card-selected {
-      border-radius: 28px;
-      background-color: #0d1513;
-      border: 1px solid #2d4740;
-      box-sizing: border-box;
-      height: calc(60vh - 100px);
-      width: calc((60vh - 120px) * 0.75);
-      min-width: calc((60vh - 120px) * 0.75);
-      overflow: hidden;
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: flex-start;
-      padding: 36px;
-      margin: 0 10px;
-      opacity: 0.8;
-      transform: scale(1.05);
-      transition: transform 0.3s, opacity 0.3s;
-    }
-  }
-  .card-left-navigation-wrapper {
-    position: absolute;
-    top: calc(50% - 20px);
-    left: 10px;
-  }
-  .card-right-navigation-wrapper {
-    position: absolute;
-    top: calc(50% - 20px);
-    right: 10px;
-  }
-}
-.card-content {
-  align-self: stretch;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: start;
-  gap: 10px;
-  .card-image {
-    width: 150px;
-    position: relative;
-    height: 160px;
-    object-fit: cover;
-  }
-  .card-text-wrapper {
-    align-self: stretch;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    .card-title {
-      position: relative;
-      letter-spacing: -0.02em;
-      line-height: 1.1em;
-      margin-top: 20px;
-    }
-    .description-selected {
-      align-self: stretch;
-      position: relative;
-      font-size: 0.55em;
-      line-height: 1.1em;
-      letter-spacing: 0.45px;
-      color: #c7d4cf;
-    }
-    .description {
-      align-self: stretch;
-      position: relative;
-      font-size: 0.55em;
-      line-height: 1.1em;
-      letter-spacing: 0.45px;
-      color: #c7d4cf;
+      flex-direction: column;
+      gap: 120px;
+      padding: 0 16px 0 0;
+      .box-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 104px;
+        .box-text-wrapper {
+          h3 {
+            color: #1CBA75;
+            font-size: 28px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+            letter-spacing: -0.56px;
+            margin-bottom: 16px;
+          }
+          p {
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+          }
+          ul {
+            margin-top: 24px;
+            list-style-type: none;
+            padding-left: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            li {
+              display: flex;
+              gap: 8px;
+              align-items: flex-start;
+              .icon {
+                color: #1CBA75;
+                font-size: 24px;
+              }
+              p {
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+              }
+            }
+          }
+          .box-btn-action {
+            margin-top: 24px;
+            border: 0.1px solid white;
+            color: #1cba75;
+          }
+        }
+        .image {
+          display: block;
+          height: 332px;
+          min-width: 332px;
+          overflow: hidden;
+          position: relative;
+          img {
+            position: absolute;
+            top: -41%;
+            left: -31%;
+            width: 565px;
+          }
+        }
+      }
+      .box-wrapper:nth-child(even) {
+        flex-direction: row-reverse;
+      }
     }
   }
-}
-.dotActive {
-  width: 24px;
-  position: relative;
-  border-radius: 33px;
-  height: 8px;
-  overflow: hidden;
-  flex-shrink: 0;
-  background-color: #1cba75;
-  cursor: pointer;
-}
-.dotInactive {
-  width: 8px;
-  position: relative;
-  border-radius: 33px;
-  height: 8px;
-  overflow: hidden;
-  flex-shrink: 0;
-  background-color: #ededed;
-  cursor: pointer;
-}
-.dotItem {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-.dotParent {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
+  @media (max-width: $screen-sm) {
+    .discover-us-wrapper {
+      gap: 48px;
+      padding: 0 16px;
+      .title-wrapper {
+        .title {
+          font-size: 24px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: normal;
+          letter-spacing: -0.48px;
+        }
+        .paragraph {
+          font-size: 16px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+        }
+      }
+      .discover-content-wrapper {
+        gap: 104px;
+        padding: 0;
+        .box-wrapper {
+          flex-direction: column;
+          gap: 32px;
+          .box-text-wrapper {
+            h3 {
+              font-size: 24px;
+              margin-bottom: 16px;
+              text-align: center;
+              width: 100%;
+            }
+            p {
+              font-size: 16px;
+              ul {
+                margin-top: 16px;
+                li {
+                  .icon {
+                    font-size: 20px;
+                  }
+                  p {
+                    font-size: 16px;
+                  }
+                }
+              }
+            }
+            .box-btn-action {
+              margin-top: 24px;
+              width: 100%;
+            }
+          }
+          .image {
+            display: block;
+            height: 142px;
+            min-width: 142px;
+            overflow: hidden;
+            position: relative;
+            img {
+              position: absolute;
+              top: -42%;
+              left: -31%;
+              width: 243px;
+            }
+          }
+        }
+        .box-wrapper:nth-child(even) {
+          flex-direction: column;
+        }
+      }
+    }
+  }
 </style>
