@@ -5,9 +5,16 @@ import { useHead } from "@vueuse/head";
 import { SIDEBAR_LINKS } from "@/domain/constants/sidebar.constant";
 import { useAppStore } from "@/infraestructure/stores/app";
 import { SidebarItem } from "@/domain/models/sidebar-item";
-import { CART_ICON } from "@/domain/constants/icons.constant";
-import { BUY_CRYPTO_URL } from "@/domain/constants/url-pages.constant";
+//import { CART_ICON } from "@/domain/constants/icons.constant";
+//import { BUY_CRYPTO_URL } from "@/domain/constants/url-pages.constant";
 import { linksToShow } from "@/application/mappers/sidebar-mapper";
+
+import { googleTokenLogin } from "vue3-google-login"
+const login = () => {
+  googleTokenLogin().then((response) => {
+    console.log("Handle the response", response)
+  })
+}
 
 const router = useRouter();
 const route = useRoute();
@@ -43,12 +50,12 @@ const handleItem = (item: SidebarItem): void => {
   appStore.setActivePage(item.title!);
   router.push(item.route);
 };
-
+/*
 const goToBuyCrypto = (): void => {
   appStore.setActivePage("Buy Crypto");
   appStore.setPageIcon(CART_ICON);
   router.push(BUY_CRYPTO_URL);
-};
+};*/
 </script>
 
 <template>
@@ -112,7 +119,7 @@ const goToBuyCrypto = (): void => {
           block
           class="justify-center extended-fab py-6"
           :class="{ 'button-buy-crypto': isCollapsed }"
-          @click="goToBuyCrypto()"
+          @click="login"
         >
           <v-icon :class="{ 'mr-2': !isCollapsed }">mdi-currency-btc</v-icon>
           <span v-if="!isCollapsed" class="text-capitalize">Buy Crypto</span>
