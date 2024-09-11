@@ -3,6 +3,13 @@
 import CoinGroupModel from "@/components/coin/CoinGroupModel.vue";
 // import CoinScene from "@/components/coin/CoinScene.vue";
 //const appStore = useAppStore();
+import { googleTokenLogin } from "vue3-google-login"
+const login = () => {
+  googleTokenLogin().then((response) => {
+    console.log("Handle the response", response)
+  })
+}
+
 </script>
 <template>
   <div class="home-wrapper">
@@ -33,7 +40,7 @@ import CoinGroupModel from "@/components/coin/CoinGroupModel.vue";
         </div>
         <div class="buttons-wrapper">
           <v-btn rounded variant="outlined" class="btn-how-it-works text-capitalize">How it works</v-btn>
-          <v-btn rounded color="primary" class="btn-buy-crypto text-capitalize">Buy Crypto</v-btn>
+          <v-btn rounded color="primary" class="btn-buy-crypto text-capitalize" @click="login">Buy Crypto</v-btn>
         </div>
       </div>
       <div class="sponsorship-wrapper">
