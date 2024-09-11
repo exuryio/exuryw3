@@ -21,6 +21,7 @@
     "three": "^0.167.1",
     "vite-plugin-pages": "^0.32.3",
     "vue": "^3.4.21",
+    "vue3-google-login": "^2.0.33",
     "vuetify": "^3.5.8"
   },
   "devDependencies": {
