@@ -49,10 +49,12 @@
           </div>
           <Footer />
         </div>
-        <div id="whatsapp-wrapper">
-          <div id="stateLayer">
-            <v-icon id="maskGroupIcon" icon="mdi-whatsapp"></v-icon>
-          </div>
+        <div id="whatsapp-wrapper"> 
+          <a :href="whatsappLink" target="_blank" rel="noopener noreferrer"> <!-- Añadido para enlace de whatsapp -->
+            <div id="stateLayer">
+              <v-icon id="maskGroupIcon" icon="mdi-whatsapp"></v-icon>
+            </div>
+          </a>
         </div>
         <img
           id="logoExury"
@@ -457,6 +459,9 @@ import AvatarMenu from "@/components/AvatarMenu.vue";
 import Footer from "@/components/Footer.vue";
 import { ref, onMounted } from "vue";
 const searchQuery = ref("");
+const whatsappNumber = '+34604117851'; 
+const message = 'Hola quiero saber más detalles de vuestro servicio'; 
+const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 const onSearch = (value: string) => {
   console.log(value);
 };

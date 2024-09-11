@@ -5,33 +5,45 @@
     <div class="card-wrapper">
       <div v-for="(card, index) in contents" class="card" :key="index">
         <div class="image">
-          <img :src="card.image" :alt="card.image"/>
+          <img :src="card.image" :alt="card.title"/>
         </div>
         <div class="content">
           <h2>{{ card.title }}</h2>
           <p>{{ card.description }}</p>
-          <v-btn rounded variant="outlined" class="box-btn-action text-capitalize">{{ card.button }}</v-btn>
+          <!-- Enlace whatsapp from contact-->
+          <a v-if="card.button === '¡Chatea con Nosotros!'" :href="card.link" target="_blank">
+            <v-btn rounded variant="outlined" class="box-btn-action text-capitalize">{{ card.button }}</v-btn>
+          </a>
+          <v-btn v-else rounded variant="outlined" class="box-btn-action text-capitalize">{{ card.button }}</v-btn>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
+const whatsappNumber = '+34604117851'; 
+const message = 'Hola estoy interesadx en saber más'; 
+const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
 const contents = [
   {
     title: 'Whatsapp',
-    description: '¿Necesitas ayuda o quieres hacer una operarción? Escríbenos y te asistiremos al instante.',
+    description: '¿Necesitas ayuda o quieres hacer una operación? Escríbenos y te asistiremos al instante.',
     button: '¡Chatea con Nosotros!',
+    link: whatsappLink, // Añadido para el enlace de WhatsApp
     image: '/assets/contact/Contactusexury-01.svg'
   },
   {
     title: 'Email',
-    description: 'Para consultas escríbenos al email contact@exury.io Responderemos rapido con la informacion solicitada',
-    button: '¡Escribenos ahora!',
+    description: 'Para consultas escríbenos al email contact@exury.io. Responderemos rápido con la información solicitada.',
+    button: '¡Escríbenos ahora!',
+    link: '', // Enlace vacío para el botón de email
     image: '/assets/contact/Contactusexury-02.svg'
   }
-]
+];
 </script>
+
 <style lang="scss">
 @import "@/styles/variables.scss";
 .contact-wrapper {
