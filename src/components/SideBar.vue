@@ -5,8 +5,8 @@ import { useHead } from "@vueuse/head";
 import { SIDEBAR_LINKS } from "@/domain/constants/sidebar.constant";
 import { useAppStore } from "@/infraestructure/stores/app";
 import { SidebarItem } from "@/domain/models/sidebar-item";
-import { CART_ICON } from "@/domain/constants/icons.constant";
-import { BUY_CRYPTO_URL } from "@/domain/constants/url-pages.constant";
+//import { CART_ICON } from "@/domain/constants/icons.constant";
+//import { BUY_CRYPTO_URL } from "@/domain/constants/url-pages.constant";
 import { linksToShow } from "@/application/mappers/sidebar-mapper";
 
 import { googleTokenLogin } from "vue3-google-login"
