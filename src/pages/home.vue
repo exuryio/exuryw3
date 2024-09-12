@@ -49,7 +49,7 @@ const login = () => {
           alt=""
           src="/EN_Funded_by_European_Union_vert_RGB_NEG.png"
         />
-        <img class="sponsor-right" alt="" src="/banco-de-espana-white.png" />
+        <img class="sponsor-right" alt="" src="/iconoblack.png" style="opacity: 0.01;" />
       </div>
     </div>
   </div>
