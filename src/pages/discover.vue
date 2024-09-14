@@ -81,6 +81,7 @@ const formatText = (text: string) => {
     display: flex;
     flex-direction: column;
     margin-top: 88px;
+    padding-bottom: 48px;
     gap: 48px;
     .title-wrapper {
       .title {

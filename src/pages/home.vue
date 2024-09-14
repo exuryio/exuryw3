@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-// import CoinModel from "@/components/coin/CoinModel.vue";
 import CoinGroupModel from "@/components/coin/CoinGroupModel.vue";
-// import CoinScene from "@/components/coin/CoinScene.vue";
-//const appStore = useAppStore();
 import { googleTokenLogin } from "vue3-google-login"
+import {onMounted} from "vue"
 const login = () => {
   googleTokenLogin().then((response) => {
     console.log("Handle the response", response)
   })
 }
-
+onMounted(() => {
+  document.querySelector(".footer-wrapper").classList?.add("footer-home")
+})
 </script>
 <template>
   <div class="home-wrapper">
@@ -44,12 +44,14 @@ const login = () => {
         />
         <img class="sponsor-right" alt="" src="/banco-de-espana-white.png" />
       </div>
+      <div></div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 @import "@/styles/variables.scss";
+
 .home-wrapper {
   margin: 0 !important;
   height: fit-content;
@@ -75,6 +77,7 @@ const login = () => {
       display: flex;
       flex-direction: column;
       align-items: start;
+      margin-top: -48px;
       .title-wrapper {
         position: relative;
         letter-spacing: 0.5px;

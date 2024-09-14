@@ -184,7 +184,7 @@
   border-radius: 28px;
   border: none;
   background-color: #2d3531;
-  height: 56px;
+  height: 48px;
   overflow: hidden;
   flex-shrink: 0;
   display: flex;
