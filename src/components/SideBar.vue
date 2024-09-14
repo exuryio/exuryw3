@@ -31,11 +31,11 @@ watch(route, (newRoute) => {
     useHead({ title: appStore.getActivePage });
   }
   if (newRoute.path === "/home") {
-    document.querySelector(".footer-wrapper")?.classList.add("footer-home")
+    document.querySelector(".footer-wrapper")?.classList.add?.("footer-home")
   } else {
-    document.querySelector(".footer-wrapper")?.classList.remove("footer-home")
+    document.querySelector(".footer-wrapper")?.classList.remove?.("footer-home")
   }
-  document.querySelector(".listInner").scrollTo(0,0)
+  document.querySelector(".listInner")?.scrollTo?.(0,0)
   isCollapsed.value = true;
 });
 onMounted(() => {

@@ -8,7 +8,7 @@ const login = () => {
   })
 }
 onMounted(() => {
-  document.querySelector(".footer-wrapper").classList?.add("footer-home")
+  document.querySelector(".footer-wrapper")?.classList?.add?.("footer-home")
 })
 </script>
 <template>
