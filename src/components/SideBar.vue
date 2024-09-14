@@ -128,6 +128,7 @@ const handleItem = (item: SidebarItem): void => {
 @import "@/styles/scroll.scss";
 @import "@/styles/variables.scss";
 .sidebar {
+  position: sticky;
   max-width: 216px;
   background-color: $nav-background-color;
   color: $nav-default-text-color;
@@ -154,8 +155,11 @@ const handleItem = (item: SidebarItem): void => {
   opacity: 0.7;
 }
 .menu-fab {
+  top: 5px;
   background-color: transparent;
-  color: #c7d4cf;
+  color: white;
+  font-weight: bold;
+  padding-left: 0;
 }
 
 .extended-fab {

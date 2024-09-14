@@ -10,7 +10,9 @@
 .v-list-item__prepend {
   display: block !important;
 }
-.v-navigation-drawer--active:not(.v-navigation-drawer--rail) {
-  background-color: #0d151378 !important;
+@media (min-width: 768px) {
+  .v-navigation-drawer--active:not(.v-navigation-drawer--rail) {
+    background-color: #0d151378 !important;
+  }
 }
 </style>

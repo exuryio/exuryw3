@@ -7,53 +7,67 @@
         <div id="sidebarWrapper">
           <SideBar />
         </div>
-        <div class="top-bar-wrapper">
-          <div class="searchBarWrapper">
-            <div class="searchBar">
-              <v-text-field
-                v-model="searchQuery"
-                label="Buscar"
-                single-line
-                hide-details
-                @input="onSearch"
-                class="custom-search-bar"
-              >
-                <template v-slot:prepend-inner>
-                  <v-icon color="white">mdi-magnify</v-icon>
-                </template>
-              </v-text-field>
-            </div>
-            <v-btn
-              class="btn-search"
-            >
-              <v-icon style="font-size: 28px; opacity: 0.8" color="white">mdi-magnify</v-icon>
-            </v-btn>
-          </div>
-          <div id="iconButtonParent">
-            <div id="menu">
-              <div id="container">
-                <div id="stateLayer">
-                  <v-icon icon="mdi-bell-outline"></v-icon>
-                </div>
-              </div>
-            </div>
-            <AvatarMenu />
-          </div>
-        </div>
-
         <!-- Main content area -->
         <div class="listInner">
           <div class="page-view flex fill-width">
             <transition name="scroll-x-transition" mode="out-in">
-              <router-view />
+              <div>
+                <div style="height: 16px; width: 100%"></div>
+                <div class="top-bar-wrapper">
+                  <img
+                    id="logoExurySm"
+                    alt=""
+                    src="/LogoExury1.png"
+                  />
+                  <div class="searchBarWrapper">
+                    <div class="searchBar">
+                      <v-text-field
+                        v-model="searchQuery"
+                        label="Buscar"
+                        single-line
+                        hide-details
+                        @input="onSearch"
+                        class="custom-search-bar"
+                      >
+                        <template v-slot:prepend-inner>
+                          <v-icon color="white">mdi-magnify</v-icon>
+                        </template>
+                      </v-text-field>
+                    </div>
+                    <v-btn
+                      class="btn-search"
+                    >
+                      <v-icon style="font-size: 28px; opacity: 0.8" color="white">mdi-magnify</v-icon>
+                    </v-btn>
+                  </div>
+                  <div id="iconButtonParent">
+                    <div  id="search-small">
+                      <div id="container">
+                        <div id="stateLayer">
+                          <v-icon icon="mdi-magnify"></v-icon>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="menu">
+                      <div id="container">
+                        <div id="stateLayer">
+                          <v-icon icon="mdi-bell-outline"></v-icon>
+                        </div>
+                      </div>
+                    </div>
+                    <AvatarMenu />
+                  </div>
+                </div>
+                <router-view />
+                <Footer />
+              </div>
             </transition>
           </div>
-          <Footer />
         </div>
         <div id="whatsapp-wrapper">
           <a :href="whatsappLink" target="_blank" rel="noopener noreferrer"> <!-- Añadido para enlace de whatsapp -->
             <div id="stateLayer">
-              <v-icon id="maskGroupIcon" icon="mdi-whatsapp"></v-icon>
+              <v-icon id="maskGroupIcon" icon="mdi-whatsapp"  color="white"></v-icon>
             </div>
           </a>
         </div>
@@ -109,6 +123,7 @@
   overflow:hidden;
   width: 100%;
   height: 100%;
+  position: relative;
   #whatsapp-wrapper {
     position: absolute;
     bottom: 40px;
@@ -149,7 +164,6 @@
   overflow-y: auto;
   overflow-x: hidden;
   .page-view {
-    margin-top: 78px;
     height: fit-content;
   }
 }
@@ -167,7 +181,7 @@
   align-items: center;
   justify-content: center;
 }
-#menu {
+.menu {
   width: 48px;
   height: 48px;
   display: flex;
@@ -189,10 +203,12 @@
   justify-content: flex-start;
   min-width: 360px;
 }
+#search-small {
+  display: none;
+}
 .searchBarWrapper {
   position: relative;
-  margin-top: 10px;
-  left: 230px;
+  left: 247px;
   border: none;
   flex: 1;
   display: flex;
@@ -206,15 +222,15 @@
 }
 
 .top-bar-wrapper {
-  position: absolute;
-  top: -17px;
+  position: sticky;
+  top: 0px;
   right: 0;
   width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  padding: 20px 16px 10px 0;
+  padding: 0 16px 10px 0;
   z-index: 1000;
   transition: transform 0.5s ease;
   #iconButtonParent {
@@ -229,10 +245,8 @@
   }
 }
 .top-bar-wrapper.scrolling {
-  padding: 20px 16px 10px 0;
   background-color: rgba(10, 17, 14, 0.86);
   backdrop-filter: blur(4px);
-  transform: translateY(0);
 }
 #logoExury.scrolling {
   top: 26px;
@@ -249,6 +263,12 @@
   z-index: 99999;
   transition: top 0.3s ease;
 }
+#logoExurySm.scrolling {
+   z-index: 99999;
+ }
+#logoExurySm {
+  display: none;
+}
 #maskGroupIcon {
   width: 24px;
   position: relative;
@@ -257,6 +277,10 @@
 }
 
 @media (max-width: $screen-md) {
+  #logoExury {
+    left: 74px;
+
+  }
   .main {
     .list {
       .listInner {
@@ -264,10 +288,8 @@
         left: -220px;
         min-width: calc(100% - 16px);
         .top-bar-wrapper.scrolling {
-          padding: 20px 16px 10px 0;
           background-color: rgba(10, 17, 14, 0.86);
           backdrop-filter: blur(4px);
-          transform: translateY(0);
         }
         .top-bar-wrapper {
           .searchBarWrapper {
@@ -307,18 +329,17 @@
         left: 0;
         min-width: 100%;
         .top-bar-wrapper.scrolling {
-          padding: 20px 16px 10px 0;
           background-color: rgba(10, 17, 14, 0.86);
           backdrop-filter: blur(4px);
           transform: translateY(0);
         }
         .top-bar-wrapper {
-          margin-top: 16px;
+          margin-top: 0;
           width: 100%;
           display: flex;
           flex-direction: row;
           align-items: center;
-          justify-content: flex-end;
+          justify-content: space-between;
           padding-right: 16px;
           transition: padding 0.3s ease;
           .searchBarWrapper {
@@ -358,12 +379,12 @@
         left: 0;
         min-width: 100%;
         .top-bar-wrapper {
-          margin-top: 16px;
+          margin-top: 0;
           width: 100%;
           display: flex;
           flex-direction: row;
           align-items: center;
-          justify-content: flex-end;
+          justify-content: space-between;
           padding-right: 16px;
           .searchBarWrapper {
             display: none;
@@ -453,7 +474,35 @@
   }
 }
 
+@media (max-width: 879px) {
+  .top-bar-wrapper {
+    justify-content: space-between;
+  }
+  #logoExury {
+    display: none;
+  }
+  #logoExurySm {
+    width: 103px;
+    position: relative;
+    display: flex;
+    margin: 0 !important;
+    left: 73px;
+    height: 35.2px;
+    object-fit: cover;
+    z-index: 99999;
+    transition: top 0.3s ease;
+  }
+  #search-small {
+    display: block;
+  }
+  .searchBarWrapper {
+    display: none;
 
+    .searchBar {
+      display: none;
+    }
+  }
+}
 </style>
 
 <script lang="ts" setup>
@@ -476,14 +525,13 @@ onMounted(() => {
     if (listInnerElement) {
       listInnerElement.addEventListener("scroll", () => {
         const topBarWrapper = document.querySelector(".top-bar-wrapper");
-        const logoExury = document.querySelector("#logoExury");
+        const logoExury = document.querySelector("#logoExurySm");
         if (topBarWrapper && logoExury) {
           if (listInnerElement.scrollTop > 10) {
             topBarWrapper.classList.add("scrolling");
             logoExury.classList.add("scrolling");
           } else {
             topBarWrapper.classList.remove("scrolling");
-            logoExury.classList.remove("scrolling");
           }
         }
       });
