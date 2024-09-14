@@ -165,7 +165,7 @@
     }
   }
 }
-@media (max-width: $screen-md) {
+@media (max-width: $screen-lg) {
   .footer-wrapper{
     width: 100%;
     height: fit-content;

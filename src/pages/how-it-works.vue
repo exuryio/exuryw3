@@ -41,7 +41,7 @@ const onStart = () => {
   gap: 10px;
   z-index: 1;
   font-size: 2.5em;
-  margin-top: 10px;
+  margin-top: 88px;
   .title-wrapper {
     position: relative;
     display: flex;
@@ -91,7 +91,7 @@ const onStart = () => {
     }
   }
 }
-@media (max-width: $screen-sm) {
+@media (max-width: $screen-lg) {
   .how-it-works-wrapper {
     height: fit-content;
     .title-wrapper {

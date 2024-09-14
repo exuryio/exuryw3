@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
-const whatsappNumber = '+34604117851'; 
-const message = 'Hola estoy interesadx en saber más'; 
+const whatsappNumber = '+34604117851';
+const message = 'Hola estoy interesadx en saber más';
 const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
 const contents = [
@@ -47,6 +47,7 @@ const contents = [
 <style lang="scss">
 @import "@/styles/variables.scss";
 .contact-wrapper {
+   margin-top: 88px;
   .card-wrapper {
     display: flex;
     justify-content: start;

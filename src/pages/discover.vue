@@ -80,7 +80,7 @@ const formatText = (text: string) => {
   .discover-us-wrapper {
     display: flex;
     flex-direction: column;
-    margin-top: 32px;
+    margin-top: 88px;
     gap: 48px;
     .title-wrapper {
       .title {

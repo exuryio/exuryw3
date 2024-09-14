@@ -48,6 +48,7 @@ const onDropDownQuestion = (index: number) => {
 <style lang="scss">
 @import "@/styles/variables.scss";
 .faq-wrapper {
+   margin-top: 88px;
   .questions-wrapper {
     display: flex;
     flex-direction: column;
