@@ -5,11 +5,11 @@ $nav-default-text-color: #c7d4cf;
 
 $primary-color: #1cba75;
 $link-color: #0078D4;
-//SCREEN-SIZES
-//$screen-base: 1440px;
-$screen-base: 3000px;
-$screen-xs: 380px;
-$screen-sm: 576px;
-$screen-md: 1000px;
-$screen-lg: 992px;
-$screen-xl: 1200px;
+// SCREEN-SIZES (Reorganizados)
+$screen-xs: 380px;   // Pantallas muy pequeñas
+$screen-sm: 576px;   // Móviles pequeños
+$screen-md: 768px;   // Tablets o dispositivos medianos
+$screen-lg: 992px;   // Tablets grandes o desktops pequeños
+$screen-xl: 1200px;  // Pantallas grandes
+$screen-xxl: 1440px; // Pantallas extra grandes
+$screen-base: 3000px; // Resoluciones muy grandes (4K, etc.)

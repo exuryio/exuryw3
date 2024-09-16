@@ -176,13 +176,11 @@ onUnmounted(() => {
 @import "@/styles/variables.scss";
 
 .cards-wrapper {
-  margin-top: 15px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: start;
   justify-content: start;
-  gap: 10px;
   font-size: 25.03px;
   color: #1cba75;
   height: fit-content;
@@ -200,7 +198,7 @@ onUnmounted(() => {
     align-items: center;
     justify-content: flex-start;
     gap: 8px;
-    padding: 20px 30px 20px 0;
+    padding: 32px 0 16px 0;
     height: fit-content;
     width: 100%;
     max-width: 100%;
@@ -265,29 +263,8 @@ onUnmounted(() => {
   z-index: 100;
 }
 
-@media (max-width: $screen-md) {
-  .cards-wrapper {
-    min-height: 520px;
-    max-height: 520px;
-    margin-top: 0;
-    overflow-y: hidden;
-    .cards-transition-group {
-      overflow-y: hidden;
-      min-height: 500px;
-      max-height: 500px;
-    }
 
-    .card-left-navigation-wrapper {
-      display: none;
-    }
-
-    .card-right-navigation-wrapper {
-      display: none;
-    }
-  }
-}
-
-@media (max-width: $screen-sm) {
+@media (max-width: $screen-lg) {
   .cards-wrapper {
     top: 0;
     margin-top: -20px;
@@ -296,11 +273,9 @@ onUnmounted(() => {
     .cards-transition-group {
       min-height: 550px;
       max-height: 550px;
-      margin-top: 38px;
-      padding: 20px 20px 0 10px;
+      padding-left: 10px;
     }
   }
-
   .dotParent {
     position: absolute;
     top: 0;

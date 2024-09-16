@@ -5,8 +5,6 @@ import { useHead } from "@vueuse/head";
 import { SIDEBAR_LINKS } from "@/domain/constants/sidebar.constant";
 import { useAppStore } from "@/infraestructure/stores/app";
 import { SidebarItem } from "@/domain/models/sidebar-item";
-//import { CART_ICON } from "@/domain/constants/icons.constant";
-//import { BUY_CRYPTO_URL } from "@/domain/constants/url-pages.constant";
 import { linksToShow } from "@/application/mappers/sidebar-mapper";
 
 import { googleTokenLogin } from "vue3-google-login"
@@ -32,8 +30,14 @@ watch(route, (newRoute) => {
   } else {
     useHead({ title: appStore.getActivePage });
   }
+  if (newRoute.path === "/home") {
+    document.querySelector(".footer-wrapper")?.classList.add?.("footer-home")
+  } else {
+    document.querySelector(".footer-wrapper")?.classList.remove?.("footer-home")
+  }
+  document.querySelector(".listInner")?.scrollTo?.(0,0)
+  isCollapsed.value = true;
 });
-
 onMounted(() => {
   const currentLink = SIDEBAR_LINKS.find((link) => link.route === route.path);
   if (currentLink) {
@@ -50,12 +54,6 @@ const handleItem = (item: SidebarItem): void => {
   appStore.setActivePage(item.title!);
   router.push(item.route);
 };
-/*
-const goToBuyCrypto = (): void => {
-  appStore.setActivePage("Buy Crypto");
-  appStore.setPageIcon(CART_ICON);
-  router.push(BUY_CRYPTO_URL);
-};*/
 </script>
 
 <template>
