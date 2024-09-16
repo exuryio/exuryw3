@@ -83,7 +83,7 @@
   color: #c7d4cf;
   margin: 0 !important;
   padding: 80px !important;
-  height: 100vh;
+  height: 1px;
   position: relative;
   display: flex;
   justify-content: center;
@@ -300,13 +300,12 @@
 
 @media (max-width: $screen-sm) {
   .main {
-    padding: 0;
+    padding: 16px !important;
     margin: 0;
     .list {
-      position: absolute;
       display: block;
-      width: calc(100% - 32px);
-      height: calc(100% - 32px);
+      width: 100%;
+      height: 100%;
       margin: 0;
       left: 16px;
       top: 16px;
@@ -351,13 +350,12 @@
 
 @media (max-width: $screen-xs) {
   .main {
-    padding: 0;
+    padding: 16px !important;
     margin: 0;
     .list {
-      position: absolute;
       display: block;
-      width: calc(100% - 32px);
-      height: calc(100% - 32px);
+      width: 100%;
+      height: 100%;
       margin: 0;
       left: 16px;
       top: 16px;
