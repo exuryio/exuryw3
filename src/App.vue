@@ -10,4 +10,14 @@
 .v-list-item__prepend {
   display: block !important;
 }
+.footer-home {
+  position: absolute !important;
+  top: calc(100vh - 192px) !important;
+}
+@media (max-width: 1280px) {
+  .footer-home {
+    position: relative !important;
+    top: 0 !important;
+  }
+}
 </style>

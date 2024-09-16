@@ -9,50 +9,59 @@
         </div>
         <!-- Main content area -->
         <div class="listInner">
-          <div class="top-bar-wrapper">
-            <div class="searchBarWrapper">
-              <div class="searchBar">
-                <v-text-field
-                  v-model="searchQuery"
-                  label="Buscar"
-                  single-line
-                  hide-details
-                  @input="onSearch"
-                  class="custom-search-bar"
-                >
-                  <template v-slot:prepend-inner>
-                    <v-icon color="white">mdi-magnify</v-icon>
-                  </template>
-                </v-text-field>
-              </div>
-              <v-btn
-                class="btn-search"
-              >
-                <v-icon style="font-size: 28px; opacity: 0.8" color="white">mdi-magnify</v-icon>
-              </v-btn>
-            </div>
-            <div id="iconButtonParent">
-              <div id="menu">
-                <div id="container">
-                  <div id="stateLayer">
-                    <v-icon icon="mdi-bell-outline"></v-icon>
-                  </div>
-                </div>
-              </div>
-              <AvatarMenu />
-            </div>
-          </div>
           <div class="page-view flex fill-width">
             <transition name="scroll-x-transition" mode="out-in">
-              <router-view />
+              <div>
+                <div class="top-bar-wrapper">
+                  <div class="searchBarWrapper">
+                    <div class="searchBar">
+                      <v-text-field
+                        v-model="searchQuery"
+                        label="Buscar"
+                        single-line
+                        hide-details
+                        @input="onSearch"
+                        class="custom-search-bar"
+                      >
+                        <template v-slot:prepend-inner>
+                          <v-icon color="white">mdi-magnify</v-icon>
+                        </template>
+                      </v-text-field>
+                    </div>
+                    <v-btn
+                      class="btn-search"
+                    >
+                      <v-icon style="font-size: 28px; opacity: 0.8" color="white">mdi-magnify</v-icon>
+                    </v-btn>
+                  </div>
+                  <div id="iconButtonParent">
+                    <div  id="search-small">
+                      <div id="container">
+                        <div id="stateLayer">
+                          <v-icon icon="mdi-magnify"></v-icon>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="menu">
+                      <div id="container">
+                        <div id="stateLayer">
+                          <v-icon icon="mdi-web"></v-icon>
+                        </div>
+                      </div>
+                    </div>
+                    <AvatarMenu />
+                  </div>
+                </div>
+                <router-view />
+              </div>
             </transition>
           </div>
           <Footer />
         </div>
-        <div id="whatsapp-wrapper"> 
+        <div id="whatsapp-wrapper">
           <a :href="whatsappLink" target="_blank" rel="noopener noreferrer"> <!-- Añadido para enlace de whatsapp -->
             <div id="stateLayer">
-              <v-icon id="maskGroupIcon" icon="mdi-whatsapp"></v-icon>
+              <v-icon id="maskGroupIcon" icon="mdi-whatsapp" color="white"></v-icon>
             </div>
           </a>
         </div>
@@ -73,8 +82,8 @@
   font-size: 16px;
   color: #c7d4cf;
   margin: 0 !important;
-  padding: 0 !important;
-  height: 100vh;
+  padding: 80px !important;
+  height: 1px;
   position: relative;
   display: flex;
   justify-content: center;
@@ -101,15 +110,12 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 16px 0 16px 16px;
-  gap: 60px;
+  padding: 16px 16px 0 0;
+  gap: 92px;
   z-index: 0;
   overflow: hidden;
-  position: absolute;
-  top: 80px;
-  left: 80px;
-  width: calc(100% - 160px);
-  height:calc(100% - 160px);
+  width: 100%;
+  height: 100%;
   #whatsapp-wrapper {
     position: absolute;
     bottom: 40px;
@@ -149,7 +155,6 @@
   overflow-y: auto;
   overflow-x: hidden;
   .page-view {
-    margin-top: 78px;
     height: fit-content;
   }
 }
@@ -166,7 +171,7 @@
   align-items: center;
   justify-content: center;
 }
-#menu {
+.menu {
   width: 48px;
   height: 48px;
   display: flex;
@@ -179,7 +184,7 @@
   border-radius: 28px;
   border: none;
   background-color: #2d3531;
-  height: 56px;
+  height: 48px;
   overflow: hidden;
   flex-shrink: 0;
   display: flex;
@@ -188,10 +193,13 @@
   justify-content: flex-start;
   min-width: 360px;
 }
+#search-small {
+  display: none;
+}
 .searchBarWrapper {
   position: relative;
   margin-top: 10px;
-  left: 230px;
+  left: 247px;
   border: none;
   flex: 1;
   display: flex;
@@ -256,6 +264,9 @@
 }
 
 @media (max-width: $screen-md) {
+  #logoExury {
+    left: 74px;
+  }
   .main {
     .list {
       .listInner {
@@ -289,13 +300,12 @@
 
 @media (max-width: $screen-sm) {
   .main {
-    padding: 0;
+    padding: 16px !important;
     margin: 0;
     .list {
-      position: absolute;
       display: block;
-      width: calc(100% - 32px);
-      height: calc(100% - 32px);
+      width: 100%;
+      height: 100%;
       margin: 0;
       left: 16px;
       top: 16px;
@@ -340,13 +350,12 @@
 
 @media (max-width: $screen-xs) {
   .main {
-    padding: 0;
+    padding: 16px !important;
     margin: 0;
     .list {
-      position: absolute;
       display: block;
-      width: calc(100% - 32px);
-      height: calc(100% - 32px);
+      width: 100%;
+      height: 100%;
       margin: 0;
       left: 16px;
       top: 16px;
@@ -451,6 +460,19 @@
     }
   }
 }
+
+@media (max-width: 879px) {
+  #search-small {
+    display: block;
+  }
+  .searchBarWrapper {
+    display: none;
+
+    .searchBar {
+      display: none;
+    }
+  }
+}
 </style>
 
 <script lang="ts" setup>
@@ -459,8 +481,8 @@ import AvatarMenu from "@/components/AvatarMenu.vue";
 import Footer from "@/components/Footer.vue";
 import { ref, onMounted } from "vue";
 const searchQuery = ref("");
-const whatsappNumber = '+34604117851'; 
-const message = 'Hola quiero saber más detalles de vuestro servicio'; 
+const whatsappNumber = '+34604117851';
+const message = 'Hola quiero saber más detalles de vuestro servicio';
 const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 const onSearch = (value: string) => {
   console.log(value);

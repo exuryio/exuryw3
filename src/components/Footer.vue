@@ -71,11 +71,10 @@
 </template>
 <style lang="scss">
 @import "@/styles/variables.scss";
-.footer-wrapper{
+.footer-wrapper {
   width: 100%;
-  height: fit-content;
   padding: 0 16px 0 0;
-  margin-top: 60px;
+  margin-top: 32px;
   .footer-top {
     padding: 14px 16px;
     background: #373f3c;
@@ -134,6 +133,7 @@
   }
   .footer-bottom {
     padding: 23px 0 0 0;
+    margin-bottom: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -165,7 +165,7 @@
     }
   }
 }
-@media (max-width: $screen-md) {
+@media (max-width: $screen-lg) {
   .footer-wrapper{
     width: 100%;
     height: fit-content;

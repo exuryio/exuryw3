@@ -1,29 +1,18 @@
 <script lang="ts" setup>
-// import CoinModel from "@/components/coin/CoinModel.vue";
 import CoinGroupModel from "@/components/coin/CoinGroupModel.vue";
-// import CoinScene from "@/components/coin/CoinScene.vue";
-//const appStore = useAppStore();
 import { googleTokenLogin } from "vue3-google-login"
 const login = () => {
   googleTokenLogin().then((response) => {
     console.log("Handle the response", response)
   })
 }
-
 </script>
 <template>
   <div class="home-wrapper">
 
     <div class="main-content">
-<!--      <img-->
-<!--        class="image-coins"-->
-<!--        alt=""-->
-<!--        src="/Homeimagecoinscircle-exury.png"-->
-<!--      />-->
       <div class="coins-wrapper">
-<!--        <CoinModel></CoinModel>-->
         <CoinGroupModel></CoinGroupModel>
-<!--        <CoinScene />-->
       </div>
       <div class="content-wrapper">
         <div class="title-wrapper">
@@ -51,12 +40,14 @@ const login = () => {
         />
         <img class="sponsor-right" alt="" src="/iconoblack.png" style="opacity: 0.01;" />
       </div>
+      <div></div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 @import "@/styles/variables.scss";
+
 .home-wrapper {
   margin: 0 !important;
   height: fit-content;
@@ -75,15 +66,15 @@ const login = () => {
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: fit-content;
+    min-height: 100vh;
     .content-wrapper {
       width: 100%;
       max-height: fit-content;
       display: flex;
       flex-direction: column;
       align-items: start;
+      margin-top: -48px;
       .title-wrapper {
-        margin-top: 108px;
         position: relative;
         letter-spacing: 0.5px;
         display: flex;
@@ -129,7 +120,7 @@ const login = () => {
       }
     }
     .sponsorship-wrapper {
-      margin-top: 95px;
+      padding-top: 95px;
       position: relative;
       width: 100%;
       display: flex;
@@ -205,19 +196,8 @@ const login = () => {
   display: flex;
   align-items: center;
 }
+
 @media (max-width: $screen-md) {
-  .home-wrapper {
-    .content-wrapper {
-      margin-top: -100px;
-    }
-    .coins-wrapper {
-      position: absolute;
-      top: -200px;
-      right: 0;
-    }
-  }
-}
-@media (max-width: $screen-sm) {
   .home-wrapper {
     min-height: 100%;
     height: fit-content;

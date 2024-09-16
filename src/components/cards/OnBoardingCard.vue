@@ -43,7 +43,7 @@ const selectFrame = () => {
   background-color: #0d1513;
   border: 1px solid #2d4740;
   box-sizing: border-box;
-  height: 574.9px;
+  height: 537px;
   width: 414px;
   min-width: 414px;
   overflow: hidden;
@@ -62,7 +62,7 @@ const selectFrame = () => {
   background-color: #0d1513;
   border: 1px solid #2d4740;
   box-sizing: border-box;
-  height: 609px;
+  height: 587px;
   width: 453px;
   min-width: 453px;
   overflow: hidden;
@@ -124,7 +124,7 @@ const selectFrame = () => {
     }
   }
 }
-@media (max-width: $screen-md) {
+@media (max-width: $screen-lg) {
   .card-next {
     height: 460px;
     width: 270px;
@@ -156,11 +156,6 @@ const selectFrame = () => {
     opacity: 0.7;
     z-index: 5;
     transition: transform 0.3s ease, z-index 0.3s ease;
-    //transition:
-    //  margin 1s,
-    //  width 0.5s,
-    //  height 0.5s,
-    //  opacity 1s;
   }
 
   .card-selected {
