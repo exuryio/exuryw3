@@ -1,15 +1,11 @@
 <script lang="ts" setup>
 import CoinGroupModel from "@/components/coin/CoinGroupModel.vue";
 import { googleTokenLogin } from "vue3-google-login"
-import {onMounted} from "vue"
 const login = () => {
   googleTokenLogin().then((response) => {
     console.log("Handle the response", response)
   })
 }
-onMounted(() => {
-  document.querySelector(".footer-wrapper")?.classList?.add?.("footer-home")
-})
 </script>
 <template>
   <div class="home-wrapper">
@@ -42,7 +38,7 @@ onMounted(() => {
           alt=""
           src="/EN_Funded_by_European_Union_vert_RGB_NEG.png"
         />
-        <img class="sponsor-right" alt="" src="/banco-de-espana-white.png" />
+        <img class="sponsor-right" alt="" src="/iconoblack.png" style="opacity: 0.01;" />
       </div>
       <div></div>
     </div>
