@@ -6,18 +6,11 @@
   </v-app>
 </template>
 
-<style>
+<style lang="scss">
 .v-list-item__prepend {
   display: block !important;
 }
-.footer-home {
-  position: absolute !important;
-  top: calc(100vh - 192px) !important;
-}
-@media (max-width: 1280px) {
-  .footer-home {
-    position: relative !important;
-    top: 0 !important;
-  }
+.v-navigation-drawer--active:not(.v-navigation-drawer--rail) {
+  background-color: #0d151378 !important;
 }
 </style>

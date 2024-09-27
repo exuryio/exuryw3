@@ -33,6 +33,7 @@ watch(route, (newRoute) => {
   document.querySelector(".listInner")?.scrollTo?.(0,0)
   isCollapsed.value = true;
 });
+
 onMounted(() => {
   const currentLink = SIDEBAR_LINKS.find((link) => link.route === route.path);
   if (currentLink) {
@@ -53,6 +54,7 @@ const handleItem = (item: SidebarItem): void => {
 
 <template>
   <v-navigation-drawer
+    id="sidebar"
     class="sidebar rounded-te-0 rounded-be-0"
     :class="{ 'collapsed-drawer': isCollapsed }"
     :rail="isCollapsed"
@@ -60,8 +62,8 @@ const handleItem = (item: SidebarItem): void => {
   >
     <v-list dense>
       <v-list-item class="btn-menu-wrapper justify-center pt-2 pb-3 ml-2 mb-6">
-        <v-btn icon="" @click="toggle" class="menu-fab">
-          <v-icon>mdi-menu</v-icon>
+        <v-btn variant="plain" @click="toggle" class="menu-fab">
+          <v-icon class="bg-transparent">mdi-menu</v-icon>
         </v-btn>
       </v-list-item>
 
@@ -123,6 +125,7 @@ const handleItem = (item: SidebarItem): void => {
 </template>
 
 <style scoped lang="scss">
+@import "@/styles/scroll.scss";
 @import "@/styles/variables.scss";
 .sidebar {
   max-width: 216px;
@@ -136,6 +139,9 @@ const handleItem = (item: SidebarItem): void => {
       color: #1cba75;
     }
   }
+}
+.sidebar-expanded {
+  background-color: #0D1513 !important;
 }
 .custom-svg-icon {
   width: 24px;

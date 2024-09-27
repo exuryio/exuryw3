@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import CoinGroupModel from "@/components/coin/CoinGroupModel.vue";
 import { googleTokenLogin } from "vue3-google-login"
+import {onMounted} from "vue"
 const login = () => {
   googleTokenLogin().then((response) => {
     console.log("Handle the response", response)
@@ -24,11 +25,11 @@ const login = () => {
         </div>
         <div class="paragraph-wrapper">
           <p>
-            Cambia hoy euros por stablecoins y siente la libertad de tener el control sobre dónde almacenarlos.
+            , el único sonido que escucharás es el de tu inversión creciendo. Cambia hoy euros por stablecoins y siente la libertad de tener el control sobre dónde almacenarlos.
           </p>
         </div>
         <div class="buttons-wrapper">
-          <v-btn rounded variant="outlined" class="btn-how-it-works text-capitalize">How it works</v-btn>
+          <v-btn rounded variant="outlined" class="btn-how-it-works text-capitalize" style="border-color: #919C97">How it works</v-btn>
           <v-btn rounded color="primary" class="btn-buy-crypto text-capitalize" @click="login">Buy Crypto</v-btn>
         </div>
       </div>
@@ -73,7 +74,6 @@ const login = () => {
       display: flex;
       flex-direction: column;
       align-items: start;
-      margin-top: -48px;
       .title-wrapper {
         position: relative;
         letter-spacing: 0.5px;

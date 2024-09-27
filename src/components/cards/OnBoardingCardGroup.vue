@@ -49,7 +49,6 @@ const nextFrame = () => {
 };
 
 const prevFrame = () => {
-  console.log("prevFrame");
   if (currentFrame.value > 0) {
     currentFrame.value--;
     scrollToFrame(currentFrame.value, "left");
@@ -60,7 +59,7 @@ const scrollToFrame = (index: number, side: "left" | "right") => {
   const container = cardWrapper.value;
   const card = container?.children[index] as HTMLElement;
   if (container && card) {
-    const scrollPosition = card.offsetLeft - (side === "right" ? 30 : 5);
+    const scrollPosition = card.offsetLeft - (side === "right" ? 60 : 5);
     container.scrollTo({
       left: scrollPosition,
       behavior: "smooth",
@@ -78,14 +77,12 @@ const handleTouchStart = (event: TouchEvent) => {
 const handleTouchMove = (event: TouchEvent) => {
   if (isScrolling.value && event.touches.length === 1) {
     finalTouchPosition.value = event.touches[0].clientX;
-    console.log("moving");
   }
 };
 
 const handleTouchEnd = () => {
   isScrolling.value = false;
   const difference = finalTouchPosition.value - initialTouchPosition.value;
-  console.log(difference);
 
   if (difference < 0) {
     nextFrame();
@@ -158,12 +155,14 @@ onUnmounted(() => {
       </div>
     </div>
     <div class="card-left-navigation-wrapper" v-if="isInsideCardGroup">
-      <v-btn icon="mdi-chevron-left" @click="prevFrame" v-if="currentFrame > 0">
+      <v-btn icon="mdi-chevron-left"  color="#A9A9A9" style="background: #A9A9A9" @click="prevFrame" v-if="currentFrame > 0">
       </v-btn>
     </div>
     <div class="card-right-navigation-wrapper" v-if="isInsideCardGroup">
       <v-btn
         icon="mdi-chevron-right"
+        color="#A9A9A9"
+        style="background: #A9A9A9"
         @click="nextFrame"
         v-if="currentFrame < frames.length - 1"
       >

@@ -1,59 +1,51 @@
 <template>
   <v-app>
-    <v-main class="main fill-width overflow-hidden position-relative text-left d-flex justify-center align-center">
+    <v-main class="main" style="--v-layout-left: 30px !important;">
       <div id="mainContainer" class="rounded-circle" />
       <div class="list">
         <!-- Sidebar with padding -->
         <div id="sidebarWrapper">
           <SideBar />
         </div>
+        <div class="top-bar-wrapper">
+          <div class="searchBarWrapper">
+            <div class="searchBar">
+              <v-text-field
+                v-model="searchQuery"
+                label="Buscar"
+                single-line
+                hide-details
+                @input="onSearch"
+                class="custom-search-bar"
+              >
+                <template v-slot:prepend-inner>
+                  <v-icon color="white">mdi-magnify</v-icon>
+                </template>
+              </v-text-field>
+            </div>
+            <v-btn
+              class="btn-search"
+            >
+              <v-icon style="font-size: 28px; opacity: 0.8" color="white">mdi-magnify</v-icon>
+            </v-btn>
+          </div>
+          <div id="iconButtonParent">
+            <div id="menu">
+              <div id="container">
+                <div id="stateLayer">
+                  <v-icon icon="mdi-bell-outline"></v-icon>
+                </div>
+              </div>
+            </div>
+            <AvatarMenu />
+          </div>
+        </div>
+
         <!-- Main content area -->
         <div class="listInner">
           <div class="page-view flex fill-width">
             <transition name="scroll-x-transition" mode="out-in">
-              <div>
-                <div class="top-bar-wrapper">
-                  <div class="searchBarWrapper">
-                    <div class="searchBar">
-                      <v-text-field
-                        v-model="searchQuery"
-                        label="Buscar"
-                        single-line
-                        hide-details
-                        @input="onSearch"
-                        class="custom-search-bar"
-                      >
-                        <template v-slot:prepend-inner>
-                          <v-icon color="white">mdi-magnify</v-icon>
-                        </template>
-                      </v-text-field>
-                    </div>
-                    <v-btn
-                      class="btn-search"
-                    >
-                      <v-icon style="font-size: 28px; opacity: 0.8" color="white">mdi-magnify</v-icon>
-                    </v-btn>
-                  </div>
-                  <div id="iconButtonParent">
-                    <div  id="search-small">
-                      <div id="container">
-                        <div id="stateLayer">
-                          <v-icon icon="mdi-magnify"></v-icon>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="menu">
-                      <div id="container">
-                        <div id="stateLayer">
-                          <v-icon icon="mdi-web"></v-icon>
-                        </div>
-                      </div>
-                    </div>
-                    <AvatarMenu />
-                  </div>
-                </div>
-                <router-view />
-              </div>
+              <router-view />
             </transition>
           </div>
           <Footer />
@@ -61,7 +53,7 @@
         <div id="whatsapp-wrapper">
           <a :href="whatsappLink" target="_blank" rel="noopener noreferrer"> <!-- Añadido para enlace de whatsapp -->
             <div id="stateLayer">
-              <v-icon id="maskGroupIcon" icon="mdi-whatsapp" color="white"></v-icon>
+              <v-icon id="maskGroupIcon" icon="mdi-whatsapp"></v-icon>
             </div>
           </a>
         </div>
@@ -77,12 +69,12 @@
 
 <style lang="scss" scoped>
 @import "@/styles/variables.scss";
+//@import "@/styles/scroll.scss";
 .main {
   background-color: #141218;
   font-size: 16px;
   color: #c7d4cf;
-  margin: 0 !important;
-  padding: 80px !important;
+  padding: 30px !important;
   height: 1px;
   position: relative;
   display: flex;
@@ -93,13 +85,14 @@
   position: absolute;
   top: 10%;
   left: 28%;
-  filter: blur(400px);
+  filter: blur(200px);
   background-color: #1f866c;
   width: 940px;
   height: 450px;
   transform: rotate(30deg);
   transform-origin: 0 0;
   mix-blend-mode: normal;
+  flex-shrink: 0;
 }
 .list {
   backdrop-filter: blur(4px);
@@ -111,15 +104,15 @@
   align-items: flex-start;
   justify-content: flex-start;
   padding: 16px 16px 0 0;
-  gap: 92px;
+  gap: 60px;
   z-index: 0;
-  overflow: hidden;
+  overflow:hidden;
   width: 100%;
   height: 100%;
   #whatsapp-wrapper {
     position: absolute;
     bottom: 40px;
-    right: 40px;
+    right: 16px;
     border-radius: 100px;
     background-color: #1cba75;
     overflow: hidden;
@@ -145,6 +138,7 @@
   justify-content: flex-start;
   align-items: center;
   padding-right: 44px;
+  z-index: 10001;
 }
 .listInner {
   position: relative;
@@ -155,9 +149,11 @@
   overflow-y: auto;
   overflow-x: hidden;
   .page-view {
+    margin-top: 78px;
     height: fit-content;
   }
 }
+
 #icon {
   width: 24px;
   position: relative;
@@ -171,7 +167,7 @@
   align-items: center;
   justify-content: center;
 }
-.menu {
+#menu {
   width: 48px;
   height: 48px;
   display: flex;
@@ -184,7 +180,7 @@
   border-radius: 28px;
   border: none;
   background-color: #2d3531;
-  height: 48px;
+  height: 54px;
   overflow: hidden;
   flex-shrink: 0;
   display: flex;
@@ -193,13 +189,10 @@
   justify-content: flex-start;
   min-width: 360px;
 }
-#search-small {
-  display: none;
-}
 .searchBarWrapper {
   position: relative;
   margin-top: 10px;
-  left: 247px;
+  left: 230px;
   border: none;
   flex: 1;
   display: flex;
@@ -213,7 +206,7 @@
 }
 
 .top-bar-wrapper {
-  position: fixed;
+  position: absolute;
   top: -17px;
   right: 0;
   width: 100%;
@@ -243,7 +236,7 @@
 }
 #logoExury.scrolling {
   top: 26px;
-  z-index: 1000;
+  z-index: 99999;
 }
 #logoExury {
   width: 103px;
@@ -253,7 +246,7 @@
   left: 98px;
   height: 35.2px;
   object-fit: cover;
-  z-index: 1000;
+  z-index: 99999;
   transition: top 0.3s ease;
 }
 #maskGroupIcon {
@@ -264,9 +257,6 @@
 }
 
 @media (max-width: $screen-md) {
-  #logoExury {
-    left: 74px;
-  }
   .main {
     .list {
       .listInner {
@@ -300,12 +290,13 @@
 
 @media (max-width: $screen-sm) {
   .main {
-    padding: 16px !important;
+    padding: 0;
     margin: 0;
     .list {
+      position: absolute;
       display: block;
-      width: 100%;
-      height: 100%;
+      width: calc(100% - 32px);
+      height: calc(100% - 32px);
       margin: 0;
       left: 16px;
       top: 16px;
@@ -350,12 +341,13 @@
 
 @media (max-width: $screen-xs) {
   .main {
-    padding: 16px !important;
+    padding: 0;
     margin: 0;
     .list {
+      position: absolute;
       display: block;
-      width: 100%;
-      height: 100%;
+      width: calc(100% - 32px);
+      height: calc(100% - 32px);
       margin: 0;
       left: 16px;
       top: 16px;
@@ -461,18 +453,7 @@
   }
 }
 
-@media (max-width: 879px) {
-  #search-small {
-    display: block;
-  }
-  .searchBarWrapper {
-    display: none;
 
-    .searchBar {
-      display: none;
-    }
-  }
-}
 </style>
 
 <script lang="ts" setup>

@@ -1,5 +1,5 @@
 <template>
-  <v-menu location="start" :close-on-content-click="false">
+  <v-menu location="start" :close-on-content-click="false" >
     <template v-slot:activator="{ props }">
       <img
         v-bind="props"
@@ -8,7 +8,7 @@
         src="/avatar.svg"
       />
     </template>
-    <v-list dense class="mt-12 p-3" style="width: 200px">
+    <v-list dense class="mt-12 p-3" style="width: 200px; right: -40px">
       <v-list-item title="Settings" class="py-2 px-3">
         <template v-slot:prepend>
           <v-icon color="white" class="mr-3">mdi-cog</v-icon>

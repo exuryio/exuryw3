@@ -22,6 +22,7 @@
     "vite-plugin-pages": "^0.32.3",
     "vue": "^3.4.21",
     "vue3-google-login": "^2.0.33",
+    "vue3-perfect-scrollbar": "^2.0.0",
     "vuetify": "^3.5.8"
   },
   "devDependencies": {

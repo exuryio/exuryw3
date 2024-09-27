@@ -1,4 +1,4 @@
-export const HOME_ICON = "mdi-home";
+export const HOME_ICON = "mdi-home-outline";
 export const CART_ICON = "mdi-cart-minus";
 export const CURRENCY_ICON = "mdi-currency-usd";
 export const ACCOUNT_ICON_GROUP = "mdi-account-group";
