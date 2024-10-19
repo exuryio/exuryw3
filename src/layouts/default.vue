@@ -8,7 +8,11 @@
           <SideBar />
         </div>
         <!-- Main content area -->
-        <div class="listInner">
+        <div
+          class="listInner"
+          @scroll="handleScroll"
+          :class="{ 'scroll-active': isScrolling }"
+        >
           <div class="page-view flex fill-width">
             <transition name="scroll-x-transition" mode="out-in">
               <div>
@@ -76,6 +80,7 @@
 </template>
 
 <style lang="scss" scoped>
+@import "@/styles/scroll.scss";
 @import "@/styles/variables.scss";
 .main {
   background-color: #141218;
@@ -486,6 +491,13 @@ const message = 'Hola quiero saber más detalles de vuestro servicio';
 const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 const onSearch = (value: string) => {
   console.log(value);
+};
+const isScrolling = ref(false);
+const handleScroll = () => {
+  isScrolling.value = true;
+  setTimeout(() => {
+    isScrolling.value = false;
+  }, 1000);
 };
 onMounted(() => {
   console.log("mounted");

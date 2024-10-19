@@ -49,12 +49,21 @@ const handleItem = (item: SidebarItem): void => {
   appStore.setActivePage(item.title!);
   router.push(item.route);
 };
+
+const isScrolling = ref(false);
+const handleScroll = () => {
+  isScrolling.value = true;
+  setTimeout(() => {
+    isScrolling.value = false;
+  }, 1000);
+};
+
 </script>
 
 <template>
   <v-navigation-drawer
     class="sidebar rounded-te-0 rounded-be-0"
-    :class="{ 'collapsed-drawer': isCollapsed }"
+    :class="{ 'collapsed-drawer': isCollapsed, 'scroll-active': isScrolling }"
     :rail="isCollapsed"
     permanent
   >
@@ -123,6 +132,7 @@ const handleItem = (item: SidebarItem): void => {
 </template>
 
 <style scoped lang="scss">
+@import "@/styles/scroll.scss";
 @import "@/styles/variables.scss";
 .sidebar {
   max-width: 216px;
