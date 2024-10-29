@@ -8,7 +8,8 @@
           <SideBar />
         </div>
         <!-- Main content area -->
-        <div
+        <div class="scroll-container">
+           <div
           class="listInner"
           @scroll="handleScroll"
           :class="{ 'scroll-active': isScrolling }"
@@ -61,6 +62,7 @@
             </transition>
           </div>
           <Footer />
+        </div>
         </div>
         <div id="whatsapp-wrapper">
           <a :href="whatsappLink" target="_blank" rel="noopener noreferrer"> <!-- Añadido para enlace de whatsapp -->
@@ -123,7 +125,7 @@
   #whatsapp-wrapper {
     position: absolute;
     bottom: 40px;
-    right: 40px;
+    right: 16px;
     border-radius: 100px;
     background-color: #1cba75;
     overflow: hidden;
@@ -155,6 +157,14 @@
   align-items: center;
   padding-right: 44px;
 }
+
+.scroll-container {
+  height: 100%;
+  overflow-y: auto;
+  padding-top: 5vh; /* Ajusta este valor para mover el inicio del scrollbar */
+  box-sizing: border-box;
+}
+
 .listInner {
   position: relative;
   width: 100%;
@@ -167,6 +177,7 @@
     height: fit-content;
   }
 }
+
 #icon {
   width: 24px;
   position: relative;

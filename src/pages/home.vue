@@ -14,7 +14,10 @@ const login = () => {
       <div class="coins-wrapper">
         <CoinGroupModel></CoinGroupModel>
       </div>
+      <div class="title-top-space"></div>
+
       <div class="content-wrapper">
+
         <div class="title-wrapper">
           <p class="title-top">
             Gana más, arriesga menos.
@@ -196,7 +199,9 @@ const login = () => {
   display: flex;
   align-items: center;
 }
-
+.title-top-space {
+  height: 15dvh;
+}
 @media (max-width: $screen-md) {
   .home-wrapper {
     min-height: 100%;

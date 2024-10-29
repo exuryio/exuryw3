@@ -23,7 +23,7 @@ const goHome = () => {
 };
 </script>
 <template>
-  <div class="d-flex justify-center w-100" style="margin-top: 136px;">
+  <div class="d-flex justify-center w-100" style="margin-top: 88px;">
     <div class="d-flex align-center flex-column">
       <img src="/iconoblack.png"  alt="Coming Soon" height="197" width="192" style="opacity: 0.70;"/>
       <h3 class="text-center text-primary mt-4">Proximamente!</h3>
