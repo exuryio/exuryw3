@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main class="main fill-width overflow-hidden position-relative text-left d-flex justify-center align-center">
+    <v-main class="main">
       <div id="mainContainer" class="rounded-circle" />
       <div class="list">
         <!-- Sidebar with padding -->
@@ -75,24 +75,23 @@
           src="/LogoExury1.png"
         />
       </div>
+      <div class="footer-space"></div>
     </v-main>
   </v-app>
 </template>
 
 <style lang="scss" scoped>
-@import "@/styles/scroll.scss";
 @import "@/styles/variables.scss";
+
 .main {
   background-color: #141218;
   font-size: 16px;
   color: #c7d4cf;
   margin: 0 !important;
-  padding: 80px !important;
-  height: 1px;
-  position: relative;
+  padding: 5vh !important;
+  height: 100vh;
+  flex-direction: column;
   display: flex;
-  justify-content: center;
-  align-items: center;
 }
 #mainContainer {
   position: absolute;
@@ -107,6 +106,7 @@
   mix-blend-mode: normal;
 }
 .list {
+  flex: 1;
   backdrop-filter: blur(4px);
   border-radius: 16px;
   background-color: rgba(13, 21, 19, 0.5);
@@ -119,8 +119,7 @@
   gap: 92px;
   z-index: 0;
   overflow: hidden;
-  width: 100%;
-  height: 100%;
+  height: 100vh;
   #whatsapp-wrapper {
     position: absolute;
     bottom: 40px;
@@ -141,6 +140,11 @@
       padding: 8px;
     }
   }
+}
+.footer-space {
+  position: sticky;
+  bottom: 0;
+  background: transparent;
 }
 #sidebarWrapper {
   flex-shrink: 0;
@@ -267,7 +271,25 @@
   height: 24px;
   object-fit: contain;
 }
+@media (min-width: $screen-md) {
+  .listInner::-webkit-scrollbar {
+    width: 8px;
+  }
 
+  .listInner::-webkit-scrollbar-track {
+    background-color: #1a1a1a;
+    border-radius: 8px;
+  }
+
+  .listInner::-webkit-scrollbar-thumb {
+    background-color: #b3b3b3;
+    border-radius: 8px;
+  }
+
+  .listInner::-webkit-scrollbar-thumb:hover {
+    background-color: #8c8c8c;
+  }
+}
 @media (max-width: $screen-md) {
   #logoExury {
     left: 74px;
@@ -465,7 +487,6 @@
     }
   }
 }
-
 @media (max-width: 879px) {
   #search-small {
     display: block;
@@ -491,13 +512,6 @@ const message = 'Hola quiero saber más detalles de vuestro servicio';
 const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 const onSearch = (value: string) => {
   console.log(value);
-};
-const isScrolling = ref(false);
-const handleScroll = () => {
-  isScrolling.value = true;
-  setTimeout(() => {
-    isScrolling.value = false;
-  }, 1000);
 };
 onMounted(() => {
   console.log("mounted");

@@ -10,14 +10,23 @@
 .v-list-item__prepend {
   display: block !important;
 }
-.footer-home {
-  position: absolute !important;
-  top: calc(100vh - 192px) !important;
+body, html {
+  overflow: hidden; /* Esto elimina el scrollbar externo */
+  height: 100%;
+  margin: 0;
 }
-@media (max-width: 1280px) {
-  .footer-home {
-    position: relative !important;
-    top: 0 !important;
-  }
+
+.main {
+  overflow: hidden; /* Asegura que el contenedor principal no tenga scroll */
 }
+.v-navigation-drawer__content::-webkit-scrollbar {
+  display: none;
+}
+
+.v-navigation-drawer__content {
+  -ms-overflow-style: none; /* Para Internet Explorer y Edge */
+  scrollbar-width: none; /* Para Firefox */
+  overflow-y: auto; /* Asegura que no haya scrollbar visible */
+}
+
 </style>
