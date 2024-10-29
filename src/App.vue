@@ -11,22 +11,22 @@
   display: block !important;
 }
 body, html {
-  overflow: hidden; /* Esto elimina el scrollbar externo */
+  overflow: hidden;
   height: 100%;
   margin: 0;
 }
 
 .main {
-  overflow: hidden; /* Asegura que el contenedor principal no tenga scroll */
+  overflow: hidden;
 }
 .v-navigation-drawer__content::-webkit-scrollbar {
   display: none;
 }
 
 .v-navigation-drawer__content {
-  -ms-overflow-style: none; /* Para Internet Explorer y Edge */
-  scrollbar-width: none; /* Para Firefox */
-  overflow-y: auto; /* Asegura que no haya scrollbar visible */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow-y: auto;
 }
 
 </style>

@@ -161,7 +161,7 @@
 .scroll-container {
   height: 100%;
   overflow-y: auto;
-  padding-top: 5vh; /* Ajusta este valor para mover el inicio del scrollbar */
+  padding-top: 5vh;
   box-sizing: border-box;
 }
 
