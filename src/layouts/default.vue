@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main class="main fill-width overflow-hidden position-relative text-left d-flex justify-center align-center">
+    <v-main class="main">
       <div id="mainContainer" class="rounded-circle" />
       <div class="list">
         <!-- Sidebar with padding -->
@@ -8,7 +8,10 @@
           <SideBar />
         </div>
         <!-- Main content area -->
-        <div class="listInner">
+        <div class="scroll-container">
+           <div
+          class="listInner"
+        >
           <div class="page-view flex fill-width">
             <transition name="scroll-x-transition" mode="out-in">
               <div>
@@ -58,6 +61,7 @@
           </div>
           <Footer />
         </div>
+        </div>
         <div id="whatsapp-wrapper">
           <a :href="whatsappLink" target="_blank" rel="noopener noreferrer"> <!-- Añadido para enlace de whatsapp -->
             <div id="stateLayer">
@@ -71,23 +75,23 @@
           src="/LogoExury1.png"
         />
       </div>
+      <div class="footer-space"></div>
     </v-main>
   </v-app>
 </template>
 
 <style lang="scss" scoped>
 @import "@/styles/variables.scss";
+
 .main {
   background-color: #141218;
   font-size: 16px;
   color: #c7d4cf;
   margin: 0 !important;
-  padding: 80px !important;
-  height: 1px;
-  position: relative;
+  padding: 5vh !important;
+  height: 100vh;
+  flex-direction: column;
   display: flex;
-  justify-content: center;
-  align-items: center;
 }
 #mainContainer {
   position: absolute;
@@ -102,6 +106,7 @@
   mix-blend-mode: normal;
 }
 .list {
+  flex: 1;
   backdrop-filter: blur(4px);
   border-radius: 16px;
   background-color: rgba(13, 21, 19, 0.5);
@@ -114,12 +119,11 @@
   gap: 92px;
   z-index: 0;
   overflow: hidden;
-  width: 100%;
-  height: 100%;
+  height: 100vh;
   #whatsapp-wrapper {
     position: absolute;
     bottom: 40px;
-    right: 40px;
+    right: 16px;
     border-radius: 100px;
     background-color: #1cba75;
     overflow: hidden;
@@ -137,6 +141,11 @@
     }
   }
 }
+.footer-space {
+  position: sticky;
+  bottom: 0;
+  background: transparent;
+}
 #sidebarWrapper {
   flex-shrink: 0;
   width: 160px;
@@ -146,6 +155,14 @@
   align-items: center;
   padding-right: 44px;
 }
+
+.scroll-container {
+  height: 100%;
+  overflow-y: auto;
+  padding-top: 5vh;
+  box-sizing: border-box;
+}
+
 .listInner {
   position: relative;
   width: 100%;
@@ -158,6 +175,7 @@
     height: fit-content;
   }
 }
+
 #icon {
   width: 24px;
   position: relative;
@@ -262,7 +280,25 @@
   height: 24px;
   object-fit: contain;
 }
+@media (min-width: $screen-md) {
+  .listInner::-webkit-scrollbar {
+    width: 8px;
+  }
 
+  .listInner::-webkit-scrollbar-track {
+    background-color: #1a1a1a;
+    border-radius: 8px;
+  }
+
+  .listInner::-webkit-scrollbar-thumb {
+    background-color: #b3b3b3;
+    border-radius: 8px;
+  }
+
+  .listInner::-webkit-scrollbar-thumb:hover {
+    background-color: #8c8c8c;
+  }
+}
 @media (max-width: $screen-md) {
   #logoExury {
     left: 74px;
@@ -460,7 +496,6 @@
     }
   }
 }
-
 @media (max-width: 879px) {
   #search-small {
     display: block;

@@ -41,7 +41,7 @@ const onStart = () => {
   gap: 10px;
   z-index: 1;
   font-size: 2.5em;
-  margin-top: 80px;
+  margin-top: 32px;
   .title-wrapper {
     position: relative;
     display: flex;
