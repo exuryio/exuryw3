@@ -47,7 +47,7 @@ const contents = [
 <style lang="scss">
 @import "@/styles/variables.scss";
 .contact-wrapper {
-   margin-top: 88px;
+   margin-top: 24px;
   .card-wrapper {
     display: flex;
     justify-content: start;

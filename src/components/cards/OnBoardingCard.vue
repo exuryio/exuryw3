@@ -124,6 +124,7 @@ const selectFrame = () => {
     }
   }
 }
+
 @media (max-width: $screen-lg) {
   .card-next {
     height: 460px;

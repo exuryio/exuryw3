@@ -49,62 +49,65 @@ const handleItem = (item: SidebarItem): void => {
   appStore.setActivePage(item.title!);
   router.push(item.route);
 };
+
+
 </script>
 
 <template>
   <v-navigation-drawer
     class="sidebar rounded-te-0 rounded-be-0"
-    :class="{ 'collapsed-drawer': isCollapsed }"
+    :class="{ 'collapsed-drawer': isCollapsed}"
     :rail="isCollapsed"
     permanent
   >
-    <v-list dense>
-      <v-list-item class="btn-menu-wrapper justify-center pt-2 pb-3 ml-2 mb-6">
-        <v-btn icon="" @click="toggle" class="menu-fab">
-          <v-icon>mdi-menu</v-icon>
-        </v-btn>
-      </v-list-item>
+    <v-list-item class="btn-menu-wrapper justify-center pt-2 pb-3 ml-2 mb-6">
+      <v-btn icon="mdi-menu" @click="toggle" class="menu-fab">
+      </v-btn>
+    </v-list-item>
 
-      <v-list-item-group
-        v-model="route.path"
-        density="compact"
-        nav
-        :class="['options-bar', { 'item-group': isCollapsed }]"
-      >
-        <v-list-item
-          rounded="xl"
-          v-for="(link, index) in linksToShow"
-          :key="link.title"
-          @click="handleItem(link)"
-          :title="link.title"
-          :class="[
-            'nav-item',
-            { 'active-link': route.path === link.route },
-            { 'mb-2': index === 4 },
-          ]"
+    <div class="scrollable-content">
+      <v-list dense>
+        <v-list-item-group
+          v-model="route.path"
+          density="compact"
+          nav
+          :class="['options-bar', { 'item-group': isCollapsed }]"
         >
-          <template v-slot:prepend>
-            <v-icon
-              v-if="link.icon"
-              :color="route.path === link.route ? '#1CBA75' : 'white'"
-              class="mr-3"
-              >{{ link.icon }}</v-icon
-            >
-            <img
-              v-else-if="link.svg"
-              :src="link.svg"
-              :alt="link.title"
-              class="custom-svg-icon mr-3 mt-2"
-              :class="{ active: route.path === link.route }"
+          <v-list-item
+            rounded="xl"
+            v-for="(link, index) in linksToShow"
+            :key="link.title"
+            @click="handleItem(link)"
+            :title="link.title"
+            :class="[
+                        'nav-item',
+                        { 'active-link': route.path === link.route },
+                        { 'mb-2': index === 4 },
+                    ]"
+          >
+            <template v-slot:prepend>
+              <v-icon
+                v-if="link.icon"
+                :color="route.path === link.route ? '#1CBA75' : 'white'"
+                class="mr-3"
+              >{{ link.icon }}</v-icon>
+              <img
+                v-else-if="link.svg"
+                :src="link.svg"
+                :alt="link.title"
+                class="custom-svg-icon mr-3 mt-2"
+                :class="{ active: route.path === link.route }"
+              />
+            </template>
+            <hr
+              v-if="index === 4"
+              class="position-absolute left-0 mt-4 w-100 opacity-20"
             />
-          </template>
-          <hr
-            v-if="index === 4"
-            class="position-absolute left-0 mt-4 w-100 opacity-20"
-          />
-        </v-list-item>
-      </v-list-item-group>
-    </v-list>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </div>
+
     <template v-slot:append>
       <div class="pa-3">
         <v-btn
@@ -120,9 +123,11 @@ const handleItem = (item: SidebarItem): void => {
       </div>
     </template>
   </v-navigation-drawer>
+
 </template>
 
 <style scoped lang="scss">
+@import "@/styles/scroll.scss";
 @import "@/styles/variables.scss";
 .sidebar {
   max-width: 216px;
@@ -148,10 +153,22 @@ const handleItem = (item: SidebarItem): void => {
   opacity: 0.7;
 }
 .menu-fab {
-  background-color: transparent;
   color: #c7d4cf;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+.scrollable-content {
+  overflow-y: auto;
+  max-height: calc(100vh - 20px);
 }
 
+.btn-menu-wrapper {
+  position: sticky;
+  top: 10px;
+  z-index: 1;
+  background-color: inherit;
+}
 .extended-fab {
   width: 56px;
   height: 56px;
