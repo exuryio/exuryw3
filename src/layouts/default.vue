@@ -11,8 +11,6 @@
         <div class="scroll-container">
            <div
           class="listInner"
-          @scroll="handleScroll"
-          :class="{ 'scroll-active': isScrolling }"
         >
           <div class="page-view flex fill-width">
             <transition name="scroll-x-transition" mode="out-in">

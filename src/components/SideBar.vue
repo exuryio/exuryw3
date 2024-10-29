@@ -50,20 +50,13 @@ const handleItem = (item: SidebarItem): void => {
   router.push(item.route);
 };
 
-const isScrolling = ref(false);
-const handleScroll = () => {
-  isScrolling.value = true;
-  setTimeout(() => {
-    isScrolling.value = false;
-  }, 1000);
-};
 
 </script>
 
 <template>
   <v-navigation-drawer
     class="sidebar rounded-te-0 rounded-be-0"
-    :class="{ 'collapsed-drawer': isCollapsed, 'scroll-active': isScrolling }"
+    :class="{ 'collapsed-drawer': isCollapsed}"
     :rail="isCollapsed"
     permanent
   >
