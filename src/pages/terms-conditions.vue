@@ -46,7 +46,7 @@
                   imposibilita la utilización de los servicios de la Plataforma de Exury.
                 </p>
                 <p>
-                  Para cualquier consulta o reclamación relacionada con nuestros servicios, puedes contactarnos en info@exury.co.
+                  Para cualquier consulta o reclamación relacionada con nuestros servicios, puedes contactarnos en contact@exury.co.
                 </p>
               </div>
             </div>
@@ -287,7 +287,7 @@
                         El usuario declara ser conocedor de todos los riesgos que supone la posesión de criptomonedas, por lo que exonera a Exury de cualquier responsabilidad por la pérdida de sus criptomonedas. Cualquier incidencia en la operativa de las entidades bancarias será responsabilidad exclusiva de las mismas.
                     </p>
                     <p>
-                        Así mismo, cualquier incidente derivado del uso de los métodos de pago y recepción de dinero de curso legal será responsabilidad única del proveedor del mismo. No obstante lo anterior, en los supuestos en los que pueda ocurrir algún error durante el proceso de compra venta de criptomonedas, el usuario podrá contactar con el servicio de soporte de Exury en <a href="mailto:info@exury.co">info@exury.co</a>.
+                        Así mismo, cualquier incidente derivado del uso de los métodos de pago y recepción de dinero de curso legal será responsabilidad única del proveedor del mismo. No obstante lo anterior, en los supuestos en los que pueda ocurrir algún error durante el proceso de compra venta de criptomonedas, el usuario podrá contactar con el servicio de soporte de Exury en <a href="mailto:contact@exury.co">contact@exury.co</a>.
                     </p>
                     <h3>6.5 Otras obligaciones</h3>
                     <ul>
@@ -319,7 +319,7 @@
                         La remuneración que reciba Exury por la prestación de cualquier servicio incluido en estos Términos y Condiciones por cuenta del usuario, se incrementará en la cuantía correspondiente a cuantos impuestos, tasas y arbitrios sean aplicables según la legislación vigente. Es de exclusiva responsabilidad del usuario determinar si, y en qué medida, se aplican impuestos a cualquier transacción que realice a través de Exury, e informar o ingresar la cantidad correcta de impuestos a las autoridades fiscales correspondientes.
                     </p>
                     <p>
-                        Información sobre la entidad de dinero electrónico, así como de las otras entidades, se encuentra en el siguiente enlace: <a href="https://exury.io/legal" target="_blank">https://exury.io/legal</a>.
+                        Información sobre la entidad de dinero electrónico, así como de las otras entidades, se encuentra en las presentes condiciones generales.
                     </p>
 
                     <h3>7.1 Confirmación de Transacciones</h3>
@@ -467,7 +467,7 @@
                         <li>El uso del apalancamiento puede funcionar en su contra y puede generar grandes pérdidas y ganancias.</li>
                     </ul>
                     <p>
-                        Para ver más sobre los riesgos asociados a la inversión en criptoactivos, consultar el siguiente enlace: <a href="https://exury.io/riesgos" target="_blank">Alerta de riesgos</a>.
+                        Para ver más sobre los riesgos asociados a la inversión en criptoactivos, consultar la seccion de Alerta de riesgos dentro de la plataforma.
                     </p>
                 </div>
             </div>
@@ -593,7 +593,7 @@
                         <ul>
                             <li><strong>a.</strong> Por no aceptación de la modificación de la Política de Privacidad, de los Términos y Condiciones o del precio del servicio, o cualquier ley y reglamento aplicable (incluyendo cualquier ley relativa a la lucha contra el blanqueo de capitales, la financiación del terrorismo, las sanciones económicas internacionales y los embargos): El contrato se extinguirá automáticamente.</li>
                             <li><strong>b.</strong> Por incumplimiento por alguna de las partes de alguna obligación esencial del contrato: La otra parte podrá resolver de forma unilateral el presente contrato.</li>
-                            <li><strong>c.</strong> Por deseo expreso del usuario: El usuario podrá decidir en cualquier momento dar por finalizada la vigencia del presente contrato para lo que deberá comunicar su decisión a la siguiente dirección de correo electrónico: <a href="mailto:contacto@exury.io">contacto@exury.io</a>. Cuando el presente contrato se extinga por cualquier causa, el usuario no podrá solicitar a Exury que se deshaga de la operación o las operaciones efectuadas a lo largo de la relación contractual. Por tanto, no se podrán solicitar devoluciones de criptomonedas vendidas a Exury o restitución de efectivo (moneda de curso legal) alguna.</li>
+                            <li><strong>c.</strong> Por deseo expreso del usuario: El usuario podrá decidir en cualquier momento dar por finalizada la vigencia del presente contrato para lo que deberá comunicar su decisión a la siguiente dirección de correo electrónico: <a href="mailto:contact@exury.co">contact@exury.co</a>. Cuando el presente contrato se extinga por cualquier causa, el usuario no podrá solicitar a Exury que se deshaga de la operación o las operaciones efectuadas a lo largo de la relación contractual. Por tanto, no se podrán solicitar devoluciones de criptomonedas vendidas a Exury o restitución de efectivo (moneda de curso legal) alguna.</li>
                             <li><strong>d.</strong> Por la detección por parte de Exury de acciones fraudulentas, comportamientos antisociales o ilegales (como por ejemplo, insultos o amenazas).</li>
                             <li><strong>e.</strong> Si Exury tiene motivos razonables para sospechar que el usuario es víctima de un fraude, robo, ciberataque, extorsión, manipulación, violencia o chantaje.</li>
                             <li><strong>f.</strong> Por imposición legal o por orden de autoridad competente. Exury informará del motivo del cierre de la cuenta del usuario siempre y cuando no exista una obligación legal de no dar dicha información.</li>
@@ -614,7 +614,7 @@
                         Exury se compromete a cumplir con la LOPDGDD y el RGPD. Los datos personales serán tratados de forma confidencial y solo se utilizarán para los fines relacionados con la prestación del servicio.
                     </p>
                     <p>
-                        Los servicios prestados por Divisy APP S.L requieren el tratamiento de datos personales. Divisy App S.L se compromete a proteger la privacidad y proporcionar una experiencia de usuario segura. Al contratar los servicios, el usuario acepta explícitamente el tratamiento de sus datos tal como se describe en la <a href="https://Exury.io/privacidad" target="_blank">Política de Privacidad</a> establecida por Exury.
+                        Los servicios prestados por Divisy APP S.L requieren el tratamiento de datos personales. Divisy App S.L se compromete a proteger la privacidad y proporcionar una experiencia de usuario segura. Al contratar los servicios, el usuario acepta explícitamente el tratamiento de sus datos tal como se describe en la <a href="https://Exury.io/privacy-policy" target="_blank">Política de Privacidad</a> establecida por Exury.
                     </p>
                 </div>
             </div>
@@ -659,8 +659,7 @@
                 </h2>
                 <div v-if="expandedSection === 'servicio-atencion-usuario'" class="mdc-typography--body1 justified-text">
                     <p>
-                        El usuario dispone de un Servicio de Atención al Usuario para que pueda contactar directamente con un agente en la siguiente dirección: 
-                        <a href="https://exury.io/support/home" target="_blank">https://exury.io/support</a>
+                        El usuario dispone de un Servicio de Atención al Usuario para que pueda contactar directamente con un agente en la siguiente dirección: contact@exury.co. 
                     </p>
                 </div>
             </div>

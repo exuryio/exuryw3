@@ -203,7 +203,7 @@
                         <p>Para garantizar la seguridad y legitimidad en el ejercicio de estos derechos, será necesario que el Usuario acredite su identidad. El ejercicio deberá formalizarse mediante una comunicación escrita, firmada por el titular de los datos, indicando su domicilio y adjuntando copia de su Documento Nacional de Identidad (DNI) u otro documento de identificación válido.</p>
                         <p>Las solicitudes podrán ser enviadas por los siguientes medios:</p>
                         <ul>
-                            <li><strong>Correo electrónico:</strong> Enviar un mensaje a <a href="mailto:info@exury.co">info@exury.co</a>.</li>
+                            <li><strong>Correo electrónico:</strong> Enviar un mensaje a <a href="mailto:contact@exury.co">contact@exury.co</a>.</li>
                             <li><strong>Correo postal:</strong> Dirigir la comunicación escrita a la siguiente dirección:<br>
                             DIVISY APP S.L<br>
                             Calle Hermosilla 48, 1ra Derecha,<br>
@@ -215,7 +215,7 @@
                         <p>El Usuario tiene derecho a oponerse al envío de comunicaciones comerciales por parte de Exury y a retirar su consentimiento en cualquier momento. La retirada del consentimiento no afectará la licitud del tratamiento realizado con anterioridad para otras finalidades legítimas.</p>
 
                         <h4>2.4.3 Delegado de Protección de Datos (DPD)</h4>
-                        <p>Para garantizar una adecuada gestión de los datos personales, Exury ha designado un Delegado de Protección de Datos (DPD), quien estará disponible para resolver cualquier duda o reclamación relacionada con el tratamiento de datos. Podrá contactarse a través del correo electrónico: <a href="mailto:info@exury.co">info@exury.co</a>.</p>
+                        <p>Para garantizar una adecuada gestión de los datos personales, Exury ha designado un Delegado de Protección de Datos (DPD), quien estará disponible para resolver cualquier duda o reclamación relacionada con el tratamiento de datos. Podrá contactarse a través del correo electrónico: <a href="mailto:contact@exury.co">contact@exury.co</a>.</p>
 
                         <h4>2.4.4 Reclamaciones ante la autoridad de control</h4>
                         <p>Exury informa a los Usuarios de su derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (AEPD) si consideran que no han sido atendidos adecuadamente en el ejercicio de sus derechos o detectan un incumplimiento de la normativa de protección de datos.</p>
@@ -268,7 +268,7 @@
                         <h3 class="mdc-typography--subtitle1">3.1 Derecho de Renuncia</h3>
                         <p>El Usuario tiene el derecho de oponerse en cualquier momento al envío de comunicaciones comerciales por parte de Exury. Para ejercer este derecho, podrá:</p>
                         <ul>
-                            <li><strong>I. Enviar un correo electrónico:</strong> Dirigirse a <a href="mailto:info@exury.co">info@exury.co</a>, manifestando claramente su intención de renunciar a la recepción de dichas comunicaciones.</li>
+                            <li><strong>I. Enviar un correo electrónico:</strong> Dirigirse a <a href="mailto:contact@exury.co">contact@exury.co</a>, manifestando claramente su intención de renunciar a la recepción de dichas comunicaciones.</li>
                             <li><strong>II. Utilizar la opción incluida en cada comunicación:</strong> Todas las comunicaciones comerciales enviadas por Exury incluirán un enlace o mecanismo que permitirá al Usuario darse de baja de forma rápida y sencilla.</li>
                         </ul>
                         <p>
