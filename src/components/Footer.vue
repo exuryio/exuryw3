@@ -16,8 +16,8 @@
       <div>
         <h2>Seguridad & Legal</h2>
         <ul>
-          <li>Politica de Privacidad</li>
-          <li>Terminos y Condiciones</li>
+          <li><router-link to="/privacy-policy">Política de Privacidad</router-link></li>
+          <li><router-link to="/terms-conditions">Términos y Condiciones</router-link></li>        
           <li>Cookies</li>
           <li>Licencias</li>
         </ul>
