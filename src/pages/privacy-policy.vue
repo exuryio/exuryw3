@@ -5,7 +5,7 @@
           <h1>Política de Privacidad</h1>
           <p class="policy-date">Última actualización: 17 de diciembre de 2024</p>
         </header>
-  
+          
         <section class="policy-content">
             
         <!-- Aspectos Generales -->
