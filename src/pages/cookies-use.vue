@@ -1,146 +1,120 @@
 <template>
-  <div class="cookies-policy mdc-typography">
-    <div class="container">
-      <!-- Título Principal -->
-      <header class="policy-header mdc-typography--headline4">
-        <h1>Política de Cookies</h1>
-        <p class="policy-date">Última actualización: 17 de diciembre de 2024</p>
-      </header>
-
-      <section class="policy-content">
-        <!-- ¿Qué son las cookies? -->
-        <div class="policy-section" id="what-are-cookies">
-          <div class="mdc-card section-card">
-            <h2 @click="toggle('what-are-cookies')" class="expandable-title mdc-typography--headline5">
-              ¿Qué son las cookies? <span :class="{'expanded': expandedSection === 'what-are-cookies'}">▼</span>
-            </h2>
-            <div v-if="expandedSection === 'what-are-cookies'" class="mdc-typography--body1 justified-text">
+  <div class="cookie-policy">
+    <v-card class="policy-card">
+      <v-card-title class="text-xl font-semibold">Política de Cookies</v-card-title>
+      <v-card-subtitle class="text-sm text-gray-600">Última actualización: 27 de Enero de 2025</v-card-subtitle>
+      <v-card-text>
+        <p>
+          Este sitio utiliza cookies para mejorar tu experiencia, analizar el uso del sitio y ayudar en nuestros esfuerzos de marketing. Puedes gestionar tus preferencias a continuación:
+        </p>
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-title class="font-medium">¿Qué son las cookies?</v-expansion-panel-title>
+            <v-expansion-panel-text>
               <p>
                 Las cookies son pequeños archivos de texto que se guardan en tu dispositivo cuando visitas nuestro sitio web. Nos ayudan a mejorar tu experiencia, recordando tus preferencias y permitiéndonos ofrecerte contenido más relevante.
               </p>
               <p>
                 Al navegar por Exury, utilizamos cookies para entender cómo interactúas con el sitio, como las páginas que visitas o los botones en los que haces clic. Esta información nos permite mejorar la funcionalidad del sitio y brindarte una mejor experiencia.
               </p>
-            </div>
-          </div>
-        </div>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
 
-        <!-- ¿Cómo usamos las cookies? -->
-        <div class="policy-section" id="how-we-use-cookies">
-          <div class="mdc-card section-card">
-            <h2 @click="toggle('how-we-use-cookies')" class="expandable-title mdc-typography--headline5">
-              ¿Cómo usamos las cookies? <span :class="{'expanded': expandedSection === 'how-we-use-cookies'}">▼</span>
-            </h2>
-            <div v-if="expandedSection === 'how-we-use-cookies'" class="mdc-typography--body1 justified-text">
-              <p>
-                En Exury utilizamos dos tipos de cookies:
-              </p>
-              <ul>
-                <li>
-                  <strong>Cookies esenciales:</strong> Estas cookies son necesarias para el funcionamiento básico del sitio web, como recordar tus preferencias de privacidad o permitirte iniciar sesión.
-                </li>
-                <li>
-                  <strong>Cookies de análisis:</strong> Nos ayudan a recopilar información anónima sobre el uso del sitio web para mejorar la experiencia del usuario.
-                </li>
+          <v-expansion-panel>
+            <v-expansion-panel-title class="font-medium">¿Cómo usamos las cookies? </v-expansion-panel-title>
+            <v-expansion-panel-text>
+                <p>
+                En Exury utilizamos dos tipos de cookies: 
+                </p>
+              <ul class="list-disc pl-5">           
+                <li><b>Cookies persistentes:</b> Son las que permanecen en tu dispositivo durante un tiempo y nos ayudan a recordar tus preferencias, como tu idioma o tu configuración de seguridad.</li>
+                <li><b>Cookies de sesión::</b> Son temporales y solo se usan mientras navegas en nuestro sitio. Se eliminan cuando cierras el navegador.</li>
               </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+
+          <v-expansion-panel>
+            <v-expansion-panel-title class="font-medium">¿Que cookies utilizamos? </v-expansion-panel-title>
+            <v-expansion-panel-text>
+                <ul class="list-disc pl-5">           
+                <li><b>Cookies necesarias:</b> stas son esenciales para que nuestro sitio web funcione correctamente. Permiten funciones básicas como acceder a tu cuenta, hacer transacciones o resolver problemas técnicos. Sin ellas, no podrías usar todos los servicios de nuestra plataforma..</li>
+                <li><b>Cookies de preferencia</b> Estas cookies nos permiten recordar tus preferencias (como el idioma o la ubicación) para que tu experiencia de navegación sea más personalizada y cómoda.</li>
+                <li><b>Cookies de análisis:</b> Nos ayudan a entender cómo usas nuestro sitio para mejorarlo. Por ejemplo, sabemos qué páginas visitan más los usuarios o si hay problemas en alguna parte del sitio que necesitamos solucionar.</li>
+                <li><b>Cookies de publicidad:</b> Estas cookies nos permiten mostrarte anuncios más relevantes para ti, basados en tu actividad en el sitio. Así podemos ofrecerte productos y servicios relacionados con criptomonedas y finanzas de manera más efectiva.</li>
+              </ul>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+
+          <v-expansion-panel>
+            <v-expansion-panel-title class="font-medium">Cookies de terceros</v-expansion-panel-title>
+            <v-expansion-panel-text>
+                <p>
+                También usamos cookies de empresas externas que nos ayudan a mejorar el rendimiento de nuestro sitio y a ofrecerte publicidad personalizada. Estas son algunas de las herramientas que usamos: 
+                </p>
+              <ul class="list-disc pl-5">           
+                <li><b>Google Analytics:</b> Para analizar cómo interactúas con nuestro sitio y mejorar la experiencia. Nos permite ver cuántos usuarios están en el sitio web y qué páginas están visitando, así como rastrear cuántos visitantes se han registrado.</li>
+                <li><b>Google Ads:</b> Nos permiten medir la efectividad de nuestras campañas publicitarias, al rastrear cuántos usuarios hacen clic en nuestro sitio web desde un anuncio concreto y los datos demográficos de estos usuarios.</li>
+                <li><b>Meta Pixel:</b> Lo usamos para medir, optimizar y generar audiencias para campañas de publicidad que se ofrecen en plataformas de Meta. </li>
+                <li><b>Twitter Pixel:</b> Lo usamos para medir, optimizar y generar audiencias para campañas de publicidad que se ofrecen en X (antes Twitter).</li>
+                <li><b>LinkedIn Insights Tag:</b> Lo usamos para medir, optimizar y generar audiencias para campañas de publicidad que se ofrecen en plataformas de LinkedIn</li>
+              </ul>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+
+          <v-expansion-panel>
+            <v-expansion-panel-title class="font-medium">¿Puedo cambiar mis preferencias de cookies?</v-expansion-panel-title>
+            <v-expansion-panel-text>
+                <p>
+                ¡Claro! Tienes el control total sobre las cookies que aceptas. Cuando accedes al sitio, te pedimos que elijas qué cookies quieres permitir mediante un banner. Además, puedes cambiar esta configuración en cualquier momento a través de la opción en el pie de página o ajustando la configuración de tu navegador.
+                </p>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+
+          <v-expansion-panel>
+            <v-expansion-panel-title class="font-medium">¿Actualizamos esta política?</v-expansion-panel-title>
+            <v-expansion-panel-text>
+                <p>
+                 Sí, si alguna vez cambiamos las cookies que usamos, actualizaremos esta política y te informaremos para que siempre estés al tanto de lo que sucede. Te recomendamos revisar esta página de vez en cuando para mantenerte informado.
+                </p>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+
+          <v-expansion-panel>
+            <v-expansion-panel-title class="font-medium">¿Tienes dudas?</v-expansion-panel-title>
+            <v-expansion-panel-text>
+                <p>
+                  Si tienes alguna pregunta sobre nuestras cookies o necesitas más información, no dudes en ponerte en contacto con nosotros a través de correo electrónico.
+                </p>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-card-text>     
+    </v-card>
   </div>
 </template>
 
-<script>
-export default {
-  name: "CookiesPolicy",
-  data() {
-    return {
-      expandedSection: '',
-    };
-  },
-  methods: {
-    toggle(section) {
-      this.expandedSection = this.expandedSection === section ? '' : section;
-    },
-  },
-};
-</script>
-
 <style scoped>
-/* Material Design 2 (MD2) Palette */
-:root {
-  --mdc-theme-primary: #1CBA75;
-  --mdc-theme-secondary: #03dac6;
-  --mdc-theme-background: #f5f5f5;
-  --mdc-theme-surface: #ffffff;
-}
-
-/* Base styles */
-body {
-  background-color: var(--mdc-theme-background);
-  font-family: 'Roboto', sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-/* Container */
-.container {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Header */
-.policy-header {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.policy-header h1 {
-  font-size: 2.25rem;
-  font-weight: 400;
-  color: var(--mdc-theme-primary);
-  margin: 0;
-}
-
-.policy-date {
-  font-size: 1rem;
-  color: #555;
-  margin: 5px 0 0;
-}
-
-/* Card and Section Styles */
-.mdc-card {
-  background-color: var(--mdc-theme-surface);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
-  transition: all 0.3s ease;
-}
-
-/* Title & Expandable Sections */
-.expandable-title {
-  color: var(--mdc-theme-primary);
-  cursor: pointer;
+.cookie-policy {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  padding: 20px;
 }
-
-.expandable-title:hover {
-  color: #1CBA75;
+.policy-card {
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 16px;
 }
-
-.expandable-title .expanded {
-  transform: rotate(180deg);
-  transition: transform 0.3s ease;
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
 }
-
-/* Justified Text */
-.justified-text {
-  text-align: justify;
-  margin-bottom: 20px;
+.font-semibold {
+  font-weight: 600;
+}
+.text-gray-600 {
+  color: #4b5563;
 }
 </style>
