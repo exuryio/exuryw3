@@ -18,7 +18,7 @@
         <ul>
           <li><router-link to="/privacy-policy">Política de Privacidad</router-link></li>
           <li><router-link to="/terms-conditions">Términos y Condiciones</router-link></li>        
-          <li>Cookies</li>
+          <li><router-link to="/cookies-use">Cookies</router-link></li> 
           <li>Licencias</li>
         </ul>
       </div><div>
