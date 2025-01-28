@@ -19,7 +19,7 @@
           <li><router-link to="/privacy-policy">Política de Privacidad</router-link></li>
           <li><router-link to="/terms-conditions">Términos y Condiciones</router-link></li>        
           <li><router-link to="/cookies-use">Cookies</router-link></li> 
-          <li>Licencias</li>
+          <li><router-link to="/licencias">Licencias</router-link></li> 
         </ul>
       </div><div>
       <h2>Tendencias</h2>
