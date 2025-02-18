@@ -1,9 +1,3 @@
-/**
- * .eslintrc.js
- *
- * ESLint configuration file.
- */
-
 module.exports = {
   root: true,
   env: {
@@ -12,18 +6,17 @@ module.exports = {
   extends: [
     "plugin:vue/vue3-essential",
     "eslint:recommended",
-    "@vue/eslint-config-typescript",
-    "plugin:@typescript-eslint/recommended", // Agrega esta línea para incluir las reglas recomendadas de TypeScript
+    "@vue/eslint-config-typescript/recommended", 
+    "prettier", 
   ],
   parserOptions: {
-    parser: "@typescript-eslint/parser", 
+    parser: "@typescript-eslint/parser",
   },
-  plugins: [
-    "@typescript-eslint", // Añade el plugin de TypeScript
-  ],
+  plugins: ["@typescript-eslint"],
   rules: {
-    "vue/multi-word-component-names": "off",
-    "no-unused-vars": "off",
-
+    "vue/multi-word-component-names": "off", 
+    "no-unused-vars": "off", 
+    
+    "@typescript-eslint/explicit-function-return-type": "off", 
   },
 };

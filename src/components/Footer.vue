@@ -14,7 +14,7 @@
         <p>contact@exury.io</p>
       </div>
       <div>
-        <h2>Seguridad & Legal</h2>
+        <h2>Seguridad y Legal</h2>
         <ul>
           <li><router-link to="/privacy-policy">Política de Privacidad</router-link></li>
           <li><router-link to="/terms-conditions">Términos y Condiciones</router-link></li>        
@@ -42,12 +42,16 @@
       </div>
     </div>
     <hr />
+    
     <div class="footer-bottom">
       <div class="social-icons">
-        <img class="icon" src="/assets/social/x.svg" />
-        <v-icon class="icon instagram" icon="mdi-instagram"></v-icon>
-        <v-icon class="icon whatsapp" icon="mdi-whatsapp"></v-icon>
+        <div @click="openLink('x')" class="clickable-icon">
+          <img class="icon" src="/assets/social/x.svg" />
+         </div>
+        <v-icon class="icon instagram" icon="mdi-instagram" @click="openLink('instagram')"></v-icon>
+        <v-icon class="icon whatsapp" icon="mdi-whatsapp" @click="openLink('whatsapp')"></v-icon>
       </div>
+
       <div class="a-product-of">
         <p>A product of <svg xmlns="http://www.w3.org/2000/svg" width="36" height="39" viewBox="0 0 36 39" fill="none">
           <g clip-path="url(#clip0_5068_2210)">
@@ -64,11 +68,28 @@
         </svg></p>
       </div>
       <div>
-        <p>© 2024 Exury. All rights reserved</p>
+        <p>© 2025 Exury. All rights reserved</p>
       </div>
     </div>
   </div>
 </template>
+
+<script lang="ts">
+export default {
+  methods: {
+    openLink(platform: "x" | "instagram" | "whatsapp") {
+      const links = {
+        x: "https://x.com/Exuryio",
+        instagram: "https://instagram.com/exury.io",
+        whatsapp: "https://wa.me/34604117851"
+      };
+      window.open(links[platform], "_blank");
+    }
+  }
+};
+</script>
+
+
 <style lang="scss">
 @import "@/styles/variables.scss";
 .footer-wrapper {
@@ -147,6 +168,8 @@
       }
       .icon.whatsapp, .icon.instagram {
         padding: 17.5px;
+        position: relative;
+        top: -2px;
       }
     }
     .social-icons > * {
@@ -233,6 +256,11 @@
       align-items: center;
       justify-content: space-between;
       gap: 48px;
+      .icon.whatsapp, .icon.instagram {
+        padding: 17.5px;
+        position: relative;
+        top: -2px;
+      }
       .social-icons > * {
         margin-right: 16px;
       }
@@ -318,11 +346,21 @@
       align-items: center;
       justify-content: space-between;
       gap: 48px;
+      .icon.whatsapp, .icon.instagram {
+        padding: 17.5px;
+        position: relative;
+        top: -2px;
+      }
       .social-icons > * {
         margin-right: 16px;
       }
     }
   }
+}
+
+.clickable-icon {
+  display: inline-block;
+  cursor: pointer;
 }
 </style>
 <script setup lang="ts">

@@ -18,6 +18,9 @@ const coins = [
   { imgSrc: "coinsfrontview_solaris.png" },
   { imgSrc: "coinsfrontview_USDT.png" }
 ];
+
+defineExpose({});
+
 </script>
 
 <style lang="scss" scoped>

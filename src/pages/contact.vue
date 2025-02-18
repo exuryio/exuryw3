@@ -5,16 +5,30 @@
     <div class="card-wrapper">
       <div v-for="(card, index) in contents" class="card" :key="index">
         <div class="image">
-          <img :src="card.image" :alt="card.title"/>
+          <img :src="card.image" :alt="card.title" />
         </div>
         <div class="content">
           <h2>{{ card.title }}</h2>
           <p>{{ card.description }}</p>
-          <!-- Enlace whatsapp from contact-->
-          <a v-if="card.button === '¡Chatea con Nosotros!'" :href="card.link" target="_blank">
-            <v-btn rounded variant="outlined" class="box-btn-action text-capitalize">{{ card.button }}</v-btn>
-          </a>
-          <v-btn v-else rounded variant="outlined" class="box-btn-action text-capitalize">{{ card.button }}</v-btn>
+          <template v-if="card.title === 'Whatsapp'">
+            <a :href="card.link" target="_blank" class="contact-button">
+              <v-btn rounded variant="outlined" class="box-btn-action text-capitalize">
+                {{ card.button }}
+              </v-btn>
+            </a>
+          </template>
+          <template v-else-if="card.title === 'Email'">
+            <a :href="`mailto:direccion@exury.io?subject=Consulta%20desde%20la%20web&body=Hola,%20tengo%20una%20consulta`" class="contact-button">
+              <v-btn rounded variant="outlined" class="box-btn-action text-capitalize">
+                {{ card.button }}
+              </v-btn>
+            </a>
+          </template>
+          <template v-else>
+            <v-btn rounded variant="outlined" class="box-btn-action text-capitalize">
+              {{ card.button }}
+            </v-btn>
+          </template>
         </div>
       </div>
     </div>
@@ -31,14 +45,14 @@ const contents = [
     title: 'Whatsapp',
     description: '¿Necesitas ayuda o quieres hacer una operación? Escríbenos y te asistiremos al instante.',
     button: '¡Chatea con Nosotros!',
-    link: whatsappLink, // Añadido para el enlace de WhatsApp
+    link: whatsappLink,
     image: '/assets/contact/Contactusexury-01.svg'
   },
   {
     title: 'Email',
-    description: 'Para consultas escríbenos al email contact@exury.io. Responderemos rápido con la información solicitada.',
+    description: 'Para consultas escríbenos al email direccion@exury.io responderemos rápido con la información solicitada.',
     button: '¡Escríbenos ahora!',
-    link: '', // Enlace vacío para el botón de email
+    link: '', // No es necesario un enlace aquí, se usará mailto
     image: '/assets/contact/Contactusexury-02.svg'
   }
 ];
