@@ -2,20 +2,48 @@
   <div class="discover-us-wrapper">
     <div class="title-wrapper">
       <h2 class="title">Discover us</h2>
-      <p class="paragraph">Explora cómo EXURY transforma el intercambio de criptomonedas con seguridad respaldada por el Banco de España y un toque humano inigualable. Unete a la 1ra plataforma SIN CUSTODIA del mercado.</p>
+      <p class="paragraph">Explora cómo EXURY transforma el intercambio de criptomonedas con seguridad respaldada por el Banco de España y un toque humano inigualable. Únete a la 1ra plataforma SIN CUSTODIA del mercado.</p>
     </div>
     <div class="discover-content-wrapper">
       <div v-for="(content, index) in contents" :key="index" class="box-wrapper">
         <div class="image">
-          <img :src="content.image" :alt="content.image"/>
+          <img :src="content.image" :alt="content.image" />
         </div>
         <div class="box-text-wrapper">
           <h3>{{ content.title }}</h3>
           <p v-html="formatText(content.description)"></p>
           <ul v-if="content.listDescription.length">
-            <li v-for="(item, index) in content.listDescription" :key="index"><v-icon class="icon">mdi-check-circle-outline</v-icon><p>{{ item }}</p></li>
+            <li v-for="(item, index) in content.listDescription" :key="index">
+              <v-icon class="icon">mdi-check-circle-outline</v-icon>
+              <p>{{ item }}</p>
+            </li>
           </ul>
-          <v-btn rounded variant="outlined" class="box-btn-action text-capitalize">{{ content.button }}</v-btn>
+          <template v-if="content.button === 'How it works'">
+            <router-link to="/how-it-works" custom v-slot="{ href, navigate }">
+              <v-btn rounded variant="outlined" class="box-btn-action text-capitalize" :href="href" @click="navigate">
+                {{ content.button }}
+              </v-btn>
+            </router-link>
+          </template>
+          <template v-else-if="content.button === 'Buy Crypto'">
+            <router-link to="/home" custom v-slot="{ href, navigate }">
+              <v-btn rounded variant="outlined" class="box-btn-action text-capitalize" :href="href" @click="navigate">
+                {{ content.button }}
+              </v-btn>
+            </router-link>
+          </template>
+          <template v-else-if="content.button === 'Register now'">
+            <router-link to="/home" custom v-slot="{ href, navigate }">
+              <v-btn rounded variant="outlined" class="box-btn-action text-capitalize" :href="href" @click="navigate">
+                {{ content.button }}
+              </v-btn>
+            </router-link>
+          </template>
+          <template v-else>
+            <v-btn rounded variant="outlined" class="box-btn-action text-capitalize">
+              {{ content.button }}
+            </v-btn>
+          </template>
         </div>
       </div>
     </div>
