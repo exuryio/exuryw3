@@ -1,20 +1,24 @@
 <template>
   <div class="how-it-works-wrapper">
     <div class="title-wrapper">
-      <div class="title" @click="onStart">
+      <div class="title">
         <b class="card-title">How it works?</b>
         <div class="subtitle-wrapper">
           <div class="subtitle">
             ¡Intercambia tus criptoactivos con EXURY en solo 4 simples pasos! Sigue nuestra guía rápida y segura para completar tu transacción sin complicaciones.
           </div>
           <div class="button-wrapper">
-            <v-btn
-              rounded
-              variant="outlined"
-              class="btn-label text-capitalize"
-              @click="onStart"
-            >Empezar</v-btn
-            >
+            <router-link to="/home" custom v-slot="{ href, navigate }">
+              <v-btn
+                rounded
+                variant="outlined"
+                class="btn-label text-capitalize"
+                :href="href"
+                @click="navigate"
+              >
+                Empezar
+              </v-btn>
+            </router-link>
           </div>
         </div>
       </div>
@@ -26,9 +30,6 @@
 <script lang="ts" setup>
 import OnBoardingCardGroup from "@/components/cards/OnBoardingCardGroup.vue";
 
-const onStart = () => {
-  console.log("Start");
-};
 </script>
 
 <style lang="scss" scoped>
