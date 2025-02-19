@@ -31,7 +31,11 @@ const login = () => {
           </p>
         </div>
         <div class="buttons-wrapper">
-          <v-btn rounded variant="outlined" class="btn-how-it-works text-capitalize">How it works</v-btn>
+          <router-link to="/how-it-works" custom v-slot="{ href, navigate }">
+          <v-btn rounded variant="outlined" class="btn-how-it-works text-capitalize" :href="href" @click="navigate">
+            How it works
+          </v-btn>
+          </router-link>
           <v-btn rounded color="primary" class="btn-buy-crypto text-capitalize" @click="login">Buy Crypto</v-btn>
         </div>
       </div>
