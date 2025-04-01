@@ -45,13 +45,6 @@
                         </div>
                       </div>
                     </div>
-                    <div class="menu">
-                      <div id="container">
-                        <div id="stateLayer">
-                          <v-icon icon="mdi-web"></v-icon>
-                        </div>
-                      </div>
-                    </div>
                     <AvatarMenu />
                   </div>
                 </div>
