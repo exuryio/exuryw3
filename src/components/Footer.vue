@@ -71,6 +71,15 @@
         <p>© 2025 Exury. All rights reserved</p>
       </div>
     </div>
+    
+    <!-- Exury (Divisy App SL) Information -->
+    <div class="paydo-info">
+      <div class="paydo-content">
+        <p class="paydo-registration">
+          DIVISY APP, S.L. (CIF: B-56826183) está registrada en el Banco de España como proveedora de servicios de cambio de moneda virtual por moneda fiduciaria y viceversa con número de registro E102 y opera bajo la marca registrada Exury®.
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -153,8 +162,8 @@ export default {
     }
   }
   .footer-bottom {
-    padding: 23px 0 0 0;
-    margin-bottom: 16px;
+    padding: 23px 0 32px 0;
+    margin-bottom: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -265,6 +274,27 @@ export default {
         margin-right: 16px;
       }
     }
+    
+    .paydo-info {
+      margin-top: 32px;
+      padding-top: 24px;
+      padding: 24px 0;
+      
+      .paydo-content {
+        .paydo-company {
+          font-size: 14px;
+        }
+        
+        .paydo-address {
+          font-size: 12px;
+        }
+        
+        .paydo-registration {
+          font-size: 11px;
+          line-height: 1.6;
+        }
+      }
+    }
   }
 }
 @media (max-width: $screen-sm) {
@@ -353,6 +383,50 @@ export default {
       }
       .social-icons > * {
         margin-right: 16px;
+      }
+    }
+    
+    .paydo-info {
+      margin-top: 32px;
+      padding-top: 24px;
+      padding: 24px 16px;
+      
+      .paydo-content {
+        .paydo-registration {
+          font-size: clamp(9px, 0.8vw, 10px);
+          line-height: 1.6;
+          margin-top: 0;
+          margin-bottom: clamp(20px, 3vw, 32px);
+          opacity: 0.45;
+        }
+      }
+    }
+  }
+  
+  .paydo-info {
+    margin-top: clamp(32px, 4vw, 40px);
+    padding-top: clamp(24px, 3vw, 32px);
+    padding-bottom: clamp(16px, 2vw, 24px);
+    border-top: 1px solid rgba(230, 225, 227, 0.1);
+    
+    .paydo-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+      
+      @media (min-width: 768px) {
+        padding: 0 0;
+      }
+      
+      .paydo-registration {
+        color: #E6E1E3;
+        font-size: clamp(10px, 0.75vw, 11px);
+        font-weight: 400;
+        line-height: 1.6;
+        opacity: 0.45;
+        max-width: 900px;
+        margin-bottom: clamp(24px, 3vw, 40px);
+        margin-top: 0;
       }
     }
   }
