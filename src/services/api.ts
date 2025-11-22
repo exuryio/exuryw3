@@ -44,12 +44,17 @@ class ApiService {
   /**
    * Get a quote for EUR → Crypto conversion
    */
-  async getQuote(base: string, asset: string, amount: number) {
+  async getQuote(base: string, asset: string, amount: number, cacheBuster?: number) {
     const params = new URLSearchParams({
       base,
       asset,
       amount: amount.toString(),
     });
+    
+    // Add cache buster to ensure fresh quote
+    if (cacheBuster) {
+      params.append('_t', cacheBuster.toString());
+    }
     
     return this.request(`/quotes?${params}`);
   }

@@ -13,7 +13,7 @@ class PricingService {
     process.env.EXCHANGE_FEE_PERCENTAGE || '0.5'
   );
   private readonly SPREAD_PERCENTAGE = parseFloat(
-    process.env.EXCHANGE_SPREAD_PERCENTAGE || '0.1'
+    process.env.EXCHANGE_SPREAD_PERCENTAGE || '1.5'
   );
   private readonly QUOTE_TTL = parseInt(
     process.env.QUOTE_TTL_SECONDS || '30'

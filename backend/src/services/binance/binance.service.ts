@@ -46,12 +46,25 @@ class BinanceService {
         }
       );
 
+      // If price needs inversion (e.g., EURUSDC returns 1 EUR = X USDC, we need 1 USDC = X EUR)
+      let price = response.data.price;
+      if (this.needsPriceInversion(asset)) {
+        const invertedPrice = (1 / parseFloat(price)).toFixed(8);
+        price = invertedPrice;
+        logger.info(`Binance price inverted for ${asset}: ${response.data.price} -> ${price}`);
+      }
+
       logger.info(`Binance price fetched: ${symbol}`, {
         symbol,
-        price: response.data.price,
+        originalPrice: response.data.price,
+        finalPrice: price,
+        asset,
       });
 
-      return response.data;
+      return {
+        symbol: response.data.symbol,
+        price: price,
+      };
     } catch (error: any) {
       logger.error('Error fetching Binance price', {
         error: error.message,
@@ -191,10 +204,20 @@ class BinanceService {
       ETH: 'ETHEUR',
       BNB: 'BNBEUR',
       USDT: 'EURT', // Tether EUR
+      USDC: 'EURUSDC', // USDC/EUR pair (price is 1 EUR = X USDC, need to invert)
       SOL: 'SOLEUR',
     };
 
     return pairMap[asset] || `${asset}EUR`;
+  }
+  
+  /**
+   * Check if trading pair needs price inversion
+   * Some pairs like EURUSDC return price as 1 EUR = X USDC, but we need 1 USDC = X EUR
+   */
+  private needsPriceInversion(asset: string): boolean {
+    // Pairs where base currency is EUR and quote is the asset
+    return asset === 'USDC';
   }
 
   /**
@@ -221,6 +244,7 @@ class BinanceService {
       ETH: '2800',
       BNB: '350',
       USDT: '0.92',
+      USDC: '0.87', // 1 USDC = 0.87 EUR (inverted from EURUSDC which would be ~1.151)
       SOL: '120',
     };
 
