@@ -72,7 +72,13 @@ onMounted(async () => {
     console.log('🔄 Calling backend to exchange code for token...');
     console.log('   Code:', code.substring(0, 10) + '...');
     
-    const response = await apiService.handleAuth0Callback(code);
+    // Get the redirect_uri that was used in the Auth0 authorization request
+    // This should match what was sent to Auth0
+    const redirectUri = typeof window !== 'undefined' 
+      ? `${window.location.origin}/auth-callback`
+      : '';
+    
+    const response = await apiService.handleAuth0Callback(code, redirectUri);
     console.log('✅ Backend response received:', response);
     console.log('   Response type:', typeof response);
     console.log('   Response keys:', response ? Object.keys(response) : 'null');

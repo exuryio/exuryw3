@@ -168,10 +168,14 @@ class ApiService {
   /**
    * Handle Auth0 callback
    */
-  async handleAuth0Callback(code: string) {
+  async handleAuth0Callback(code: string, redirectUri?: string) {
+    // Use the redirect_uri from the request, or construct it from window.location
+    const finalRedirectUri = redirectUri || 
+      (typeof window !== 'undefined' ? `${window.location.origin}/auth-callback` : '');
+    
     return this.request('/auth/auth0/callback', {
       method: 'POST',
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ code, redirect_uri: finalRedirectUri }),
     });
   }
 
