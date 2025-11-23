@@ -18,10 +18,14 @@ class ApiService {
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
     
+    // Get auth token from localStorage (only in browser)
+    const token = typeof window !== 'undefined' ? localStorage.getItem('exury_token') : null;
+    
     const config: RequestInit = {
       ...options,
       headers: {
         'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
         ...options.headers,
       },
     };
@@ -31,12 +35,27 @@ class ApiService {
       
       if (!response.ok) {
         const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(error.error || `HTTP ${response.status}`);
+        const errorMessage = error.error || error.message || `HTTP ${response.status}`;
+        console.error(`❌ API request failed: ${url}`, {
+          status: response.status,
+          error: errorMessage,
+          fullError: error
+        });
+        const apiError = new Error(errorMessage);
+        (apiError as any).response = { 
+          status: response.status, 
+          error: errorMessage,
+          data: error
+        };
+        (apiError as any).status = response.status;
+        throw apiError;
       }
 
-      return await response.json();
+      const data = await response.json();
+      console.log(`✅ API request successful: ${url}`, data);
+      return data;
     } catch (error: any) {
-      console.error('API request failed:', error);
+      console.error('❌ API request failed:', url, error);
       throw error;
     }
   }
@@ -105,7 +124,66 @@ class ApiService {
   async getBalance(asset: string) {
     return this.request(`/users/me/balances/${asset}`);
   }
+
+  /**
+   * Register a new user with email
+   */
+  async registerUser(email: string) {
+    return this.request('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+  }
+
+  /**
+   * Login with email - sends verification code
+   */
+  async loginWithEmail(email: string) {
+    return this.request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+  }
+
+  /**
+   * Verify email with code
+   */
+  async verifyEmailCode(email: string, code: string) {
+    return this.request('/auth/verify-email', {
+      method: 'POST',
+      body: JSON.stringify({ email, code }),
+    });
+  }
+
+  /**
+   * Resend verification code
+   */
+  async resendVerificationCode(email: string) {
+    return this.request('/auth/resend-code', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+  }
+
+  /**
+   * Handle Auth0 callback
+   */
+  async handleAuth0Callback(code: string) {
+    return this.request('/auth/auth0/callback', {
+      method: 'POST',
+      body: JSON.stringify({ code }),
+    });
+  }
+
+  /**
+   * Logout user
+   */
+  async logout() {
+    return this.request('/auth/logout', {
+      method: 'POST',
+    });
+  }
 }
 
-export const apiService = new ApiService();
+export default new ApiService();
 

@@ -13,13 +13,13 @@
           Madrid, Spain</p>
         <p>contact@exury.io</p>
       </div>
-      <div>
+      <div class="legal-section">
         <h2>Seguridad y Legal</h2>
-        <ul>
-          <li><router-link to="/privacy-policy">Política de Privacidad</router-link></li>
-          <li><router-link to="/terms-conditions">Términos y Condiciones</router-link></li>        
-          <li><router-link to="/cookies-use">Cookies</router-link></li> 
-          <li><router-link to="/licencias">Licencias</router-link></li> 
+        <ul class="legal-links">
+          <li><router-link to="/privacy-policy" class="footer-link">Política de Privacidad</router-link></li>
+          <li><router-link to="/terms-conditions" class="footer-link">Términos y Condiciones</router-link></li>        
+          <li><router-link to="/cookies-use" class="footer-link">Cookies</router-link></li> 
+          <li><router-link to="/licencias" class="footer-link">Licencias</router-link></li> 
         </ul>
       </div><div>
       <h2>Tendencias</h2>
@@ -99,7 +99,7 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/styles/variables.scss";
 .footer-wrapper {
   width: 100%;
@@ -150,15 +150,83 @@ export default {
       line-height: 28px;
       margin-bottom: 24px;
     }
-    ul li {
-      color: #E6E1E3;
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: normal;
+    ul {
+      padding: 0;
+      margin: 0;
+      
+      li {
+        color: #E6E1E3;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.5;
+        opacity: 0.65;
+        list-style: none;
+        margin-bottom: 16px;
+        transition: opacity 0.2s ease;
+      }
+    }
+    
+    // Estilos específicos para los enlaces del footer
+    .legal-links {
+      li {
+        .footer-link {
+          color: #E6E1E3 !important;
+          text-decoration: none !important;
+          text-decoration-line: none !important;
+          border-bottom: none !important;
+          opacity: 0.65;
+          transition: opacity 0.2s ease, color 0.2s ease;
+          display: inline-block;
+          position: relative;
+          
+          &:hover {
+            opacity: 1 !important;
+            color: #1cba75 !important;
+            text-decoration: none !important;
+            border-bottom: none !important;
+          }
+          
+          &:active {
+            opacity: 0.8;
+            text-decoration: none !important;
+          }
+          
+          &:focus {
+            outline: 1px solid rgba(28, 186, 117, 0.5);
+            outline-offset: 2px;
+            border-radius: 2px;
+            text-decoration: none !important;
+          }
+          
+          &:visited {
+            color: #E6E1E3 !important;
+            opacity: 0.65;
+            text-decoration: none !important;
+          }
+        }
+      }
+    }
+    
+    // Estilos profundos para router-link (se renderiza como <a>)
+    :deep(.footer-link) {
+      color: #E6E1E3 !important;
+      text-decoration: none !important;
+      text-decoration-line: none !important;
+      border-bottom: none !important;
       opacity: 0.65;
-      list-style: none;
-      margin-bottom: 16px;
+      
+      &:hover {
+        color: #1cba75 !important;
+        opacity: 1 !important;
+        text-decoration: none !important;
+        border-bottom: none !important;
+      }
+      
+      &:visited {
+        color: #E6E1E3 !important;
+        text-decoration: none !important;
+      }
     }
   }
   .footer-bottom {
@@ -249,10 +317,42 @@ export default {
         font-size: 16px;
         font-style: normal;
         font-weight: 400;
-        line-height: normal;
+        line-height: 1.5;
         opacity: 0.65;
         list-style: none;
         margin-bottom: 16px;
+        transition: opacity 0.2s ease;
+        
+        a,
+        :deep(a),
+        :deep(router-link) {
+          color: #E6E1E3 !important;
+          text-decoration: none !important;
+          opacity: 0.65;
+          transition: opacity 0.2s ease, color 0.2s ease;
+          display: inline-block;
+          position: relative;
+          
+          &:hover {
+            opacity: 1 !important;
+            color: #1cba75 !important;
+          }
+          
+          &:active {
+            opacity: 0.8;
+          }
+          
+          &:focus {
+            outline: 1px solid rgba(28, 186, 117, 0.5);
+            outline-offset: 2px;
+            border-radius: 2px;
+          }
+          
+          &:visited {
+            color: #E6E1E3 !important;
+            opacity: 0.65;
+          }
+        }
       }
       .newsletter {
         margin-bottom: 25px;
@@ -354,10 +454,42 @@ export default {
         font-size: 16px;
         font-style: normal;
         font-weight: 400;
-        line-height: normal;
+        line-height: 1.5;
         opacity: 0.65;
         list-style: none;
         margin-bottom: 16px;
+        transition: opacity 0.2s ease;
+        
+        a,
+        :deep(a),
+        :deep(router-link) {
+          color: #E6E1E3 !important;
+          text-decoration: none !important;
+          opacity: 0.65;
+          transition: opacity 0.2s ease, color 0.2s ease;
+          display: inline-block;
+          position: relative;
+          
+          &:hover {
+            opacity: 1 !important;
+            color: #1cba75 !important;
+          }
+          
+          &:active {
+            opacity: 0.8;
+          }
+          
+          &:focus {
+            outline: 1px solid rgba(28, 186, 117, 0.5);
+            outline-offset: 2px;
+            border-radius: 2px;
+          }
+          
+          &:visited {
+            color: #E6E1E3 !important;
+            opacity: 0.65;
+          }
+        }
       }
       .newsletter {
         margin-bottom: 25px;

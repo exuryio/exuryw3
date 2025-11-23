@@ -3,31 +3,24 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import CoinGroupModel from "@/components/coin/CoinGroupModel.vue";
 import PriceSimulatorInline from "@/components/PriceSimulatorInline.vue";
-import { googleTokenLogin } from "vue3-google-login"
+// Removed unused import
 
 const router = useRouter();
 const email = ref('');
 
 const handleSignup = () => {
-  if (email.value) {
-    // TODO: Implement email signup logic
-    console.log('Signup with email:', email.value);
-    // For now, redirect to exchange or trigger login
-    router.push('/exchange');
+  // Always redirect to register page
+  // If email is provided, pass it as query parameter
+  if (email.value && email.value.trim()) {
+    router.push({
+      path: '/register',
+      query: { email: email.value.trim() }
+    });
   } else {
-    // If no email, trigger Google login
-    login();
+    // Redirect to register page even without email
+    router.push('/register');
   }
 };
-
-const login = () => {
-  // This will trigger Auth0 authentication
-  googleTokenLogin().then((response) => {
-    console.log("Handle the response", response)
-    // After login, redirect to exchange page
-    router.push('/exchange');
-  })
-}
 </script>
 <template>
   <div class="home-wrapper">
@@ -145,6 +138,9 @@ const login = () => {
   display: flex;
   flex-direction: column;
   justify-content: start;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   .main-content {
     position: relative;
     display: flex;
@@ -152,8 +148,11 @@ const login = () => {
     align-items: center;
     justify-content: flex-start;
     width: 100%;
+    max-width: 100%;
     min-height: 100vh;
     padding: clamp(16px, 3vw, 24px) clamp(16px, 5%, 80px) 0 clamp(16px, 5%, 80px);
+    overflow-x: hidden;
+    box-sizing: border-box;
 
     .home-layout {
       display: flex;
@@ -161,12 +160,14 @@ const login = () => {
       align-items: flex-start;
       justify-content: space-between;
       width: 100%;
-      max-width: 1400px;
+      max-width: 100%;
       gap: clamp(32px, 5vw, 64px);
       margin-top: 0;
       z-index: 2;
-      overflow: visible;
+      overflow-x: hidden;
+      overflow-y: visible;
       padding-left: clamp(0px, 2vw, 20px);
+      box-sizing: border-box;
     }
 
     .simulator-wrapper {
@@ -470,18 +471,29 @@ const login = () => {
 
 .image-coins {
   width: 622.1px;
+  max-width: 100%;
   position: absolute;
   margin: 0 !important;
   top: -50px;
-  right: 90px;
+  right: 0;
   height: 623px;
   object-fit: cover;
   z-index: 0;
+  
+  @media (max-width: 1400px) {
+    right: -100px;
+    opacity: 0.3;
+  }
+  
+  @media (max-width: 1200px) {
+    display: none;
+  }
 }
 
 .frameParent {
   align-self: stretch;
-  width: 1025px;
+  width: 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -490,6 +502,8 @@ const login = () => {
   gap: 32px;
   z-index: 1;
   background: green;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 .stateLayer13 {
   align-self: stretch;

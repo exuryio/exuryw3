@@ -6,9 +6,9 @@ import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { orderRepository } from '../repositories/order.repository';
 import { pricingService } from '../services/pricing/pricing.service';
-import { binanceService } from '../services/binance/binance.service';
+// Removed unused imports
 import { paydoService } from '../services/paydo/paydo.service';
-import { ledgerService } from '../services/ledger/ledger.service';
+// Removed unused import
 import { transactionRepository } from '../repositories/transaction.repository';
 import { OrderStatus, TransactionType, PaymentStatus } from '../types';
 import { logger } from '../config/logger';
@@ -24,7 +24,7 @@ export class OrderController {
     
     try {
       const { quote_id } = req.body;
-      const userId = req.user?.id || 'test-user-id'; // TODO: Get from auth middleware
+      const userId = (req as any).user?.id || 'test-user-id'; // TODO: Get from auth middleware
 
       if (!quote_id) {
         res.status(400).json({
@@ -121,7 +121,7 @@ export class OrderController {
   async getOrder(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const userId = req.user?.id || 'test-user-id'; // TODO: Get from auth middleware
+      const userId = (req as any).user?.id || 'test-user-id'; // TODO: Get from auth middleware
 
       const order = await orderRepository.findById(id);
 
@@ -155,7 +155,7 @@ export class OrderController {
    */
   async getUserOrders(req: Request, res: Response): Promise<void> {
     try {
-      const userId = req.user?.id || 'test-user-id'; // TODO: Get from auth middleware
+      const userId = (req as any).user?.id || 'test-user-id'; // TODO: Get from auth middleware
 
       const orders = await orderRepository.findByUserId(userId);
 

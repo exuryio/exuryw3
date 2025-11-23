@@ -5,7 +5,7 @@
 import { Request, Response } from 'express';
 import { pricingService } from '../services/pricing/pricing.service';
 import { logger } from '../config/logger';
-import { QuoteRequest, LockQuoteRequest } from '../types';
+import { QuoteRequest } from '../types';
 
 export class QuoteController {
   /**

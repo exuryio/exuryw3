@@ -6,7 +6,7 @@ import { Request, Response } from 'express';
 import { paydoService } from '../services/paydo/paydo.service';
 import { orderRepository } from '../repositories/order.repository';
 import { transactionRepository } from '../repositories/transaction.repository';
-import { binanceService } from '../services/binance/binance.service';
+// Removed unused import
 import { ledgerService } from '../services/ledger/ledger.service';
 import { OrderStatus, PaymentStatus, TransactionType } from '../types';
 import { logger } from '../config/logger';
@@ -92,7 +92,7 @@ export class PayDoController {
   private async processPayment(
     transaction: any,
     status: string,
-    client: any
+    _client: any
   ): Promise<void> {
     // Update transaction status
     let newStatus: PaymentStatus;

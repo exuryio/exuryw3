@@ -197,11 +197,12 @@
           color="primary"
           block
           size="large"
-          :disabled="!isValid"
+          :disabled="!isValid || isLoading"
+          :loading="isLoading"
           @click="handleContinue"
           class="continue-btn"
         >
-          Continuar
+          {{ isLoading ? 'Procesando...' : 'Continuar' }}
         </v-btn>
         <v-btn
           variant="outlined"
@@ -220,7 +221,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { apiService } from '@/services/api';
+import apiService from '@/services/api';
 
 const router = useRouter();
 
@@ -296,17 +297,7 @@ const isValid = computed(() => {
   }
 });
 
-const assets = {
-  BTC: 'Bitcoin',
-  ETH: 'Ethereum',
-  BNB: 'BNB',
-  USDC: 'USD Coin',
-  SOL: 'Solana',
-};
-
-const getAssetName = (asset: string): string => {
-  return assets[asset as keyof typeof assets] || asset;
-};
+// Asset names removed - not used
 
 const getAssetSymbol = (asset: string): string => {
   if (asset === 'USDC') return 'T';
@@ -333,7 +324,7 @@ const fetchQuote = async () => {
       
       // Force a new quote by adding a cache-busting parameter
       const cacheBuster = Date.now();
-      const response = await apiService.getQuote('EUR', selectedAsset.value, eurAmount.value, cacheBuster);
+      const response = await apiService.getQuote('EUR', selectedAsset.value, eurAmount.value, cacheBuster) as any;
       
       console.log('New quote fetched:', {
         quote_id: response.quote_id,
@@ -346,7 +337,7 @@ const fetchQuote = async () => {
       quote.value = null; // Clear first to trigger reactivity
       await new Promise(resolve => setTimeout(resolve, 10)); // Small delay to ensure reactivity
       quote.value = { 
-        ...response,
+        ...(response as object),
         _timestamp: cacheBuster // Add timestamp to force update
       };
       error.value = null;
@@ -397,8 +388,9 @@ const fetchQuote = async () => {
         // exchange_rate = 1 / adjustedPrice, so adjustedPrice = 1 / exchange_rate
         // adjustedPrice = cryptoPrice * (1 + spread/100)
         // So: cryptoPrice = adjustedPrice / (1 + spread/100) = (1/exchange_rate) / (1 + spread/100)
-        const adjustedPrice = 1 / tempResponse.exchange_rate;
-        const buySpreadPercent = tempResponse.spread || 1.5;
+        const tempResponseTyped1 = tempResponse as any;
+        const adjustedPrice = 1 / (tempResponseTyped1.exchange_rate || 1);
+        const buySpreadPercent = tempResponseTyped1.spread || 1.5;
         const cryptoPrice = adjustedPrice / (1 + buySpreadPercent / 100);
         
         // For selling: use SELL_SPREAD_PERCENTAGE (2.0% - when Exury buys from user)
@@ -417,12 +409,6 @@ const fetchQuote = async () => {
         const feePercent = 0.5;
         const fee = (eurAfterSpread * feePercent) / 100;
         const eurAmount = eurAfterSpread - fee;
-        
-        // Calculate effective sell price per unit (for display)
-        const sellPrice = eurAmount / cryptoAmount.value;
-        
-        // Calculate spread amount for display
-        const spreadAmount = marketValue - eurAfterSpread;
         
         // Calculate reverse rate (1 crypto = X EUR after fees)
         const reverseRate = eurAmount / cryptoAmount.value;
@@ -449,8 +435,9 @@ const fetchQuote = async () => {
         });
         
         // Initialize timer for sell quote
-        if (tempResponse.ttl) {
-          timeRemaining.value = tempResponse.ttl;
+        const tempResponseTyped2 = tempResponse as any;
+        if (tempResponseTyped2.ttl) {
+          timeRemaining.value = tempResponseTyped2.ttl;
         } else {
           timeRemaining.value = 30;
         }
@@ -578,12 +565,6 @@ watch(direction, (newDir) => {
   }
 });
 
-const formatNumber = (num: number): string => {
-  // Format for exchange rate display
-  const formatted = num.toFixed(8);
-  // Remove trailing zeros but keep meaningful precision
-  return parseFloat(formatted).toString();
-};
 
 const formatCrypto = (amount: number): string => {
   return amount.toFixed(6);
@@ -651,16 +632,51 @@ const getEstimatedReverseRate = (): string => {
   return afterFee.toFixed(2);
 };
 
-const handleContinue = () => {
-  if (quote.value) {
-    router.push({
-      path: '/exchange',
-      query: {
-        quote_id: quote.value.quote_id,
-        amount: eurAmount.value,
-        asset: selectedAsset.value,
-      },
-    });
+const handleContinue = async () => {
+  if (!quote.value) {
+    error.value = 'Por favor, espera a que se cargue la cotización';
+    return;
+  }
+
+  try {
+    isLoading.value = true;
+    error.value = null;
+
+    // Lock quote first
+    await apiService.lockQuote(quote.value.quote_id);
+
+    // Create order
+    const response = await apiService.createOrder(quote.value.quote_id);
+    
+    // Show success and redirect or show order details
+    console.log('✅ Order created:', response);
+    
+    // If we're already on /exchange, show success message
+    // Otherwise, redirect to /exchange with order info
+    if (router.currentRoute.value.path === '/exchange') {
+      // Emit event or use a store to show success message
+      // For now, just show a success alert
+      const responseTyped = response as any;
+      alert(`¡Orden creada exitosamente! ID: ${responseTyped.order_id}`);
+      // Refresh quote to get a new one
+      if (direction.value === 'eur-to-crypto' && eurAmount.value > 0) {
+        await fetchQuote();
+      }
+    } else {
+      const responseTyped = response as any;
+      router.push({
+        path: '/exchange',
+        query: {
+          order_id: responseTyped.order_id,
+          success: 'true',
+        },
+      });
+    }
+  } catch (err: any) {
+    console.error('Error creating order:', err);
+    error.value = err.message || 'Error al crear la orden. Por favor, intenta de nuevo.';
+  } finally {
+    isLoading.value = false;
   }
 };
 

@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Request logging
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req: Request, _res: Response, next: NextFunction) => {
   logger.info(`${req.method} ${req.path}`, {
     method: req.method,
     path: req.path,
@@ -32,7 +32,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 // Health check
-app.get('/health', (req: Request, res: Response) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
@@ -44,7 +44,7 @@ app.get('/health', (req: Request, res: Response) => {
 app.use(`/${API_VERSION}`, routes);
 
 // Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
   logger.error('Unhandled error', {
     error: err.message,
     stack: err.stack,

@@ -1,252 +1,148 @@
 <template>
   <div class="exchange-wrapper">
     <div class="exchange-container">
-      <h1 class="exchange-title">Buy Crypto</h1>
-      <p class="exchange-subtitle">Exchange EUR for cryptocurrency instantly</p>
+      <div class="exchange-header">
+        <h1 class="exchange-title">Cambia euros por cripto</h1>
+        <p class="exchange-subtitle">Intercambia al instante con las mejores tasas</p>
+      </div>
 
-      <v-card class="exchange-card" elevation="2">
-        <v-card-text>
-          <div class="form-section">
-            <v-text-field
-              v-model.number="eurAmount"
-              label="Amount (EUR)"
-              type="number"
-              min="0"
-              step="0.01"
-              variant="outlined"
-              @input="onAmountChange"
-            />
+      <!-- Price Simulator - Same as home page -->
+      <div class="simulator-container">
+        <PriceSimulatorInline />
+      </div>
 
-            <v-select
-              v-model="selectedAsset"
-              :items="cryptoAssets"
-              label="Select Cryptocurrency"
-              variant="outlined"
-              @update:model-value="onAssetChange"
-            />
+      <!-- Success/Error Messages -->
+      <v-alert
+        v-if="error"
+        type="error"
+        class="mt-4 alert-message"
+        dismissible
+        @click:close="error = null"
+      >
+        {{ error }}
+      </v-alert>
 
-            <div v-if="quote" class="quote-section">
-              <v-divider class="my-4" />
-              <div class="quote-details">
-                <div class="quote-row">
-                  <span>You will receive:</span>
-                  <span class="quote-value">{{ formatCrypto(quote.crypto_amount) }} {{ quote.asset }}</span>
-                </div>
-                <div class="quote-row">
-                  <span>Exchange rate:</span>
-                  <span class="quote-value">1 EUR = {{ formatNumber(quote.exchange_rate) }} {{ quote.asset }}</span>
-                </div>
-                <div class="quote-row">
-                  <span>Fee:</span>
-                  <span class="quote-value">{{ formatNumber(quote.fee) }} EUR</span>
-                </div>
-                <div class="quote-row">
-                  <span>Expires in:</span>
-                  <span class="quote-value">{{ timeRemaining }}s</span>
-                </div>
-              </div>
-            </div>
-
-            <v-btn
-              color="primary"
-              size="large"
-              block
-              :disabled="!quote || isProcessing"
-              :loading="isProcessing"
-              @click="createOrder"
-              class="mt-4"
-            >
-              {{ isProcessing ? 'Processing...' : 'Buy Crypto' }}
-            </v-btn>
-
-            <v-alert
-              v-if="error"
-              type="error"
-              class="mt-4"
-              dismissible
-              @click:close="error = null"
-            >
-              {{ error }}
-            </v-alert>
-
-            <v-alert
-              v-if="success"
-              type="success"
-              class="mt-4"
-            >
-              Order created successfully! Order ID: {{ orderId }}
-            </v-alert>
-          </div>
-        </v-card-text>
-      </v-card>
+      <v-alert
+        v-if="success"
+        type="success"
+        class="mt-4 alert-message"
+      >
+        ¡Orden creada exitosamente! ID de orden: {{ orderId }}
+      </v-alert>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-import { apiService } from '@/services/api';
+import { ref, onMounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import PriceSimulatorInline from '@/components/PriceSimulatorInline.vue';
+import { useAuthStore } from '@/infraestructure/stores/auth';
 
-const eurAmount = ref<number>(100);
-const selectedAsset = ref<string>('BTC');
-const quote = ref<any>(null);
-const isProcessing = ref<boolean>(false);
+const route = useRoute();
+const router = useRouter();
+const authStore = useAuthStore();
+
 const error = ref<string | null>(null);
 const success = ref<boolean>(false);
 const orderId = ref<string | null>(null);
-const timeRemaining = ref<number>(0);
-let quoteTimer: number | null = null;
 
-const cryptoAssets = [
-  { title: 'Bitcoin', value: 'BTC' },
-  { title: 'Ethereum', value: 'ETH' },
-  { title: 'BNB', value: 'BNB' },
-  { title: 'Tether', value: 'USDT' },
-  { title: 'Solana', value: 'SOL' },
-];
-
-const fetchQuote = async () => {
-  if (!eurAmount.value || eurAmount.value <= 0) {
-    quote.value = null;
-    return;
-  }
-
-  try {
-    error.value = null;
-    const response = await apiService.getQuote('EUR', selectedAsset.value, eurAmount.value);
-    quote.value = response;
-    timeRemaining.value = response.ttl || 30;
-    
-    // Start countdown
-    startCountdown();
-  } catch (err: any) {
-    error.value = err.message || 'Failed to fetch quote';
-    quote.value = null;
-  }
-};
-
-const startCountdown = () => {
-  if (quoteTimer) {
-    clearInterval(quoteTimer);
+// Check query params for success/error messages
+onMounted(() => {
+  console.log('Exchange page mounted');
+  
+  // Check if user is authenticated
+  if (typeof window !== 'undefined') {
+    authStore.loadFromStorage();
   }
   
-  quoteTimer = setInterval(() => {
-    if (timeRemaining.value > 0) {
-      timeRemaining.value--;
-    } else {
-      if (quoteTimer) {
-        clearInterval(quoteTimer);
-      }
-      quote.value = null;
-    }
-  }, 1000);
-};
-
-const onAmountChange = () => {
-  if (quoteTimer) {
-    clearInterval(quoteTimer);
-  }
-  fetchQuote();
-};
-
-const onAssetChange = () => {
-  if (quoteTimer) {
-    clearInterval(quoteTimer);
-  }
-  fetchQuote();
-};
-
-const createOrder = async () => {
-  if (!quote.value) {
-    return;
-  }
-
-  try {
-    isProcessing.value = true;
-    error.value = null;
-    success.value = false;
-
-    // Lock quote first
-    await apiService.lockQuote(quote.value.quote_id);
-
-    // Create order
-    const response = await apiService.createOrder(quote.value.quote_id);
-    orderId.value = response.order_id;
+  // Check if we have success message from order creation
+  const orderIdParam = route.query.order_id as string;
+  const successParam = route.query.success as string;
+  
+  if (orderIdParam && successParam === 'true') {
+    orderId.value = orderIdParam;
     success.value = true;
-    quote.value = null;
-  } catch (err: any) {
-    error.value = err.message || 'Failed to create order';
-  } finally {
-    isProcessing.value = false;
+    // Clean URL
+    router.replace({ path: '/exchange', query: {} });
   }
-};
-
-const formatCrypto = (amount: number): string => {
-  return amount.toFixed(8);
-};
-
-const formatNumber = (amount: number): string => {
-  return amount.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 8,
-  });
-};
-
-onMounted(() => {
-  fetchQuote();
 });
 
-onUnmounted(() => {
-  if (quoteTimer) {
-    clearInterval(quoteTimer);
+// Watch for route changes to show success messages
+watch(() => route.query, (newQuery) => {
+  if (newQuery.order_id && newQuery.success === 'true') {
+    orderId.value = newQuery.order_id as string;
+    success.value = true;
+    // Clean URL after showing message
+    setTimeout(() => {
+      router.replace({ path: '/exchange', query: {} });
+    }, 3000);
   }
 });
 </script>
 
 <style lang="scss" scoped>
 .exchange-wrapper {
-  padding: 32px;
-  max-width: 600px;
+  padding: clamp(24px, 4vw, 48px);
+  max-width: 1200px;
   margin: 0 auto;
+  min-height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.exchange-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.exchange-header {
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
 }
 
 .exchange-title {
-  font-size: 32px;
+  font-size: clamp(28px, 5vw, 42px);
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  color: #ffffff !important;
+  line-height: 1.2;
 }
 
 .exchange-subtitle {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 32px;
+  font-size: clamp(16px, 2.5vw, 20px);
+  color: rgba(255, 255, 255, 0.7) !important;
+  margin-bottom: 0;
 }
 
-.exchange-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.quote-section {
-  margin-top: 16px;
-}
-
-.quote-details {
+.simulator-container {
+  width: 100%;
+  max-width: 500px;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.quote-row {
-  display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  font-size: 14px;
 }
 
-.quote-value {
-  font-weight: 600;
-  color: #1cba75;
+.alert-message {
+  max-width: 500px;
+  width: 100%;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .exchange-wrapper {
+    padding: clamp(16px, 3vw, 32px);
+  }
+  
+  .simulator-container {
+    max-width: 100%;
+  }
 }
 </style>
 

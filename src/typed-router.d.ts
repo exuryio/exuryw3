@@ -20,6 +20,7 @@ declare module 'vue-router/auto-routes' {
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
     '/[any]': RouteRecordInfo<'/[any]', '/:any', { any: ParamValue<true> }, { any: ParamValue<false> }>,
+    '/auth-callback': RouteRecordInfo<'/auth-callback', '/auth-callback', Record<never, never>, Record<never, never>>,
     '/contact': RouteRecordInfo<'/contact', '/contact', Record<never, never>, Record<never, never>>,
     '/cookies-use': RouteRecordInfo<'/cookies-use', '/cookies-use', Record<never, never>, Record<never, never>>,
     '/discover': RouteRecordInfo<'/discover', '/discover', Record<never, never>, Record<never, never>>,
@@ -28,7 +29,10 @@ declare module 'vue-router/auto-routes' {
     '/home': RouteRecordInfo<'/home', '/home', Record<never, never>, Record<never, never>>,
     '/how-it-works': RouteRecordInfo<'/how-it-works', '/how-it-works', Record<never, never>, Record<never, never>>,
     '/licencias': RouteRecordInfo<'/licencias', '/licencias', Record<never, never>, Record<never, never>>,
+    '/login': RouteRecordInfo<'/login', '/login', Record<never, never>, Record<never, never>>,
     '/privacy-policy': RouteRecordInfo<'/privacy-policy', '/privacy-policy', Record<never, never>, Record<never, never>>,
+    '/register': RouteRecordInfo<'/register', '/register', Record<never, never>, Record<never, never>>,
     '/terms-conditions': RouteRecordInfo<'/terms-conditions', '/terms-conditions', Record<never, never>, Record<never, never>>,
+    '/verify-email': RouteRecordInfo<'/verify-email', '/verify-email', Record<never, never>, Record<never, never>>,
   }
 }

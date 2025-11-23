@@ -18,6 +18,8 @@ interface PayDoPayment {
 
 class PayDoService {
   private apiKey: string;
+  // apiSecret stored for future webhook signature verification
+  // @ts-ignore - Will be used in verifyWebhookSignature implementation
   private apiSecret: string;
   private baseURL: string;
   private client: AxiosInstance;

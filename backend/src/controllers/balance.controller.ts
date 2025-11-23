@@ -13,7 +13,7 @@ export class BalanceController {
    */
   async getBalances(req: Request, res: Response): Promise<void> {
     try {
-      const userId = req.user?.id || 'test-user-id'; // TODO: Get from auth middleware
+      const userId = (req as any).user?.id || 'test-user-id'; // TODO: Get from auth middleware
 
       const balances = await ledgerService.getUserBalances(userId);
 
@@ -34,7 +34,7 @@ export class BalanceController {
   async getBalance(req: Request, res: Response): Promise<void> {
     try {
       const { asset } = req.params;
-      const userId = req.user?.id || 'test-user-id'; // TODO: Get from auth middleware
+      const userId = (req as any).user?.id || 'test-user-id'; // TODO: Get from auth middleware
 
       const balance = await ledgerService.getUserBalance(userId, asset);
 

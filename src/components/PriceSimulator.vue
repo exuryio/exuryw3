@@ -150,7 +150,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { apiService } from '@/services/api';
+import apiService from '@/services/api';
 
 const props = defineProps<{
   modelValue: boolean;

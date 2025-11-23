@@ -3,7 +3,7 @@
  * Business logic for order processing
  */
 import { orderRepository } from '../repositories/order.repository';
-import { pricingService } from './pricing/pricing.service';
+// Removed unused import
 import { binanceService } from './binance/binance.service';
 import { ledgerService } from './ledger/ledger.service';
 import { transactionRepository } from '../repositories/transaction.repository';

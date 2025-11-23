@@ -21,4 +21,10 @@ const head = createHead();
 registerPlugins(app);
 app.use(head);
 app.mount("#app");
-app.use(vue3GoogleLogin, {  clientId: '352765913521-fvm83et7mf3tsnal92pve2s42g5mpjbl.apps.googleusercontent.com '})
+// Configure Google OAuth
+// IMPORTANT: Add these redirect URIs in Google Cloud Console:
+// - http://localhost:5173 (development)
+// - Your production domain (e.g., https://exury.io)
+app.use(vue3GoogleLogin, {
+  clientId: '352765913521-fvm83et7mf3tsnal92pve2s42g5mpjbl.apps.googleusercontent.com'
+})
