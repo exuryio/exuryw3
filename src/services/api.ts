@@ -4,7 +4,7 @@
  */
 // Determine API base URL based on environment
 const getApiBaseUrl = (): string => {
-  // If explicitly set in env, use it
+  // If explicitly set in env, use it (highest priority)
   if (import.meta.env.VITE_API_BASE_URL) {
     return import.meta.env.VITE_API_BASE_URL;
   }
@@ -15,9 +15,12 @@ const getApiBaseUrl = (): string => {
     
     // Production/preview URLs: exurydev--prXX-*.web.app or exury.io
     if (hostname.includes('exurydev') || hostname.includes('exury.io')) {
-      // Railway backend URL - will be set via environment variable in production
-      // For now, fallback to localhost if not set
-      return import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
+      // Use Railway URL from env, or fallback to Railway domain
+      // Priority: VITE_RAILWAY_API_URL > VITE_API_BASE_URL > Railway default
+      // TEMPORARY: Using Railway domain until api.exury.io is configured
+      return import.meta.env.VITE_RAILWAY_API_URL || 
+             import.meta.env.VITE_API_BASE_URL || 
+             'https://exuryw3-production.up.railway.app'; // Temporary Railway domain
     }
   }
   

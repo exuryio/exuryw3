@@ -12,7 +12,9 @@ import routes from './routes';
 dotenv.config();
 
 const app: Express = express();
+// Railway automatically sets PORT, but we need to listen on 0.0.0.0 for Railway
 const PORT = process.env.PORT || 3001;
+const HOST = process.env.HOST || '0.0.0.0';
 const API_VERSION = process.env.API_VERSION || 'v1';
 
 // Middleware
@@ -66,10 +68,11 @@ app.use((req: Request, res: Response) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  logger.info(`🚀 Exury Backend API running on port ${PORT}`);
+app.listen(PORT, HOST, () => {
+  logger.info(`🚀 Exury Backend API running on ${HOST}:${PORT}`);
   logger.info(`📡 API Version: ${API_VERSION}`);
   logger.info(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  logger.info(`🔗 Accessible at: http://${HOST}:${PORT}`);
 });
 
 export default app;
