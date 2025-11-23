@@ -128,7 +128,16 @@ onMounted(async () => {
       // Ensure we're using the current origin, not hardcoded localhost
       const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
       console.log('🔀 Redirecting to /exchange on origin:', currentOrigin);
-      await router.replace('/exchange');
+      console.log('🔀 Current URL:', typeof window !== 'undefined' ? window.location.href : 'N/A');
+      
+      // Force navigation using current origin to prevent localhost redirects
+      if (typeof window !== 'undefined' && currentOrigin && !currentOrigin.includes('localhost')) {
+        // If we're on preview/production, ensure we stay on that domain
+        await router.replace('/exchange');
+      } else {
+        // Fallback to router navigation
+        await router.replace('/exchange');
+      }
       
       // After navigation, ensure visibility one more time
       await nextTick();

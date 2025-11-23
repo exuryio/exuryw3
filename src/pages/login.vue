@@ -216,7 +216,12 @@ const handleSocialLogin = (connection: string, providerName: string) => {
   const auth0ClientId = import.meta.env.VITE_AUTH0_CLIENT_ID || '';
   
   // CRITICAL: redirect_uri MUST match exactly what's configured in Auth0 and backend
-  const redirectUri = import.meta.env.VITE_AUTH0_REDIRECT_URI || `${window.location.origin}/auth-callback`;
+  // Always use window.location.origin dynamically to support preview/production environments
+  // Only use VITE_AUTH0_REDIRECT_URI if it's explicitly set and not localhost (for production configs)
+  const envRedirectUri = import.meta.env.VITE_AUTH0_REDIRECT_URI;
+  const redirectUri = (envRedirectUri && !envRedirectUri.includes('localhost')) 
+    ? envRedirectUri 
+    : `${window.location.origin}/auth-callback`;
   
   console.log(`🔐 Initiating Auth0 ${providerName} login...`);
   console.log('   Domain:', auth0Domain);
