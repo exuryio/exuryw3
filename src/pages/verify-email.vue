@@ -254,6 +254,9 @@ const handleVerify = async () => {
       });
       
       // Redirect to exchange or dashboard (use replace to avoid back button issues)
+      // Ensure we're using the current origin, not hardcoded localhost
+      const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+      console.log('🔀 Redirecting to /exchange on origin:', currentOrigin);
       await router.replace('/exchange');
       
       // Ensure visibility after navigation

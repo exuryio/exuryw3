@@ -125,6 +125,9 @@ onMounted(async () => {
       });
       
       // Use replace instead of push to avoid back button issues
+      // Ensure we're using the current origin, not hardcoded localhost
+      const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+      console.log('🔀 Redirecting to /exchange on origin:', currentOrigin);
       await router.replace('/exchange');
       
       // After navigation, ensure visibility one more time
@@ -161,11 +164,15 @@ onMounted(async () => {
       authStore.setAuth(userData, authToken);
       console.log('✅ User session saved:', userData.email);
       
+      const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+      console.log('🔀 Redirecting to /exchange on origin:', currentOrigin);
       await new Promise(resolve => setTimeout(resolve, 100));
       router.push('/exchange');
     } else {
       // If no success property but no error either, assume success
       console.log('✅ Authentication successful (no explicit success flag)');
+      const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+      console.log('🔀 Redirecting to /exchange on origin:', currentOrigin);
       await new Promise(resolve => setTimeout(resolve, 100));
       router.push('/exchange');
     }
