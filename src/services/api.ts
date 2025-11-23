@@ -2,7 +2,30 @@
  * API Service for Frontend
  * Handles all API calls to the backend
  */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+// Determine API base URL based on environment
+const getApiBaseUrl = (): string => {
+  // If explicitly set in env, use it
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+  
+  // If running in browser, detect deployment environment
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    
+    // Production/preview URLs: exurydev--prXX-*.web.app or exury.io
+    if (hostname.includes('exurydev') || hostname.includes('exury.io')) {
+      // Railway backend URL - will be set via environment variable in production
+      // For now, fallback to localhost if not set
+      return import.meta.env.VITE_RAILWAY_API_URL || 'http://localhost:3001';
+    }
+  }
+  
+  // Default to localhost for local development
+  return 'http://localhost:3001';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 const API_VERSION = 'v1';
 
 class ApiService {
