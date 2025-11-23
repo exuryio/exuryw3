@@ -13,13 +13,13 @@
           Madrid, Spain</p>
         <p>contact@exury.io</p>
       </div>
-      <div>
+      <div class="legal-section">
         <h2>Seguridad y Legal</h2>
-        <ul>
-          <li><router-link to="/privacy-policy">Política de Privacidad</router-link></li>
-          <li><router-link to="/terms-conditions">Términos y Condiciones</router-link></li>        
-          <li><router-link to="/cookies-use">Cookies</router-link></li> 
-          <li><router-link to="/licencias">Licencias</router-link></li> 
+        <ul class="legal-links">
+          <li><router-link to="/privacy-policy" class="footer-link">Política de Privacidad</router-link></li>
+          <li><router-link to="/terms-conditions" class="footer-link">Términos y Condiciones</router-link></li>        
+          <li><router-link to="/cookies-use" class="footer-link">Cookies</router-link></li> 
+          <li><router-link to="/licencias" class="footer-link">Licencias</router-link></li> 
         </ul>
       </div><div>
       <h2>Tendencias</h2>
@@ -71,6 +71,15 @@
         <p>© 2025 Exury. All rights reserved</p>
       </div>
     </div>
+    
+    <!-- Exury (Divisy App SL) Information -->
+    <div class="paydo-info">
+      <div class="paydo-content">
+        <p class="paydo-registration">
+          DIVISY APP, S.L. (CIF: B-56826183) está registrada en el Banco de España como proveedora de servicios de cambio de moneda virtual por moneda fiduciaria y viceversa con número de registro E102 y opera bajo la marca registrada Exury®.
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -90,7 +99,7 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/styles/variables.scss";
 .footer-wrapper {
   width: 100%;
@@ -141,20 +150,88 @@ export default {
       line-height: 28px;
       margin-bottom: 24px;
     }
-    ul li {
-      color: #E6E1E3;
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: normal;
+    ul {
+      padding: 0;
+      margin: 0;
+      
+      li {
+        color: #E6E1E3;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.5;
+        opacity: 0.65;
+        list-style: none;
+        margin-bottom: 16px;
+        transition: opacity 0.2s ease;
+      }
+    }
+    
+    // Estilos específicos para los enlaces del footer
+    .legal-links {
+      li {
+        .footer-link {
+          color: #E6E1E3 !important;
+          text-decoration: none !important;
+          text-decoration-line: none !important;
+          border-bottom: none !important;
+          opacity: 0.65;
+          transition: opacity 0.2s ease, color 0.2s ease;
+          display: inline-block;
+          position: relative;
+          
+          &:hover {
+            opacity: 1 !important;
+            color: #1cba75 !important;
+            text-decoration: none !important;
+            border-bottom: none !important;
+          }
+          
+          &:active {
+            opacity: 0.8;
+            text-decoration: none !important;
+          }
+          
+          &:focus {
+            outline: 1px solid rgba(28, 186, 117, 0.5);
+            outline-offset: 2px;
+            border-radius: 2px;
+            text-decoration: none !important;
+          }
+          
+          &:visited {
+            color: #E6E1E3 !important;
+            opacity: 0.65;
+            text-decoration: none !important;
+          }
+        }
+      }
+    }
+    
+    // Estilos profundos para router-link (se renderiza como <a>)
+    :deep(.footer-link) {
+      color: #E6E1E3 !important;
+      text-decoration: none !important;
+      text-decoration-line: none !important;
+      border-bottom: none !important;
       opacity: 0.65;
-      list-style: none;
-      margin-bottom: 16px;
+      
+      &:hover {
+        color: #1cba75 !important;
+        opacity: 1 !important;
+        text-decoration: none !important;
+        border-bottom: none !important;
+      }
+      
+      &:visited {
+        color: #E6E1E3 !important;
+        text-decoration: none !important;
+      }
     }
   }
   .footer-bottom {
-    padding: 23px 0 0 0;
-    margin-bottom: 16px;
+    padding: 23px 0 32px 0;
+    margin-bottom: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -240,10 +317,42 @@ export default {
         font-size: 16px;
         font-style: normal;
         font-weight: 400;
-        line-height: normal;
+        line-height: 1.5;
         opacity: 0.65;
         list-style: none;
         margin-bottom: 16px;
+        transition: opacity 0.2s ease;
+        
+        a,
+        :deep(a),
+        :deep(router-link) {
+          color: #E6E1E3 !important;
+          text-decoration: none !important;
+          opacity: 0.65;
+          transition: opacity 0.2s ease, color 0.2s ease;
+          display: inline-block;
+          position: relative;
+          
+          &:hover {
+            opacity: 1 !important;
+            color: #1cba75 !important;
+          }
+          
+          &:active {
+            opacity: 0.8;
+          }
+          
+          &:focus {
+            outline: 1px solid rgba(28, 186, 117, 0.5);
+            outline-offset: 2px;
+            border-radius: 2px;
+          }
+          
+          &:visited {
+            color: #E6E1E3 !important;
+            opacity: 0.65;
+          }
+        }
       }
       .newsletter {
         margin-bottom: 25px;
@@ -263,6 +372,27 @@ export default {
       }
       .social-icons > * {
         margin-right: 16px;
+      }
+    }
+    
+    .paydo-info {
+      margin-top: 32px;
+      padding-top: 24px;
+      padding: 24px 0;
+      
+      .paydo-content {
+        .paydo-company {
+          font-size: 14px;
+        }
+        
+        .paydo-address {
+          font-size: 12px;
+        }
+        
+        .paydo-registration {
+          font-size: 11px;
+          line-height: 1.6;
+        }
       }
     }
   }
@@ -324,10 +454,42 @@ export default {
         font-size: 16px;
         font-style: normal;
         font-weight: 400;
-        line-height: normal;
+        line-height: 1.5;
         opacity: 0.65;
         list-style: none;
         margin-bottom: 16px;
+        transition: opacity 0.2s ease;
+        
+        a,
+        :deep(a),
+        :deep(router-link) {
+          color: #E6E1E3 !important;
+          text-decoration: none !important;
+          opacity: 0.65;
+          transition: opacity 0.2s ease, color 0.2s ease;
+          display: inline-block;
+          position: relative;
+          
+          &:hover {
+            opacity: 1 !important;
+            color: #1cba75 !important;
+          }
+          
+          &:active {
+            opacity: 0.8;
+          }
+          
+          &:focus {
+            outline: 1px solid rgba(28, 186, 117, 0.5);
+            outline-offset: 2px;
+            border-radius: 2px;
+          }
+          
+          &:visited {
+            color: #E6E1E3 !important;
+            opacity: 0.65;
+          }
+        }
       }
       .newsletter {
         margin-bottom: 25px;
@@ -353,6 +515,50 @@ export default {
       }
       .social-icons > * {
         margin-right: 16px;
+      }
+    }
+    
+    .paydo-info {
+      margin-top: 32px;
+      padding-top: 24px;
+      padding: 24px 16px;
+      
+      .paydo-content {
+        .paydo-registration {
+          font-size: clamp(9px, 0.8vw, 10px);
+          line-height: 1.6;
+          margin-top: 0;
+          margin-bottom: clamp(20px, 3vw, 32px);
+          opacity: 0.45;
+        }
+      }
+    }
+  }
+  
+  .paydo-info {
+    margin-top: clamp(32px, 4vw, 40px);
+    padding-top: clamp(24px, 3vw, 32px);
+    padding-bottom: clamp(16px, 2vw, 24px);
+    border-top: 1px solid rgba(230, 225, 227, 0.1);
+    
+    .paydo-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+      
+      @media (min-width: 768px) {
+        padding: 0 0;
+      }
+      
+      .paydo-registration {
+        color: #E6E1E3;
+        font-size: clamp(10px, 0.75vw, 11px);
+        font-weight: 400;
+        line-height: 1.6;
+        opacity: 0.45;
+        max-width: 900px;
+        margin-bottom: clamp(24px, 3vw, 40px);
+        margin-top: 0;
       }
     }
   }

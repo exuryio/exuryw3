@@ -111,8 +111,12 @@
   padding: 16px 16px 0 0;
   gap: 92px;
   z-index: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
   height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   #whatsapp-wrapper {
     position: absolute;
     bottom: 40px;
@@ -152,20 +156,32 @@
 .scroll-container {
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   padding-top: 5vh;
   box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
 }
 
 .listInner {
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  height: 100%;
-  z-index: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  position: relative !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  z-index: 1 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  left: auto !important;
   .page-view {
     height: fit-content;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 }
 
@@ -218,6 +234,8 @@
   align-items: center;
   justify-content: start;
   width: fit-content;
+  max-width: calc(100% - 247px);
+  box-sizing: border-box;
 }
 .btn-search {
   display: none;
@@ -334,12 +352,15 @@
     .list {
       display: block;
       width: 100%;
+      max-width: 100%;
       height: 100%;
       margin: 0;
       left: 16px;
       top: 16px;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: hidden;
       padding: 0;
+      box-sizing: border-box;
       .listInner {
         position: relative;
         left: 0;
@@ -384,12 +405,15 @@
     .list {
       display: block;
       width: 100%;
+      max-width: 100%;
       height: 100%;
       margin: 0;
       left: 16px;
       top: 16px;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: hidden;
       padding: 0;
+      box-sizing: border-box;
       .listInner {
         position: relative;
         left: 0;
@@ -516,10 +540,49 @@ const onSearch = (value: string) => {
   console.log(value);
 };
 onMounted(() => {
-  console.log("mounted");
+  console.log("Default layout mounted");
+  
+  // Function to ensure listInner is visible
+  const ensureListInnerVisible = () => {
+    const listInnerElements = document.querySelectorAll(".listInner");
+    console.log(`Found ${listInnerElements.length} listInner elements`);
+    
+    listInnerElements.forEach(el => {
+      const htmlEl = el as HTMLElement;
+      // Only restore if not inside empty-layout-app
+      if (!htmlEl.closest('.empty-layout-app')) {
+        // Force visibility with !important
+        htmlEl.style.setProperty('display', 'block', 'important');
+        htmlEl.style.setProperty('visibility', 'visible', 'important');
+        htmlEl.style.setProperty('opacity', '1', 'important');
+        htmlEl.style.setProperty('pointer-events', 'auto', 'important');
+        htmlEl.style.setProperty('position', 'relative', 'important');
+        htmlEl.style.setProperty('left', 'auto', 'important');
+        htmlEl.style.setProperty('width', '100%', 'important');
+        htmlEl.style.setProperty('height', '100%', 'important');
+        htmlEl.style.setProperty('overflow', 'auto', 'important');
+        htmlEl.style.setProperty('max-height', 'none', 'important');
+        htmlEl.style.setProperty('padding', '', 'important');
+        htmlEl.style.setProperty('margin', '', 'important');
+        console.log('✅ Restored listInner visibility');
+      }
+    });
+  };
+  
+  // Restore immediately and multiple times to catch any timing issues
+  ensureListInnerVisible();
+  setTimeout(ensureListInnerVisible, 10);
+  setTimeout(ensureListInnerVisible, 50);
+  setTimeout(ensureListInnerVisible, 100);
+  setTimeout(ensureListInnerVisible, 200);
+  setTimeout(ensureListInnerVisible, 300);
+  setTimeout(ensureListInnerVisible, 500);
+  setTimeout(ensureListInnerVisible, 1000);
+  
+  // Setup scroll listener
   setTimeout(() => {
     const listInnerElement = document.querySelector(".listInner");
-    console.log(listInnerElement);
+    console.log('listInner element for scroll:', listInnerElement);
     if (listInnerElement) {
       listInnerElement.addEventListener("scroll", () => {
         const topBarWrapper = document.querySelector(".top-bar-wrapper");
@@ -535,7 +598,6 @@ onMounted(() => {
         }
       });
     }
-  }, 1000);
-
+  }, 500);
 });
 </script>
