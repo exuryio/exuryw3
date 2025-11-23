@@ -324,7 +324,14 @@ const fetchQuote = async () => {
       
       // Force a new quote by adding a cache-busting parameter
       const cacheBuster = Date.now();
-      const response = await apiService.getQuote('EUR', selectedAsset.value, eurAmount.value, cacheBuster) as any;
+      const response = await apiService.getQuote('EUR', selectedAsset.value, eurAmount.value, cacheBuster) as {
+        quote_id: string;
+        crypto_amount: number;
+        exchange_rate: number;
+        ttl?: number;
+        expires_at?: string;
+        [key: string]: unknown;
+      };
       
       console.log('New quote fetched:', {
         quote_id: response.quote_id,
@@ -337,7 +344,7 @@ const fetchQuote = async () => {
       quote.value = null; // Clear first to trigger reactivity
       await new Promise(resolve => setTimeout(resolve, 10)); // Small delay to ensure reactivity
       quote.value = { 
-        ...(response as object),
+        ...response,
         _timestamp: cacheBuster // Add timestamp to force update
       };
       error.value = null;
@@ -388,9 +395,14 @@ const fetchQuote = async () => {
         // exchange_rate = 1 / adjustedPrice, so adjustedPrice = 1 / exchange_rate
         // adjustedPrice = cryptoPrice * (1 + spread/100)
         // So: cryptoPrice = adjustedPrice / (1 + spread/100) = (1/exchange_rate) / (1 + spread/100)
-        const tempResponseTyped1 = tempResponse as any;
-        const adjustedPrice = 1 / (tempResponseTyped1.exchange_rate || 1);
-        const buySpreadPercent = tempResponseTyped1.spread || 1.5;
+        const tempResponseTyped = tempResponse as {
+          exchange_rate?: number;
+          spread?: number;
+          ttl?: number;
+          [key: string]: unknown;
+        };
+        const adjustedPrice = 1 / (tempResponseTyped.exchange_rate || 1);
+        const buySpreadPercent = tempResponseTyped.spread || 1.5;
         const cryptoPrice = adjustedPrice / (1 + buySpreadPercent / 100);
         
         // For selling: use SELL_SPREAD_PERCENTAGE (2.0% - when Exury buys from user)
@@ -420,7 +432,7 @@ const fetchQuote = async () => {
         // Update quote (force new object to trigger reactivity)
         const cacheBuster = Date.now();
         quote.value = {
-          ...tempResponse,
+          ...(tempResponse as Record<string, unknown>),
           eur_amount: eurAmount,
           reverse_rate: reverseRate,
           crypto_amount: cryptoAmount.value,
@@ -435,9 +447,8 @@ const fetchQuote = async () => {
         });
         
         // Initialize timer for sell quote
-        const tempResponseTyped2 = tempResponse as any;
-        if (tempResponseTyped2.ttl) {
-          timeRemaining.value = tempResponseTyped2.ttl;
+        if (tempResponseTyped.ttl) {
+          timeRemaining.value = tempResponseTyped.ttl;
         } else {
           timeRemaining.value = 30;
         }
@@ -627,8 +638,7 @@ const getEstimatedReverseRate = (): string => {
   const price = estimatedPrices[selectedAsset.value] || 1;
   const SELL_SPREAD_PERCENTAGE = 2.0; // 2.0% spread when Exury buys crypto from user
   const spreadAmount = (price * SELL_SPREAD_PERCENTAGE) / 100;
-  const sellPrice = price - spreadAmount;
-  const afterFee = sellPrice * 0.995; // 0.5% fee
+  const afterFee = (price - spreadAmount) * 0.995; // 0.5% fee
   return afterFee.toFixed(2);
 };
 
@@ -646,7 +656,10 @@ const handleContinue = async () => {
     await apiService.lockQuote(quote.value.quote_id);
 
     // Create order
-    const response = await apiService.createOrder(quote.value.quote_id);
+    const response = await apiService.createOrder(quote.value.quote_id) as {
+      order_id: string;
+      [key: string]: unknown;
+    };
     
     // Show success and redirect or show order details
     console.log('✅ Order created:', response);
@@ -656,18 +669,16 @@ const handleContinue = async () => {
     if (router.currentRoute.value.path === '/exchange') {
       // Emit event or use a store to show success message
       // For now, just show a success alert
-      const responseTyped = response as any;
-      alert(`¡Orden creada exitosamente! ID: ${responseTyped.order_id}`);
+      alert(`¡Orden creada exitosamente! ID: ${response.order_id}`);
       // Refresh quote to get a new one
       if (direction.value === 'eur-to-crypto' && eurAmount.value > 0) {
         await fetchQuote();
       }
     } else {
-      const responseTyped = response as any;
       router.push({
         path: '/exchange',
         query: {
-          order_id: responseTyped.order_id,
+          order_id: response.order_id,
           success: 'true',
         },
       });
