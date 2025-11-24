@@ -67,12 +67,38 @@ app.use((req: Request, res: Response) => {
   });
 });
 
-// Start server
-app.listen(PORT, HOST, () => {
+// Start server with error handling
+const server = app.listen(PORT, HOST, () => {
+  console.log(`🚀 Exury Backend API running on ${HOST}:${PORT}`);
+  console.log(`📡 API Version: ${API_VERSION}`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔗 Accessible at: http://${HOST}:${PORT}`);
   logger.info(`🚀 Exury Backend API running on ${HOST}:${PORT}`);
   logger.info(`📡 API Version: ${API_VERSION}`);
   logger.info(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  logger.info(`🔗 Accessible at: http://${HOST}:${PORT}`);
+});
+
+// Handle server errors
+server.on('error', (error: NodeJS.ErrnoException) => {
+  console.error('❌ Server error:', error);
+  logger.error('Server error', { error: error.message, stack: error.stack });
+  if (error.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use`);
+  }
+  process.exit(1);
+});
+
+// Handle uncaught errors
+process.on('uncaughtException', (error: Error) => {
+  console.error('❌ Uncaught Exception:', error);
+  logger.error('Uncaught Exception', { error: error.message, stack: error.stack });
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason: unknown, promise: Promise<unknown>) => {
+  console.error('❌ Unhandled Rejection:', reason);
+  logger.error('Unhandled Rejection', { reason: String(reason) });
+  process.exit(1);
 });
 
 export default app;
