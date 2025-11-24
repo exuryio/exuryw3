@@ -1,3 +1,6 @@
+[providers]
+node = "18"
+
 [phases.setup]
 nixPkgs = ["nodejs_18"]
 
