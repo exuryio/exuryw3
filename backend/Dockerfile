@@ -2,14 +2,17 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy package files and lock file
+COPY package.json package-lock.json* ./
 
-# Install dependencies
-RUN npm ci --only=production=false
+# Install dependencies (including dev dependencies for build)
+RUN npm ci
+
+# Copy TypeScript config
+COPY tsconfig.json ./
 
 # Copy source code
-COPY . .
+COPY src ./src
 
 # Build the application
 RUN npm run build
