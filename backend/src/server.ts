@@ -25,7 +25,32 @@ console.log(`📋 Configuration: PORT=${PORT}, HOST=${HOST}, API_VERSION=${API_V
 
 // Middleware
 app.use(helmet());
-app.use(cors());
+// Configure CORS to allow Firebase preview domains and production domains
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Allow Firebase preview domains (exurydev--pr*.web.app)
+    if (origin.includes('exurydev--') && origin.includes('.web.app')) {
+      return callback(null, true);
+    }
+    
+    // Allow production domains
+    if (origin.includes('exury.io') || origin.includes('exurydev.web.app')) {
+      return callback(null, true);
+    }
+    
+    // Allow localhost for development
+    if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+      return callback(null, true);
+    }
+    
+    // Default: allow all origins (for now, can be restricted later)
+    callback(null, true);
+  },
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 console.log('✅ Middleware configured');
