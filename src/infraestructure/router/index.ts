@@ -3,12 +3,15 @@
  *
  * Automatic routes for `./src/pages/*.vue`
  */
+// @ts-ignore - vue-router/auto is provided by unplugin-vue-router
 import { createRouter, createWebHistory } from "vue-router/auto";
 import { setupLayouts } from "virtual:generated-layouts";
+import type { RouteRecordRaw } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  extendRoutes: (routes) => {
+  extendRoutes: (routes: RouteRecordRaw[]) => {
     return setupLayouts([
       { path: '/', redirect: '/home' }, // Redirigir la raíz a /home
       ...routes,
@@ -17,7 +20,7 @@ const router = createRouter({
 });
 
 // Navigation guard to clean up styles when leaving empty layout pages
-router.afterEach((to, from) => {
+router.afterEach((to: RouteLocationNormalized, from: RouteLocationNormalized) => {
   // If we're navigating away from a page that uses empty layout, clean up
   if (from.path === '/register' || from.path === '/verify-email' || from.path === '/auth-callback') {
     console.log('🧹 Cleaning up styles after leaving empty layout page');

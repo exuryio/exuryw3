@@ -221,9 +221,11 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/infraestructure/stores/auth';
 import apiService from '@/services/api';
 
 const router = useRouter();
+const authStore = useAuthStore();
 
 const direction = ref<'eur-to-crypto' | 'crypto-to-eur'>('eur-to-crypto');
 const eurAmount = ref<number>(100);
@@ -643,6 +645,13 @@ const getEstimatedReverseRate = (): string => {
 };
 
 const handleContinue = async () => {
+  // Check if user is authenticated
+  if (!authStore.isLoggedIn) {
+    // User not authenticated, redirect to register
+    router.push('/register');
+    return;
+  }
+
   if (!quote.value) {
     error.value = 'Por favor, espera a que se cargue la cotización';
     return;
@@ -692,7 +701,13 @@ const handleContinue = async () => {
 };
 
 const connectWallet = () => {
-  // TODO: Implement wallet connection
+  // Redirect to register if user is not authenticated
+  if (!authStore.isLoggedIn) {
+    router.push('/register');
+    return;
+  }
+  
+  // TODO: Implement wallet connection for authenticated users
   console.log('Connect wallet');
 };
 

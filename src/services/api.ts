@@ -23,8 +23,9 @@ const getApiBaseUrl = (): string => {
     }
   }
   
-  // Default to localhost for local development
-  return 'http://localhost:3001';
+  // Default to Railway backend (backend is in separate repository)
+  // To use local backend, set VITE_API_BASE_URL=http://localhost:3001
+  return import.meta.env.VITE_API_BASE_URL || 'https://exury-backend-production.up.railway.app';
 };
 
 const API_BASE_URL = getApiBaseUrl();
