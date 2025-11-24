@@ -4,20 +4,15 @@ import { useRouter, useRoute } from "vue-router";
 import { useHead } from "@vueuse/head";
 import { SIDEBAR_LINKS } from "@/domain/constants/sidebar.constant";
 import { useAppStore } from "@/infraestructure/stores/app";
+import { useAuthStore } from "@/infraestructure/stores/auth";
 import { SidebarItem } from "@/domain/models/sidebar-item";
 import { linksToShow } from "@/application/mappers/sidebar-mapper";
-
-import { googleTokenLogin } from "vue3-google-login"
-const login = () => {
-  googleTokenLogin().then((response) => {
-    console.log("Handle the response", response)
-  })
-}
 
 const router = useRouter();
 const route = useRoute();
 
 const appStore = useAppStore();
+const authStore = useAuthStore();
 
 const isCollapsed = ref(false);
 
@@ -49,6 +44,16 @@ const toggle = () => {
 const handleItem = (item: SidebarItem): void => {
   appStore.setActivePage(item.title!);
   router.push(item.route);
+};
+
+const handleBuyCrypto = (): void => {
+  if (authStore.isLoggedIn) {
+    // User is authenticated, go to exchange
+    router.push('/exchange');
+  } else {
+    // User is not authenticated, go to login
+    router.push('/login');
+  }
 };
 
 
@@ -116,7 +121,7 @@ const handleItem = (item: SidebarItem): void => {
           block
           class="justify-center extended-fab py-6"
           :class="{ 'button-buy-crypto': isCollapsed }"
-          @click="login"
+          @click="handleBuyCrypto"
         >
           <v-icon :class="{ 'mr-2': !isCollapsed }">mdi-currency-btc</v-icon>
           <span v-if="!isCollapsed" class="text-capitalize">Buy Crypto</span>
