@@ -30,15 +30,36 @@
         <li>Comprar bitcoin con euros</li>
       </ul>
     </div>
-      <div>
+      <div class="newsletter-section">
         <h2 class="newsletter">Newsletter</h2>
         <v-text-field
+          v-model="newsletterEmail"
           append-inner-icon="mdi-email-outline"
           label="Email"
           variant="outlined"
           class="input-newsletter"
+          :disabled="isSubscribed"
+          @keyup.enter="handleSubscribe"
         ></v-text-field>
-        <v-btn rounded color="primary" class="btn-subscribe text-capitalize">Suscribirse</v-btn>
+        <v-btn 
+          rounded 
+          color="primary" 
+          class="btn-subscribe text-capitalize"
+          :disabled="isSubscribed || !newsletterEmail || isLoading"
+          :loading="isLoading"
+          @click="handleSubscribe"
+        >
+          {{ isSubscribed ? 'Suscrito' : 'Suscribirse' }}
+        </v-btn>
+        <v-alert
+          v-if="subscribeMessage"
+          :type="subscribeSuccess ? 'success' : 'error'"
+          density="compact"
+          variant="text"
+          class="subscribe-message mt-2"
+        >
+          {{ subscribeMessage }}
+        </v-alert>
       </div>
     </div>
     <hr />
@@ -83,18 +104,80 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  methods: {
-    openLink(platform: "x" | "instagram" | "whatsapp") {
-      const links = {
-        x: "https://x.com/Exuryio",
-        instagram: "https://instagram.com/exury.io",
-        whatsapp: "https://wa.me/34604117851"
-      };
-      window.open(links[platform], "_blank");
-    }
+<script setup lang="ts">
+import { ref } from 'vue';
+
+const newsletterEmail = ref('');
+const isSubscribed = ref(false);
+const isLoading = ref(false);
+const subscribeMessage = ref('');
+const subscribeSuccess = ref(false);
+
+const handleSubscribe = async () => {
+  if (!newsletterEmail.value || !newsletterEmail.value.trim()) {
+    subscribeMessage.value = 'Por favor, ingresa un correo electrónico válido';
+    subscribeSuccess.value = false;
+    setTimeout(() => {
+      subscribeMessage.value = '';
+    }, 3000);
+    return;
   }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(newsletterEmail.value.trim())) {
+    subscribeMessage.value = 'Por favor, ingresa un correo electrónico válido';
+    subscribeSuccess.value = false;
+    setTimeout(() => {
+      subscribeMessage.value = '';
+    }, 3000);
+    return;
+  }
+
+  try {
+    isLoading.value = true;
+    subscribeMessage.value = '';
+
+    // TODO: Replace with actual API call when backend endpoint is ready
+    // For now, save to localStorage as a simple solution
+    const subscribedEmails = JSON.parse(localStorage.getItem('newsletter_subscriptions') || '[]');
+    
+    if (subscribedEmails.includes(newsletterEmail.value.trim().toLowerCase())) {
+      subscribeMessage.value = 'Ya estás suscrito a nuestro newsletter';
+      subscribeSuccess.value = true;
+      isSubscribed.value = true;
+    } else {
+      subscribedEmails.push(newsletterEmail.value.trim().toLowerCase());
+      localStorage.setItem('newsletter_subscriptions', JSON.stringify(subscribedEmails));
+      
+      subscribeMessage.value = '¡Te has suscrito exitosamente!';
+      subscribeSuccess.value = true;
+      isSubscribed.value = true;
+    }
+
+    // Clear message after 5 seconds
+    setTimeout(() => {
+      subscribeMessage.value = '';
+    }, 5000);
+  } catch (error) {
+    console.error('Error subscribing to newsletter:', error);
+    subscribeMessage.value = 'Error al suscribirse. Por favor, intenta de nuevo.';
+    subscribeSuccess.value = false;
+    setTimeout(() => {
+      subscribeMessage.value = '';
+    }, 5000);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const openLink = (platform: "x" | "instagram" | "whatsapp") => {
+  const links = {
+    x: "https://x.com/Exuryio",
+    instagram: "https://instagram.com/exury.io",
+    whatsapp: "https://wa.me/34604117851"
+  };
+  window.open(links[platform], "_blank");
 };
 </script>
 
@@ -132,9 +215,23 @@ export default {
       margin-bottom: 30px;
       width: 147px;
     }
-    input {
-      width: 200px;
-      height: 40px;
+    .input-newsletter {
+      width: 100%;
+      max-width: 250px;
+      
+      :deep(.v-field) {
+        width: 100%;
+      }
+    }
+    
+    .newsletter-section {
+      width: 100%;
+      max-width: 250px;
+    }
+    
+    .subscribe-message {
+      font-size: 13px;
+      margin-top: 8px;
     }
     div:nth-child(1){
       width: 250px;
@@ -422,7 +519,22 @@ export default {
       gap: 48px;
       .input-newsletter {
         padding: 0;
-        width: fit-content;
+        width: 100%;
+        max-width: 100%;
+        
+        :deep(.v-field) {
+          width: 100%;
+        }
+      }
+      
+      .newsletter-section {
+        width: 100%;
+        max-width: 100%;
+      }
+      
+      .subscribe-message {
+        font-size: 14px;
+        margin-top: 8px;
       }
 
       .btn-subscribe {
@@ -569,5 +681,3 @@ export default {
   cursor: pointer;
 }
 </style>
-<script setup lang="ts">
-</script>
