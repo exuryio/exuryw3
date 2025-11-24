@@ -2,7 +2,33 @@
  * API Service for Frontend
  * Handles all API calls to the backend
  */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+// Determine API base URL based on environment
+const getApiBaseUrl = (): string => {
+  // If explicitly set in env, use it (highest priority)
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+  
+  // If running in browser, detect deployment environment
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    
+    // Production/preview URLs: exurydev--prXX-*.web.app or exury.io
+    if (hostname.includes('exurydev') || hostname.includes('exury.io')) {
+      // Use Railway URL from env, or fallback to Railway domain
+      // Priority: VITE_RAILWAY_API_URL > VITE_API_BASE_URL > Railway default
+      // TEMPORARY: Using Railway domain until api.exury.io is configured
+      return import.meta.env.VITE_RAILWAY_API_URL || 
+             import.meta.env.VITE_API_BASE_URL || 
+             'https://exuryw3-production.up.railway.app'; // Temporary Railway domain
+    }
+  }
+  
+  // Default to localhost for local development
+  return 'http://localhost:3001';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 const API_VERSION = 'v1';
 
 class ApiService {
@@ -168,10 +194,14 @@ class ApiService {
   /**
    * Handle Auth0 callback
    */
-  async handleAuth0Callback(code: string) {
+  async handleAuth0Callback(code: string, redirectUri?: string) {
+    // Use the redirect_uri from the request, or construct it from window.location
+    const finalRedirectUri = redirectUri || 
+      (typeof window !== 'undefined' ? `${window.location.origin}/auth-callback` : '');
+    
     return this.request('/auth/auth0/callback', {
       method: 'POST',
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ code, redirect_uri: finalRedirectUri }),
     });
   }
 

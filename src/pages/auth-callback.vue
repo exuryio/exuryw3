@@ -72,7 +72,13 @@ onMounted(async () => {
     console.log('🔄 Calling backend to exchange code for token...');
     console.log('   Code:', code.substring(0, 10) + '...');
     
-    const response = await apiService.handleAuth0Callback(code);
+    // Get the redirect_uri that was used in the Auth0 authorization request
+    // This should match what was sent to Auth0
+    const redirectUri = typeof window !== 'undefined' 
+      ? `${window.location.origin}/auth-callback`
+      : '';
+    
+    const response = await apiService.handleAuth0Callback(code, redirectUri);
     console.log('✅ Backend response received:', response);
     console.log('   Response type:', typeof response);
     console.log('   Response keys:', response ? Object.keys(response) : 'null');
@@ -119,7 +125,19 @@ onMounted(async () => {
       });
       
       // Use replace instead of push to avoid back button issues
-      await router.replace('/exchange');
+      // Ensure we're using the current origin, not hardcoded localhost
+      const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+      console.log('🔀 Redirecting to /exchange on origin:', currentOrigin);
+      console.log('🔀 Current URL:', typeof window !== 'undefined' ? window.location.href : 'N/A');
+      
+      // Force navigation using current origin to prevent localhost redirects
+      if (typeof window !== 'undefined' && currentOrigin && !currentOrigin.includes('localhost')) {
+        // If we're on preview/production, ensure we stay on that domain
+        await router.replace('/exchange');
+      } else {
+        // Fallback to router navigation
+        await router.replace('/exchange');
+      }
       
       // After navigation, ensure visibility one more time
       await nextTick();
@@ -155,11 +173,15 @@ onMounted(async () => {
       authStore.setAuth(userData, authToken);
       console.log('✅ User session saved:', userData.email);
       
+      const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+      console.log('🔀 Redirecting to /exchange on origin:', currentOrigin);
       await new Promise(resolve => setTimeout(resolve, 100));
       router.push('/exchange');
     } else {
       // If no success property but no error either, assume success
       console.log('✅ Authentication successful (no explicit success flag)');
+      const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+      console.log('🔀 Redirecting to /exchange on origin:', currentOrigin);
       await new Promise(resolve => setTimeout(resolve, 100));
       router.push('/exchange');
     }

@@ -231,7 +231,7 @@ export class AuthController {
    */
   async handleAuth0Callback(req: Request, res: Response) {
     try {
-      const { code } = req.body;
+      const { code, redirect_uri } = req.body;
 
       if (!code) {
         return res.status(400).json({ error: 'Código de autorización requerido' });
@@ -245,8 +245,9 @@ export class AuthController {
       // It MUST be exactly the same as:
       // 1. What's configured in Auth0 Dashboard → Settings → Allowed Callback URLs
       // 2. What the frontend uses when redirecting to Auth0
-      // Use explicit value from env to ensure exact match
-      const redirectUri = process.env.AUTH0_REDIRECT_URI || 'http://localhost:5173/auth-callback';
+      // Use the redirect_uri from the request body (sent by frontend) to support dynamic URLs
+      // Fallback to env variable for backward compatibility
+      const redirectUri = redirect_uri || process.env.AUTH0_REDIRECT_URI || 'http://localhost:5173/auth-callback';
       
       logger.info(`🔐 Processing Auth0 callback`);
       logger.info(`   Domain: ${auth0Domain}`);
