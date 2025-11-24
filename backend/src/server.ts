@@ -18,7 +18,7 @@ console.log('✅ Environment variables loaded');
 
 const app: Express = express();
 // Railway automatically sets PORT, but we need to listen on 0.0.0.0 for Railway
-const PORT = process.env.PORT || 3001;
+const PORT = parseInt(process.env.PORT || '3001', 10);
 const HOST = process.env.HOST || '0.0.0.0';
 const API_VERSION = process.env.API_VERSION || 'v1';
 console.log(`📋 Configuration: PORT=${PORT}, HOST=${HOST}, API_VERSION=${API_VERSION}`);
