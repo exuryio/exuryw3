@@ -6,4 +6,5 @@ src
 public
 *.md
 !.gitignore
-
+backend/node_modules
+backend/dist
