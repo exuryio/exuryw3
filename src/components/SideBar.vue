@@ -19,7 +19,7 @@ const route = useRoute();
 
 const appStore = useAppStore();
 
-const isCollapsed = ref(true);
+const isCollapsed = ref(false);
 
 watch(route, (newRoute) => {
   const currentLink = SIDEBAR_LINKS.find(
@@ -31,7 +31,8 @@ watch(route, (newRoute) => {
     useHead({ title: appStore.getActivePage });
   }
   document.querySelector(".listInner")?.scrollTo?.(0,0)
-  isCollapsed.value = true;
+  // Keep sidebar expanded on route change for better UX
+  // isCollapsed.value = true;
 });
 onMounted(() => {
   const currentLink = SIDEBAR_LINKS.find((link) => link.route === route.path);
@@ -131,14 +132,24 @@ const handleItem = (item: SidebarItem): void => {
 @import "@/styles/variables.scss";
 .sidebar {
   max-width: 216px;
+  min-width: 216px;
   background-color: $nav-background-color;
   color: $nav-default-text-color;
   border-radius: 16px;
   .v-list-item {
     padding: 0 12px;
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
     &.active-link {
       background-color: #d5ffed;
       color: #1cba75;
+    }
+    :deep(.v-list-item-title) {
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: clip;
+      max-width: none;
     }
   }
 }
@@ -181,14 +192,46 @@ const handleItem = (item: SidebarItem): void => {
   margin-left: 18px;
   padding: 16px 24px 16px 16px;
   width: calc(100% - 36px);
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
+  }
+  :deep(.v-list-item-title) {
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+    max-width: none;
+    width: auto;
   }
 }
 
 .collapsed-drawer {
   min-width: 90px;
+  max-width: 90px;
   border-right: none;
+  
+  .nav-item {
+    :deep(.v-list-item-title) {
+      display: none;
+    }
+  }
+}
+
+// When NOT collapsed, ensure full width and text visibility
+.sidebar:not(.collapsed-drawer) {
+  min-width: 216px;
+  max-width: 216px;
+  
+  .nav-item {
+    :deep(.v-list-item-title) {
+      display: block;
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: clip;
+    }
+  }
 }
 
 @media (max-width: $screen-md) {
