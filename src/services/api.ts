@@ -31,11 +31,22 @@ const getApiBaseUrl = (): string => {
 const API_BASE_URL = getApiBaseUrl();
 const API_VERSION = 'v1';
 
+// Log the API base URL for debugging
+if (typeof window !== 'undefined') {
+  console.log('🌐 API Configuration:', {
+    hostname: window.location.hostname,
+    apiBaseUrl: API_BASE_URL,
+    apiVersion: API_VERSION,
+    fullApiUrl: `${API_BASE_URL}/${API_VERSION}`
+  });
+}
+
 class ApiService {
   private baseUrl: string;
 
   constructor() {
     this.baseUrl = `${API_BASE_URL}/${API_VERSION}`;
+    console.log('📡 ApiService initialized with baseUrl:', this.baseUrl);
   }
 
   private async request<T>(
