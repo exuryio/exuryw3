@@ -552,18 +552,8 @@ const handleSignup = () => {
         align-items: center;
       }
 
-      .simulator-wrapper {
-        width: 100%;
-        max-width: 420px;
-        min-width: 100%;
-        order: 1; // Show simulator first on mobile
-        position: relative;
-        top: 0;
-        align-self: center;
-      }
-      
       .content-wrapper {
-        order: 2; // Content after simulator on mobile
+        order: 1; // Show copy and CTA first on mobile
         width: 100%;
         align-items: center;
         text-align: center;
@@ -571,7 +561,19 @@ const handleSignup = () => {
         margin-top: 0;
         top: 0;
       }
+      
+      .simulator-wrapper {
+        width: 100%;
+        max-width: 420px;
+        min-width: 100%;
+        order: 2; // Show simulator second on mobile
+        position: relative;
+        top: 0;
+        align-self: center;
+      }
+      
       .coins-wrapper {
+        order: 3; // Show coin animations last on mobile
         position: relative;
         top: -100px;
         right: 50px;

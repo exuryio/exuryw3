@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useHead } from "@vueuse/head";
 import { SIDEBAR_LINKS } from "@/domain/constants/sidebar.constant";
@@ -14,7 +14,13 @@ const route = useRoute();
 const appStore = useAppStore();
 const authStore = useAuthStore();
 
-const isCollapsed = ref(false);
+// Check if mobile on mount and set initial state
+const isMobile = () => {
+  if (typeof window === 'undefined') return false;
+  return window.innerWidth <= 960; // $screen-md breakpoint
+};
+
+const isCollapsed = ref(isMobile());
 
 watch(route, (newRoute) => {
   const currentLink = SIDEBAR_LINKS.find(
@@ -29,11 +35,29 @@ watch(route, (newRoute) => {
   // Keep sidebar expanded on route change for better UX
   // isCollapsed.value = true;
 });
+// Handle window resize to update collapsed state on mobile
+let resizeHandler: (() => void) | null = null;
+
 onMounted(() => {
   const currentLink = SIDEBAR_LINKS.find((link) => link.route === route.path);
   if (currentLink) {
     useHead({ title: currentLink.title });
     appStore.setActivePage(currentLink.title!);
+  }
+  
+  // Handle window resize to update collapsed state on mobile
+  resizeHandler = () => {
+    if (isMobile()) {
+      isCollapsed.value = true;
+    }
+  };
+  
+  window.addEventListener('resize', resizeHandler);
+});
+
+onUnmounted(() => {
+  if (resizeHandler) {
+    window.removeEventListener('resize', resizeHandler);
   }
 });
 
