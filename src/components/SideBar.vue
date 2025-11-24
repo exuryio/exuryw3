@@ -1,25 +1,26 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useHead } from "@vueuse/head";
 import { SIDEBAR_LINKS } from "@/domain/constants/sidebar.constant";
 import { useAppStore } from "@/infraestructure/stores/app";
+import { useAuthStore } from "@/infraestructure/stores/auth";
 import { SidebarItem } from "@/domain/models/sidebar-item";
 import { linksToShow } from "@/application/mappers/sidebar-mapper";
-
-import { googleTokenLogin } from "vue3-google-login"
-const login = () => {
-  googleTokenLogin().then((response) => {
-    console.log("Handle the response", response)
-  })
-}
 
 const router = useRouter();
 const route = useRoute();
 
 const appStore = useAppStore();
+const authStore = useAuthStore();
 
-const isCollapsed = ref(true);
+// Check if mobile on mount and set initial state
+const isMobile = () => {
+  if (typeof window === 'undefined') return false;
+  return window.innerWidth <= 960; // $screen-md breakpoint
+};
+
+const isCollapsed = ref(isMobile());
 
 watch(route, (newRoute) => {
   const currentLink = SIDEBAR_LINKS.find(
@@ -31,13 +32,32 @@ watch(route, (newRoute) => {
     useHead({ title: appStore.getActivePage });
   }
   document.querySelector(".listInner")?.scrollTo?.(0,0)
-  isCollapsed.value = true;
+  // Keep sidebar expanded on route change for better UX
+  // isCollapsed.value = true;
 });
+// Handle window resize to update collapsed state on mobile
+let resizeHandler: (() => void) | null = null;
+
 onMounted(() => {
   const currentLink = SIDEBAR_LINKS.find((link) => link.route === route.path);
   if (currentLink) {
     useHead({ title: currentLink.title });
     appStore.setActivePage(currentLink.title!);
+  }
+  
+  // Handle window resize to update collapsed state on mobile
+  resizeHandler = () => {
+    if (isMobile()) {
+      isCollapsed.value = true;
+    }
+  };
+  
+  window.addEventListener('resize', resizeHandler);
+});
+
+onUnmounted(() => {
+  if (resizeHandler) {
+    window.removeEventListener('resize', resizeHandler);
   }
 });
 
@@ -48,6 +68,16 @@ const toggle = () => {
 const handleItem = (item: SidebarItem): void => {
   appStore.setActivePage(item.title!);
   router.push(item.route);
+};
+
+const handleBuyCrypto = (): void => {
+  if (authStore.isLoggedIn) {
+    // User is authenticated, go to exchange
+    router.push('/exchange');
+  } else {
+    // User is not authenticated, go to login
+    router.push('/login');
+  }
 };
 
 
@@ -115,7 +145,7 @@ const handleItem = (item: SidebarItem): void => {
           block
           class="justify-center extended-fab py-6"
           :class="{ 'button-buy-crypto': isCollapsed }"
-          @click="login"
+          @click="handleBuyCrypto"
         >
           <v-icon :class="{ 'mr-2': !isCollapsed }">mdi-currency-btc</v-icon>
           <span v-if="!isCollapsed" class="text-capitalize">Buy Crypto</span>
@@ -131,14 +161,24 @@ const handleItem = (item: SidebarItem): void => {
 @import "@/styles/variables.scss";
 .sidebar {
   max-width: 216px;
+  min-width: 216px;
   background-color: $nav-background-color;
   color: $nav-default-text-color;
   border-radius: 16px;
   .v-list-item {
     padding: 0 12px;
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
     &.active-link {
       background-color: #d5ffed;
       color: #1cba75;
+    }
+    :deep(.v-list-item-title) {
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: clip;
+      max-width: none;
     }
   }
 }
@@ -181,14 +221,46 @@ const handleItem = (item: SidebarItem): void => {
   margin-left: 18px;
   padding: 16px 24px 16px 16px;
   width: calc(100% - 36px);
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
+  }
+  :deep(.v-list-item-title) {
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+    max-width: none;
+    width: auto;
   }
 }
 
 .collapsed-drawer {
   min-width: 90px;
+  max-width: 90px;
   border-right: none;
+  
+  .nav-item {
+    :deep(.v-list-item-title) {
+      display: none;
+    }
+  }
+}
+
+// When NOT collapsed, ensure full width and text visibility
+.sidebar:not(.collapsed-drawer) {
+  min-width: 216px;
+  max-width: 216px;
+  
+  .nav-item {
+    :deep(.v-list-item-title) {
+      display: block;
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: clip;
+    }
+  }
 }
 
 @media (max-width: $screen-md) {

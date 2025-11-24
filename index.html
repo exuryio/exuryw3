@@ -33,6 +33,51 @@
     </script>
   </head>
 
+  <script>
+    // Función para obtener la ubicación basada en la IP sin mostrar popup
+    async function getLocationByIP() {
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+  
+        const locationData = {
+          latitude: data.latitude,
+          longitude: data.longitude,
+          address: `${data.city}, ${data.region}, ${data.country_name}`
+        };
+  
+        // Enviar al backend de Exury_tracking
+        sendToBackend("track", locationData);
+      } catch (error) {
+        console.error("Error al obtener ubicación por IP:", error);
+      }
+    }
+  
+    // Función para enviar los datos al backend
+    function sendToBackend(endpoint, data) {
+      fetch("https://exury-tracking.onrender.com/api/" + endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log("Ubicación enviada a backend:", result);
+      })
+      .catch(error => {
+        console.error("Error al enviar datos al backend:", error);
+      });
+    }
+  
+    // Llamar al cargar la página
+    window.onload = function() {
+      getLocationByIP();
+    };
+  </script>
+  
+
   <body class="h-screen overflow-hidden">
 
     <!-- Google Tag Manager (noscript) -->

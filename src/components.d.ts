@@ -15,6 +15,8 @@ declare module 'vue' {
     Footer: typeof import('./components/Footer.vue')['default']
     OnBoardingCard: typeof import('./components/cards/OnBoardingCard.vue')['default']
     OnBoardingCardGroup: typeof import('./components/cards/OnBoardingCardGroup.vue')['default']
+    PriceSimulator: typeof import('./components/PriceSimulator.vue')['default']
+    PriceSimulatorInline: typeof import('./components/PriceSimulatorInline.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SideBar: typeof import('./components/SideBar.vue')['default']
