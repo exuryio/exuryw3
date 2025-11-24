@@ -17,10 +17,9 @@ const getApiBaseUrl = (): string => {
     if (hostname.includes('exurydev') || hostname.includes('exury.io')) {
       // Use Railway URL from env, or fallback to Railway domain
       // Priority: VITE_RAILWAY_API_URL > VITE_API_BASE_URL > Railway default
-      // TEMPORARY: Using Railway domain until api.exury.io is configured
       return import.meta.env.VITE_RAILWAY_API_URL || 
              import.meta.env.VITE_API_BASE_URL || 
-             'https://exuryw3-production.up.railway.app'; // Temporary Railway domain
+             'https://exury-backend-production.up.railway.app'; // Backend in separate repository
     }
   }
   
