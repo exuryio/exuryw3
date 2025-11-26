@@ -1,85 +1,99 @@
-# Exury - Plataforma Fiat On-Ramp
+# Exury - Fiat On-Ramp Platform
 
-## 🖥️ Descripción
+## 🖥️ Description
 
-Exury es una plataforma fiat on-ramp desarrollada con **Material UI** y **Vite.js** en **TypeScript**. Su objetivo es ayudar a los usuarios a adquirir criptomonedas de manera fácil, sencilla y con calidez humana, brindando una experiencia amigable y accesible para todos los niveles de conocimiento.
+Exury is a fiat on-ramp platform developed using **Material UI** and **Vite.js** in **TypeScript**. Its goal is to help users acquire cryptocurrencies in an easy, simple, and human-centered way, offering a friendly and accessible experience for all knowledge levels.
+This project is part of the official source code of (https://exury.io/) and is designed as a fast, lightweight, SEO-optimized landing application
 
-## 🚀 Tecnologías Utilizadas
+## 🚀 Technologies Used
 
-- **Vite.js**: Herramienta rápida de desarrollo para aplicaciones web modernas.
-- **TypeScript**: Tipado estático para JavaScript.
-- **Vue 3**: Framework progresivo de JavaScript para construir interfaces de usuario.
-- **Vuetify**: Framework de componentes UI basado en Material Design.
-- **Material UI**: Conjunto de componentes basados en Material Design.
-- **Vue Router**: Sistema de enrutamiento oficial para Vue.js.
-- **Sass**: Preprocesador CSS.
-- **Pinia**: Manejador de estado para Vue.js.
+- **Vite.js**: Fast development tool for modern web applications.
+- **TypeScript**: Static typing for JavaScript.
+- **Vue 3**: Progressive JavaScript framework for building user interfaces.
+- **Vuetify**: UI component framework based on Material Design.
+- **Material UI**: Component library based on Material Design.
+- **Vue Router**: Official routing system for Vue.js.
+- **Sass**: CSS preprocessor.
+- **Pinia**: State management for Vue.js.
 
-## 🛠️ Instalación y Configuración
+## 🛠️ Installation and Setup
 
-### Prerrequisitos
+### Prerequisites
 
-Asegúrate de tener **Node.js** (v16 o superior) instalado en tu máquina. Puedes instalarlo siguiendo las instrucciones de [Node.js](https://nodejs.org/en/download/package-manager).
+Make sure you have **Node.js** (v16 or higher) installed on your machine.  
+You can install it by following the instructions on the [Node.js website](https://nodejs.org/en/download/package-manager).
 
 ```bash
-# Instala nvm (Node Version Manager)
+# Install nvm (Node Version Manager)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-# Descarga e instala Node.js (podrías necesitar reiniciar la terminal)
+
+# Download and install Node.js (you may need to restart your terminal)
 nvm install 20
-# Verifica la versión de Node.js
-node -v # debería mostrar `v20.15.0`
-# Verifica la versión de NPM
-npm -v # debería mostrar `10.7.0`
 
+# Verify the Node.js version
+node -v   # should display v20.15.0
+
+# Verify the NPM version
+npm -v    # should display 10.7.0
+
+# Install Yarn globally
 npm install --global yarn
+```
 
+## 🛠️ Project Installation
 
-
-## 🛠️ Instalación del Proyecto
-
-Clona el repositorio:
+Clone the repository:
 
 ```bash
 git clone https://github.com/exuryio/exuryw3.git
 cd exuryw3
+```
 
-## 🛠️ Configuración del Proyecto
+## 🛠️ Project Setup
 
-Instala las dependencias:
+Install dependencies:
 
 ```bash
 yarn
+```
 
-Inicia el entorno de desarrollo:
+Start the development server:
 
 ```bash
 yarn dev
 ```
-## 🗂️ Estructura del Proyecto
 
-- `src/`: Contiene todo el código fuente de la aplicación.
-- `public/`: Archivos estáticos como imágenes y fuentes.
-- `components/`: Componentes reutilizables de Vue.
-- `router/`: Configuración del enrutador de Vue.
-- `styles/`: Archivos de estilos y temas.
+## 🗂️ Project Structure
 
-## 🚀 Contribuye al Proyecto
+- `src/`: Contains all source code for the application.
+- `public/`: Static files such as images and fonts.
+- `components/`: Reusable Vue components.
+- `router/`: Vue Router configuration.
+- `styles/`: Style and theme files.
 
-¡Nos encantaría contar con tu ayuda para mejorar Exury! Aquí te dejamos algunas formas en las que puedes contribuir:
+## 🚀 Contributing to the Project
 
-- **Ideas y Nuevas Características**: Si tienes una idea para una nueva característica o mejora, abre un [issue](https://github.com/exuryio/exuryw3/issues) para compartirla con nosotros.
-- **Corrección de Errores**: Revisa la sección de [issues](https://github.com/exuryio/exuryw3/issues) para encontrar errores que necesitan ser corregidos.
-- **Desarrollo de Nuevas Funcionalidades**: Si quieres contribuir con código, por favor, sigue estos pasos:
-  1. Prepara un email a direccion@exury.io.
-  2. Comentanos como nos conociste y cual es tu proposito al colaborar con nosotros.
-  3. Realiza una breve descripcion de tu experiencia y sobre ti.
-  4. Estaremos encantados de conocerte!
+We’d love your help improving Exury! Here are ways you can contribute:
 
-## 💬 Contacto
+- **Ideas & New Features**: If you have suggestions or improvements, open an [issue](https://github.com/exuryio/exuryw3/issues).
+- **Bug Fixes**: Check the existing [issues](https://github.com/exuryio/exuryw3/issues) for bugs that need fixing.
+- **Feature Development**: If you want to contribute code, follow these steps:
+  1. Write an email to **direccion@exury.io**.
+  2. Tell us how you found us and your motivation for collaborating.
+  3. Give a brief description of yourself and your experience.
+  4. We will be happy to meet you!
 
-Si tienes preguntas o necesitas ayuda, escribenos a direccion@exury.io o contactarnos a través de nuestras redes sociales.
-https://github.com/yizpuentesc
-https://github.com/jruizu
-https://github.com/Divisy
+## 💬 Contact
 
-¡Gracias por tu interés en contribuir a Exury!
+If you have questions or need assistance, email us at **direccion@exury.io**  
+or contact us through our social channels.
+
+## 👤 Authors
+
+Collaboration with:
+
+- https://github.com/yizpuentesc
+- https://github.com/Divisy
+- https://github.com/jruizu
+
+Thank you for your interest in contributing to **Exury**!
