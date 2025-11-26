@@ -78,8 +78,12 @@ yarn dev
 ## 💬 Contacto
 
 Si tienes preguntas o necesitas ayuda, escribenos a direccion@exury.io o contactarnos a través de nuestras redes sociales.
-https://github.com/yizpuentesc
-https://github.com/jruizu
-https://github.com/Divisy
+
+## 👤 Author
+
+-   (https://github.com/jruizu)\
+-   (https://github.com/Divisy)\
+-   (https://github.com/Divisy)\
+
 
 ¡Gracias por tu interés en contribuir a Exury!
