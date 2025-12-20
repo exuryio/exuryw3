@@ -7,6 +7,7 @@ export enum RoutesEnum {
   COMMUNITY = "/community",
   COMPANY = "/company",
   BLOG = "/blog",
+  INVESTORS = "/inversores",
   FAQ = "/faq",
   CONTACT = "/contact",
 }

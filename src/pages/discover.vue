@@ -111,6 +111,14 @@ const formatText = (text: string) => {
     margin-top: 30px;
     padding-bottom: 48px;
     gap: 48px;
+    
+    @media (max-width: $screen-md) {
+      margin-top: clamp(60px, 8vw, 80px);
+    }
+    
+    @media (max-width: $screen-xs) {
+      margin-top: clamp(50px, 7vw, 70px);
+    }
     .title-wrapper {
       .title {
         font-size: 40px;
@@ -204,7 +212,11 @@ const formatText = (text: string) => {
     .discover-us-wrapper {
       gap: 48px;
       padding: 0 16px;
+      margin-top: clamp(60px, 8vw, 80px);
+      
       .title-wrapper {
+        margin-top: 0;
+        
         .title {
           font-size: 24px;
           font-style: normal;

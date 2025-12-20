@@ -5,3 +5,4 @@ export const ACCOUNT_ICON_GROUP = "mdi-account-group";
 export const FAQ_ICON = "mdi-frequently-asked-questions";
 export const OFFICE_BUILDING_ICON = "mdi-office-building";
 export const ACCOUNT_BOX_ICON = "mdi-account-box";
+export const INVESTORS_ICON = "mdi-account-cash-outline";
