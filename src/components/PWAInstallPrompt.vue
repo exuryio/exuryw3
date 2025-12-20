@@ -54,18 +54,46 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 onMounted(() => {
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  
   console.log('🔍 PWAInstallPrompt: Componente montado, escuchando eventos...');
+  console.log(`📱 Dispositivo: ${isMobile ? 'Mobile' : 'Desktop'} ${isIOS ? '(iOS)' : ''}`);
   
   // Check if already installed first
   if (checkIfInstalled()) {
     return; // Don't show prompt if already installed
   }
   
+  // En iOS, el evento beforeinstallprompt no existe
+  // iOS usa el banner nativo del navegador
+  if (isIOS) {
+    console.log('ℹ️ iOS detectado - El evento beforeinstallprompt no está disponible');
+    console.log('💡 En iOS, usa el botón "Compartir" → "Agregar a pantalla de inicio"');
+    return;
+  }
+  
   // Listen for the beforeinstallprompt event - this is the ONLY way to show the banner
   window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
   
-  console.log('⏳ Esperando evento beforeinstallprompt de Chrome...');
-  console.log('💡 El banner solo aparecerá cuando Chrome esté listo para instalar');
+  // En mobile, el evento puede tardar más en dispararse
+  // Agregar un timeout para verificar si el evento se dispara
+  if (isMobile) {
+    console.log('⏳ Esperando evento beforeinstallprompt en mobile...');
+    console.log('💡 En mobile, Chrome puede requerir más interacción antes de mostrar el prompt');
+    
+    // Verificar después de 10 segundos si el evento se disparó
+    setTimeout(() => {
+      if (!deferredPrompt && !showInstallButton.value) {
+        console.log('⚠️ No se recibió beforeinstallprompt después de 10 segundos en mobile');
+        console.log('💡 Esto es normal en mobile - Chrome puede requerir más visitas o interacción');
+        console.log('💡 El usuario puede usar el menú del navegador para instalar la app');
+      }
+    }, 10000);
+  } else {
+    console.log('⏳ Esperando evento beforeinstallprompt en desktop...');
+    console.log('💡 El banner solo aparecerá cuando Chrome esté listo para instalar');
+  }
 });
 
 onBeforeUnmount(() => {
@@ -73,7 +101,10 @@ onBeforeUnmount(() => {
 });
 
 function handleBeforeInstallPrompt(e: Event) {
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
   console.log('🎉 beforeinstallprompt event recibido! Chrome está listo para instalar.');
+  console.log(`📱 Dispositivo: ${isMobile ? 'Mobile' : 'Desktop'}`);
   
   // Validar que el evento tenga las propiedades necesarias
   const promptEvent = e as BeforeInstallPromptEvent;
@@ -89,6 +120,12 @@ function handleBeforeInstallPrompt(e: Event) {
   // Store the event for later use
   deferredPrompt = promptEvent;
   
+  // En mobile, usar un delay más corto porque el evento ya está listo
+  // En desktop, usar el delay normal
+  const delay = isMobile ? 200 : 500;
+  
+  console.log(`⏳ Esperando ${delay}ms antes de mostrar el banner...`);
+  
   // Pequeño delay antes de mostrar el banner para asegurar que todo esté listo
   // Esto ayuda a evitar el error "too early"
   setTimeout(() => {
@@ -99,8 +136,13 @@ function handleBeforeInstallPrompt(e: Event) {
       console.log('✅ Banner de instalación mostrado.');
       console.log('✅ El botón "Instalar ahora" abrirá el diálogo nativo de Chrome cuando hagas clic.');
       console.log('✅ NO se mostrarán instrucciones manuales - solo el diálogo de instalación.');
+      
+      // Log adicional para mobile
+      if (isMobile) {
+        console.log('📱 En mobile, el diálogo de instalación aparecerá como un modal nativo de Android');
+      }
     }
-  }, 500); // 500ms delay para asegurar que Chrome esté completamente listo
+  }, delay);
 }
 
 function checkIfInstalled(): boolean {
@@ -292,18 +334,28 @@ function dismissPrompt() {
     right: 16px;
     max-width: calc(100% - 32px);
     transform: none;
+    z-index: 10000; /* Asegurar que esté por encima de otros elementos en mobile */
+    position: fixed !important; /* Forzar posición fixed en mobile */
   }
 
   .pwa-install-content {
-    padding: 10px 12px;
+    padding: 12px 16px; /* Más padding en mobile para mejor UX */
+    min-height: 60px; /* Altura mínima para mejor visibilidad */
   }
 
   .pwa-install-title {
-    font-size: 13px;
+    font-size: 14px; /* Ligeramente más grande en mobile */
+    font-weight: 700;
   }
 
   .pwa-install-subtitle {
-    font-size: 11px;
+    font-size: 12px; /* Ligeramente más grande en mobile */
+  }
+  
+  .pwa-install-btn {
+    font-size: 13px !important; /* Tamaño de fuente para mobile */
+    padding: 8px 16px !important; /* Más padding para mejor área de toque */
+    min-height: 36px; /* Altura mínima para mejor accesibilidad */
   }
 }
 
