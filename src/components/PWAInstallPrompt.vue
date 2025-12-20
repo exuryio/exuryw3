@@ -44,6 +44,43 @@
     </div>
   </div>
   
+  <!-- Banner informativo con instrucciones manuales -->
+  <!-- Se muestra si beforeinstallprompt no se ha disparado después de unos segundos -->
+  <div
+    v-if="showManualBanner && !showInstallButton && !sessionDismissed"
+    class="pwa-install-prompt pwa-manual-instructions"
+    role="banner"
+    aria-label="Instalar Exury como app"
+  >
+    <div class="pwa-install-content">
+      <div class="pwa-install-icon">
+        <v-icon :icon="isIOS ? 'mdi-apple' : isMobile ? 'mdi-cellphone' : 'mdi-monitor'" size="24" />
+      </div>
+      <div class="pwa-install-text">
+        <p class="pwa-install-title">
+          Instala Exury como app
+        </p>
+        <p class="pwa-install-subtitle">
+          <span v-if="isIOS">Toca "Compartir" → "Agregar a pantalla de inicio"</span>
+          <span v-else-if="isMobile">Toca el menú (⋮) → "Instalar app"</span>
+          <span v-else>Busca el icono (➕) en la barra de direcciones</span>
+        </p>
+      </div>
+      <div class="pwa-install-actions">
+        <v-btn
+          icon
+          variant="text"
+          size="small"
+          @click="dismissManualBanner"
+          class="pwa-install-close"
+          aria-label="Cerrar"
+        >
+          <v-icon icon="mdi-close" size="20" />
+        </v-btn>
+      </div>
+    </div>
+  </div>
+  
 </template>
 
 <script setup lang="ts">
@@ -53,7 +90,10 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 console.log('🚀 PWAInstallPrompt: Script ejecutándose...');
 
 const showInstallButton = ref(false);
+const showManualBanner = ref(false);
 const isMobile = ref(false);
+const isIOS = ref(false);
+const sessionDismissed = ref(false);
 let deferredPrompt: BeforeInstallPromptEvent | null = null;
 
 interface BeforeInstallPromptEvent extends Event {
@@ -65,10 +105,13 @@ onMounted(() => {
   console.log('✅ PWAInstallPrompt: onMounted ejecutado');
   
   isMobile.value = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  isIOS.value = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  
+  // Verificar si el usuario ya cerró el banner en esta sesión
+  sessionDismissed.value = !!sessionStorage.getItem('pwa-manual-banner-dismissed');
   
   console.log('🔍 PWAInstallPrompt: Componente montado, escuchando eventos...');
-  console.log(`📱 Dispositivo: ${isMobile.value ? 'Mobile' : 'Desktop'} ${isIOS ? '(iOS)' : ''}`);
+  console.log(`📱 Dispositivo: ${isMobile.value ? 'Mobile' : 'Desktop'} ${isIOS.value ? '(iOS)' : ''}`);
   console.log(`🌐 User Agent: ${navigator.userAgent.substring(0, 50)}...`);
   
   // Check if already installed first
@@ -81,9 +124,16 @@ onMounted(() => {
   
   // En iOS, el evento beforeinstallprompt no existe
   // iOS usa el banner nativo del navegador
-  if (isIOS) {
+  if (isIOS.value) {
     console.log('ℹ️ iOS detectado - El evento beforeinstallprompt no está disponible');
-    console.log('💡 En iOS, usa el botón "Compartir" → "Agregar a pantalla de inicio"');
+    console.log('💡 Mostrando banner informativo para iOS');
+    // Mostrar banner informativo después de 3 segundos en iOS
+    setTimeout(() => {
+      if (!sessionDismissed.value) {
+        showManualBanner.value = true;
+        console.log('✅ Banner informativo mostrado para iOS');
+      }
+    }, 3000);
     return;
   }
   
@@ -98,34 +148,14 @@ onMounted(() => {
     }
   }, 5000);
   
-  // En mobile, el evento puede tardar más en dispararse
-  // Agregar un timeout para verificar si el evento se dispara
-  if (isMobile.value) {
-    console.log('⏳ Esperando evento beforeinstallprompt en mobile...');
-    console.log('💡 En mobile, Chrome puede requerir más interacción antes de mostrar el prompt');
-    
-    // Verificar después de 30 segundos si el evento se disparó
-    setTimeout(async () => {
-      if (!deferredPrompt && !showInstallButton.value) {
-        console.log('⚠️ No se recibió beforeinstallprompt después de 30 segundos en mobile');
-        console.log('💡 Esto es normal en mobile - Chrome puede requerir más visitas o interacción');
-        console.log('💡 El usuario puede usar el menú del navegador para instalar la app');
-        showInstallationInstructions();
-      }
-    }, 30000);
-  } else {
-    console.log('⏳ Esperando evento beforeinstallprompt en desktop...');
-    console.log('💡 El banner solo aparecerá cuando Chrome esté listo para instalar');
-    
-    // En desktop, verificar después de 30 segundos también
-    setTimeout(async () => {
-      if (!deferredPrompt && !showInstallButton.value) {
-        console.log('⚠️ No se recibió beforeinstallprompt después de 30 segundos en desktop');
-        console.log('💡 El usuario puede usar el icono de instalación en la barra de direcciones');
-        showInstallationInstructions();
-      }
-    }, 30000);
-  }
+  // Mostrar banner informativo después de 8 segundos si beforeinstallprompt no se ha disparado
+  // Esto asegura que los usuarios siempre vean cómo instalar la app
+  setTimeout(() => {
+    if (!deferredPrompt && !showInstallButton.value && !sessionDismissed.value) {
+      console.log('💡 Mostrando banner informativo con instrucciones de instalación');
+      showManualBanner.value = true;
+    }
+  }, 8000);
 });
 
 onBeforeUnmount(() => {
@@ -161,6 +191,9 @@ function handleBeforeInstallPrompt(e: Event) {
   setTimeout(() => {
     // Validación estricta: SOLO mostrar si deferredPrompt existe Y tiene el método prompt()
     if (deferredPrompt && typeof deferredPrompt.prompt === 'function') {
+      // Ocultar banner manual si está visible
+      showManualBanner.value = false;
+      
       // Show our custom install button - SOLO cuando tenemos el prompt real y válido
       showInstallButton.value = true;
       
@@ -292,6 +325,15 @@ function dismissPrompt() {
   // El banner volverá a aparecer si el usuario recarga la página
 }
 
+function dismissManualBanner() {
+  console.log('❌ Usuario cerró el banner informativo');
+  showManualBanner.value = false;
+  sessionDismissed.value = true;
+  
+  // Store dismissal in sessionStorage to not show again for this session
+  sessionStorage.setItem('pwa-manual-banner-dismissed', 'true');
+}
+
 
 async function verifyInstallationCriteria() {
   console.log('🔍 Verificando criterios de instalación de la PWA...');
@@ -369,32 +411,6 @@ async function verifyInstallationCriteria() {
   return allChecksPass;
 }
 
-function showInstallationInstructions() {
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  
-  console.log('\n📱 INSTRUCCIONES PARA INSTALAR LA APP:');
-  console.log('════════════════════════════════════════');
-  
-  if (isIOS) {
-    console.log('🍎 iOS:');
-    console.log('   1. Toca el botón "Compartir" (cuadrado con flecha)');
-    console.log('   2. Desplázate hacia abajo y toca "Agregar a pantalla de inicio"');
-    console.log('   3. Toca "Agregar"');
-  } else if (isMobile.value) {
-    console.log('📱 Android:');
-    console.log('   1. Toca el menú (⋮) en la esquina superior derecha');
-    console.log('   2. Busca "Instalar app" o "Agregar a pantalla de inicio"');
-    console.log('   3. Toca "Instalar"');
-    console.log('   💡 Después de instalar, la app se abrirá sin barra del navegador');
-  } else {
-    console.log('🖥️ Desktop:');
-    console.log('   1. Busca el icono de instalación (➕) en la barra de direcciones');
-    console.log('   2. O ve al menú (⋮) → "Instalar Exury..."');
-    console.log('   3. Haz clic en "Instalar"');
-  }
-  
-  console.log('════════════════════════════════════════\n');
-}
 
 
 </script>
