@@ -43,6 +43,14 @@ import OnBoardingCardGroup from "@/components/cards/OnBoardingCardGroup.vue";
   z-index: 1;
   font-size: 2.5em;
   margin-top: 32px;
+  
+  @media (max-width: $screen-md) {
+    margin-top: clamp(60px, 8vw, 80px);
+  }
+  
+  @media (max-width: $screen-xs) {
+    margin-top: clamp(50px, 7vw, 70px);
+  }
   .title-wrapper {
     position: relative;
     display: flex;
@@ -96,7 +104,7 @@ import OnBoardingCardGroup from "@/components/cards/OnBoardingCardGroup.vue";
     height: fit-content;
     .title-wrapper {
       padding: 0 0 0 16px;
-      margin-top: 24px;
+      margin-top: 0;
       .title {
         font-size: 24px;
       }
@@ -110,6 +118,24 @@ import OnBoardingCardGroup from "@/components/cards/OnBoardingCardGroup.vue";
           margin-top: 24px;
         }
       }
+    }
+  }
+}
+
+@media (max-width: $screen-md) {
+  .how-it-works-wrapper {
+    .title-wrapper {
+      padding: 0 clamp(12px, 3vw, 16px);
+      margin-top: 0;
+    }
+  }
+}
+
+@media (max-width: $screen-xs) {
+  .how-it-works-wrapper {
+    .title-wrapper {
+      padding: 0 clamp(8px, 2vw, 12px);
+      margin-top: 0;
     }
   }
 }

@@ -173,7 +173,8 @@ const handleSignup = () => {
     .simulator-wrapper {
       flex: 0 0 auto;
       width: clamp(320px, 30vw, 420px);
-      min-width: 320px;
+      min-width: 0;
+      max-width: 420px;
       z-index: 10;
       position: sticky;
       top: clamp(60px, 8vw, 100px);
@@ -543,55 +544,80 @@ const handleSignup = () => {
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: clamp(16px, 3vw, 24px) 16px 0 16px;
+      padding: clamp(12px, 2vw, 20px) clamp(12px, 3vw, 16px) 0 clamp(12px, 3vw, 16px);
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
       
       .home-layout {
         flex-direction: column;
         gap: clamp(24px, 4vw, 40px);
         margin-top: 0;
-        align-items: center;
+        align-items: stretch;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        box-sizing: border-box;
       }
 
       .content-wrapper {
         order: 1; // Show copy and CTA first on mobile
         width: 100%;
+        max-width: 100%;
         align-items: center;
         text-align: center;
         position: relative;
         margin-top: 0;
         top: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
       
       .simulator-wrapper {
         width: 100%;
-        max-width: 420px;
-        min-width: 100%;
+        max-width: 100%;
+        min-width: 0;
         order: 2; // Show simulator second on mobile
         position: relative;
         top: 0;
-        align-self: center;
+        align-self: stretch;
+        padding: 0;
+        box-sizing: border-box;
       }
       
       .coins-wrapper {
         order: 3; // Show coin animations last on mobile
         position: relative;
-        top: -100px;
-        right: 50px;
-        width: fit-content;
+        top: 0;
+        right: 0;
+        width: 100%;
+        max-width: 100%;
         height: fit-content;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: clamp(20px, 4vw, 40px);
+        overflow: hidden;
       }
       
       .content-wrapper {
+        margin-top: clamp(60px, 8vw, 80px);
+        
         .title-wrapper {
           padding: 0;
           width: 100%;
+          max-width: 100%;
           margin-top: 0;
           margin-bottom: clamp(16px, 3vw, 24px);
           align-items: center;
           text-align: center;
+          box-sizing: border-box;
           
           .trust-badge {
             margin-bottom: clamp(10px, 2vw, 14px);
+            white-space: nowrap;
+            display: inline-flex;
+            margin-top: 0;
             
             span {
               font-size: clamp(11px, 1.2vw, 13px);
@@ -600,21 +626,32 @@ const handleSignup = () => {
             
             .title-top {
               width: 100%;
-              font-size: clamp(32px, 6vw, 40px);
+              max-width: 100%;
+              font-size: clamp(28px, 7vw, 36px);
               font-weight: 700;
-              line-height: 1.15;
-              letter-spacing: -0.5px;
+              line-height: 1.2;
+              letter-spacing: -0.3px;
               margin-bottom: clamp(10px, 2vw, 14px);
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+              hyphens: auto;
+              padding: 0 4px;
+              box-sizing: border-box;
             }
             
             .title-accent {
               width: 100%;
-              font-size: clamp(18px, 3.5vw, 24px);
-              font-weight: 600;
-              line-height: 1.3;
-              letter-spacing: -0.2px;
-              margin-bottom: 0;
               max-width: 100%;
+              font-size: clamp(14px, 3.5vw, 18px);
+              font-weight: 600;
+              line-height: 1.4;
+              letter-spacing: -0.1px;
+              margin-bottom: 0;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+              hyphens: auto;
+              padding: 0 4px;
+              box-sizing: border-box;
             }
           }
           
@@ -623,38 +660,58 @@ const handleSignup = () => {
             max-width: 100% !important;
             margin: clamp(16px, 3vw, 24px) 0 clamp(16px, 3vw, 24px) 0 !important;
             padding: 0 !important;
+            box-sizing: border-box !important;
             
             .cta-wrapper {
               flex-direction: column !important;
               gap: clamp(10px, 2vw, 14px) !important;
               width: 100% !important;
+              max-width: 100% !important;
+              box-sizing: border-box !important;
               
               .email-input {
                 width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
                 
                 :deep(.v-field) {
                   background: rgba(255, 255, 255, 1) !important;
                   height: clamp(48px, 6vw, 56px);
+                  width: 100% !important;
+                  max-width: 100% !important;
                   
                   .v-field__input {
                     height: clamp(48px, 6vw, 56px);
+                    width: 100% !important;
+                    padding: 0 clamp(12px, 3vw, 20px) !important;
+                  }
+                  
+                  input {
+                    font-size: clamp(14px, 2vw, 16px) !important;
                   }
                 }
               }
               
               .signup-btn {
                 width: 100% !important;
-                font-size: clamp(15px, 2vw, 16px) !important;
+                max-width: 100% !important;
+                font-size: clamp(14px, 2vw, 16px) !important;
                 height: clamp(48px, 6vw, 56px) !important;
-                min-width: 100% !important;
-                padding: 0 clamp(20px, 3vw, 32px) !important;
+                min-width: 0 !important;
+                padding: 0 clamp(16px, 3vw, 32px) !important;
+                box-sizing: border-box !important;
+                white-space: nowrap;
               }
             }
             
             .pain-hook {
-              font-size: clamp(11px, 2vw, 14px) !important;
+              font-size: clamp(11px, 2vw, 13px) !important;
               opacity: 0.6 !important;
               text-align: center !important;
+              width: 100% !important;
+              max-width: 100% !important;
+              padding: 0 4px;
+              box-sizing: border-box;
             }
           }
         
@@ -664,14 +721,27 @@ const handleSignup = () => {
           margin-top: clamp(12px, 2vw, 18px);
           grid-template-columns: 1fr;
           gap: clamp(8px, 1.5vw, 12px);
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
           
           .benefit-item {
             text-align: left;
             font-size: clamp(12px, 1.8vw, 14px);
             gap: clamp(6px, 1vw, 10px);
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
             
             &.highlight {
               padding: clamp(8px, 1.2vw, 12px) clamp(10px, 1.5vw, 14px);
+            }
+            
+            span {
+              word-wrap: break-word;
+              overflow-wrap: break-word;
             }
           }
         }
@@ -702,17 +772,24 @@ const handleSignup = () => {
         }
       }
       .sponsorship-wrapper {
-        margin-top: 0;
+        margin-top: clamp(20px, 4vw, 40px);
         position: relative;
-        top: calc(-40% + 50px);
+        top: 0;
         display: flex;
-        justify-content: start;
-        padding: 0 0 0 28px;
+        justify-content: center;
+        align-items: center;
+        padding: 0 16px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        gap: clamp(16px, 3vw, 24px);
         .sponsor-left{
-          width: 80px;
+          width: clamp(60px, 12vw, 80px);
+          height: auto;
         }
         .sponsor-right {
-          width: 150px;
+          width: clamp(100px, 20vw, 150px);
+          height: auto;
         }
       }
     }
@@ -722,14 +799,53 @@ const handleSignup = () => {
 @media (max-width: $screen-xs) {
   .home-wrapper {
     .main-content {
+      padding: clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) 0 clamp(8px, 2vw, 12px) !important;
+      
       .coins-wrapper {
-        top: -120px;
+        top: 0;
+        margin-top: clamp(12px, 2vw, 20px);
       }
       .content-wrapper {
-        top: -150px;
+        top: 0;
+        padding: 0 clamp(4px, 1vw, 8px);
+        margin-top: clamp(50px, 7vw, 70px) !important;
+        
+        .title-wrapper {
+          padding: 0 clamp(4px, 1vw, 8px);
+          
+          .trust-badge {
+            margin-top: 0;
+          }
+          
+          .title-top {
+            font-size: clamp(26px, 7vw, 32px);
+            line-height: 1.25;
+            padding: 0;
+          }
+          
+          .title-accent {
+            font-size: clamp(13px, 3.5vw, 16px);
+            line-height: 1.4;
+            padding: 0;
+          }
+        }
       }
       .sponsorship-wrapper{
-        margin-top: -200px;
+        margin-top: clamp(12px, 2vw, 20px);
+        padding: 0 clamp(8px, 2vw, 12px);
+      }
+      
+      .home-layout {
+        gap: clamp(16px, 3vw, 24px);
+        padding: 0;
+      }
+      
+      .cta-section {
+        padding: 0 clamp(4px, 1vw, 8px) !important;
+      }
+      
+      .benefits-list {
+        padding: 0 clamp(4px, 1vw, 8px);
       }
     }
   }

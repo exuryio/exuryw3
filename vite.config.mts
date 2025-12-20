@@ -6,6 +6,8 @@ import Layouts from "vite-plugin-vue-layouts";
 import Vue from "@vitejs/plugin-vue";
 import VueRouter from "unplugin-vue-router/vite";
 import Vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
+import tailwindcss from "tailwindcss";
+import autoprefixer from "autoprefixer";
 
 
 // Utilities
@@ -56,6 +58,11 @@ export default defineConfig({
       },
     }),
   ],
+  css: {
+    postcss: {
+      plugins: [tailwindcss(), autoprefixer()],
+    },
+  },
   define: { "process.env": {} },
   resolve: {
     alias: {

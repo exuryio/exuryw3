@@ -62,6 +62,19 @@ const contents = [
 @import "@/styles/variables.scss";
 .contact-wrapper {
    margin-top: 24px;
+   
+   @media (max-width: $screen-md) {
+     margin-top: clamp(60px, 8vw, 80px);
+   }
+   
+   @media (max-width: $screen-xs) {
+     margin-top: clamp(50px, 7vw, 70px);
+   }
+   
+  h1 {
+    margin-top: 0;
+  }
+  
   .card-wrapper {
     display: flex;
     justify-content: start;
@@ -124,6 +137,12 @@ const contents = [
 @media (max-width: $screen-sm) {
   .contact-wrapper {
     padding: 0 16px;
+    margin-top: clamp(60px, 8vw, 80px);
+    
+    h1 {
+      margin-top: 0;
+    }
+    
     .card-wrapper {
       flex-direction: column;
       gap: 16px;

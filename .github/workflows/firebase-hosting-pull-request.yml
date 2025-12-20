@@ -14,6 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: yarn install --frozen-lockfile && yarn build && ls -la dist/assets/
+        env:
+          VITE_INVEST_LEADS_EMAIL: ${{ secrets.VITE_INVEST_LEADS_EMAIL }}
+          VITE_SCHEDULING_URL: ${{ secrets.VITE_SCHEDULING_URL }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
