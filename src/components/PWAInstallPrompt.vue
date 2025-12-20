@@ -45,6 +45,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
+// Log inmediato para verificar que el componente se carga
+console.log('🚀 PWAInstallPrompt: Script ejecutándose...');
+
 const showInstallButton = ref(false);
 let deferredPrompt: BeforeInstallPromptEvent | null = null;
 
@@ -54,16 +57,22 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 onMounted(() => {
+  console.log('✅ PWAInstallPrompt: onMounted ejecutado');
+  
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   
   console.log('🔍 PWAInstallPrompt: Componente montado, escuchando eventos...');
   console.log(`📱 Dispositivo: ${isMobile ? 'Mobile' : 'Desktop'} ${isIOS ? '(iOS)' : ''}`);
+  console.log(`🌐 User Agent: ${navigator.userAgent.substring(0, 50)}...`);
   
   // Check if already installed first
+  console.log('🔍 Verificando si la PWA ya está instalada...');
   if (checkIfInstalled()) {
+    console.log('ℹ️ PWA ya está instalada, no se mostrará el banner');
     return; // Don't show prompt if already installed
   }
+  console.log('✅ PWA no está instalada, continuando...');
   
   // En iOS, el evento beforeinstallprompt no existe
   // iOS usa el banner nativo del navegador
