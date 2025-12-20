@@ -42,40 +42,6 @@
     </div>
   </div>
   
-  <!-- Banner informativo cuando todos los criterios se cumplen pero el evento no se dispara -->
-  <div
-    v-if="showManualInstructions && !showInstallButton"
-    class="pwa-install-prompt pwa-manual-instructions"
-    role="banner"
-    aria-label="Instalar Exury como app"
-  >
-    <div class="pwa-install-content">
-      <div class="pwa-install-icon">
-        <v-icon icon="mdi-download" size="24" />
-      </div>
-      <div class="pwa-install-text">
-        <p class="pwa-install-title">
-          Instala Exury
-        </p>
-        <p class="pwa-install-subtitle">
-          <span v-if="isMobile">Instala para una experiencia tipo app sin barra del navegador</span>
-          <span v-else>Usa el icono de instalación (➕) en la barra de direcciones</span>
-        </p>
-      </div>
-      <div class="pwa-install-actions">
-        <v-btn
-          icon
-          variant="text"
-          size="small"
-          @click="dismissManualInstructions"
-          class="pwa-install-close"
-          aria-label="Cerrar"
-        >
-          <v-icon icon="mdi-close" size="20" />
-        </v-btn>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -85,7 +51,6 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 console.log('🚀 PWAInstallPrompt: Script ejecutándose...');
 
 const showInstallButton = ref(false);
-const showManualInstructions = ref(false);
 const isMobile = ref(false);
 let deferredPrompt: BeforeInstallPromptEvent | null = null;
 
@@ -123,29 +88,13 @@ onMounted(() => {
   // Listen for the beforeinstallprompt event - this is the ONLY way to show the banner
   window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
   
-  // En mobile, mostrar el banner informativo más rápido (después de 3 segundos)
-  // para incentivar la instalación y que se sienta como app
-  if (isMobile && !isIOS) {
-    setTimeout(async () => {
-      if (!deferredPrompt && !showInstallButton.value && !sessionStorage.getItem('pwa-manual-instructions-dismissed')) {
-        console.log('🔍 Verificando criterios de instalación en mobile...');
-        const allCriteriaMet = await verifyInstallationCriteria();
-        
-        if (allCriteriaMet) {
-          console.log('💡 Mostrando banner de instalación en mobile para mejor experiencia tipo app');
-          showManualInstructions.value = true;
-        }
-      }
-    }, 3000); // Mostrar después de 3 segundos en mobile
-  } else {
-    // En desktop, verificar después de 5 segundos
-    setTimeout(async () => {
-      if (!deferredPrompt && !showInstallButton.value) {
-        console.log('🔍 Verificando criterios de instalación de la PWA...');
-        await verifyInstallationCriteria();
-      }
-    }, 5000);
-  }
+  // Verificar criterios después de 5 segundos (solo para diagnóstico)
+  setTimeout(async () => {
+    if (!deferredPrompt && !showInstallButton.value) {
+      console.log('🔍 Verificando criterios de instalación de la PWA...');
+      await verifyInstallationCriteria();
+    }
+  }, 5000);
   
   // En mobile, el evento puede tardar más en dispararse
   // Agregar un timeout para verificar si el evento se dispara
@@ -158,19 +107,8 @@ onMounted(() => {
       if (!deferredPrompt && !showInstallButton.value) {
         console.log('⚠️ No se recibió beforeinstallprompt después de 30 segundos en mobile');
         console.log('💡 Esto es normal en mobile - Chrome puede requerir más visitas o interacción');
-        
-        // Verificar nuevamente los criterios antes de mostrar instrucciones manuales
-        const allCriteriaMet = await verifyInstallationCriteria();
-        
-        if (allCriteriaMet) {
-          console.log('💡 Todos los criterios se cumplen. Mostrando banner informativo...');
-          if (!sessionStorage.getItem('pwa-manual-instructions-dismissed')) {
-            showManualInstructions.value = true;
-          }
-        } else {
-          console.log('💡 El usuario puede usar el menú del navegador para instalar la app');
-          showInstallationInstructions();
-        }
+        console.log('💡 El usuario puede usar el menú del navegador para instalar la app');
+        showInstallationInstructions();
       }
     }, 30000);
   } else {
@@ -185,12 +123,7 @@ onMounted(() => {
         // Verificar nuevamente los criterios antes de mostrar instrucciones manuales
         const allCriteriaMet = await verifyInstallationCriteria();
         
-        if (allCriteriaMet) {
-          console.log('💡 Todos los criterios se cumplen. Mostrando banner informativo...');
-          showManualInstructions.value = true;
-        } else {
-          showInstallationInstructions();
-        }
+        showInstallationInstructions();
       }
     }, 30000);
   }
@@ -264,16 +197,24 @@ function checkIfInstalled(): boolean {
 }
 
 async function installPWA() {
+  console.log('🔍 Estado actual:');
+  console.log('  - showInstallButton:', showInstallButton.value);
+  console.log('  - deferredPrompt:', deferredPrompt ? 'Disponible' : 'NO disponible');
+  console.log('  - deferredPrompt.prompt:', deferredPrompt && typeof deferredPrompt.prompt === 'function' ? 'Función disponible' : 'NO disponible');
+  
   // Validación estricta: NO hacer nada si no hay prompt real
   if (!deferredPrompt) {
-    console.error('❌ ERROR: No hay prompt de instalación disponible. El banner no debería estar visible.');
+    console.error('❌ ERROR: No hay prompt de instalación disponible.');
+    console.error('❌ El banner se está mostrando pero deferredPrompt es null.');
+    console.error('❌ Esto puede pasar si el evento beforeinstallprompt no se recibió correctamente.');
     showInstallButton.value = false;
     return;
   }
 
   // Verificar que el prompt tenga el método prompt()
   if (typeof deferredPrompt.prompt !== 'function') {
-    console.error('❌ ERROR: El prompt no tiene el método prompt(). Esto no debería pasar.');
+    console.error('❌ ERROR: El prompt no tiene el método prompt().');
+    console.error('❌ deferredPrompt:', deferredPrompt);
     showInstallButton.value = false;
     deferredPrompt = null;
     return;
@@ -281,21 +222,24 @@ async function installPWA() {
 
   try {
     console.log('🚀 Usuario hizo clic en "Instalar ahora"');
+    console.log('🚀 deferredPrompt disponible:', !!deferredPrompt);
+    console.log('🚀 deferredPrompt.prompt disponible:', typeof deferredPrompt.prompt === 'function');
     console.log('🚀 Abriendo diálogo nativo de instalación de Chrome...');
     
-    // Pequeño delay para asegurar que el user gesture esté completo
-    // Chrome requiere que el prompt se llame dentro de un user gesture handler
-    await new Promise(resolve => setTimeout(resolve, 100));
+    // NO usar delay - llamar inmediatamente dentro del user gesture
+    // El delay puede hacer que Chrome considere que el user gesture expiró
     
     // Show the install prompt - esto abre el diálogo nativo de Chrome
     // Este es el ÚNICO método que abre el diálogo de instalación
     // Debe llamarse dentro de un user gesture handler (click event)
     await deferredPrompt.prompt();
     
-    console.log('⏳ Esperando respuesta del usuario...');
+    console.log('⏳ Prompt mostrado, esperando respuesta del usuario...');
     
     // Wait for the user's response
     const choiceResult = await deferredPrompt.userChoice;
+    
+    console.log('📋 Resultado del usuario:', choiceResult.outcome);
     
     if (choiceResult.outcome === 'accepted') {
       console.log('✅ Usuario aceptó la instalación - La app se está instalando ahora');
@@ -310,11 +254,16 @@ async function installPWA() {
     showInstallButton.value = false;
   } catch (error: any) {
     console.error('❌ Error al instalar PWA:', error);
+    console.error('❌ Tipo de error:', error?.constructor?.name);
+    console.error('❌ Mensaje de error:', error?.message);
+    console.error('❌ Stack:', error?.stack);
     
     // Si el error es "too early", el prompt ya fue usado o descartado
     if (error?.message?.includes('too early') || error?.message?.includes('dismissed')) {
       console.warn('⚠️ El prompt fue descartado. Esto puede pasar si se llamó demasiado rápido o ya fue usado.');
       console.warn('💡 El usuario puede usar el icono de instalación en la barra de direcciones del navegador.');
+    } else if (error?.message?.includes('user gesture')) {
+      console.warn('⚠️ El prompt requiere un user gesture activo. El delay puede haber expirado.');
     }
     
     showInstallButton.value = false;
@@ -333,13 +282,6 @@ function dismissPrompt() {
   // El banner volverá a aparecer si el usuario recarga la página
 }
 
-function dismissManualInstructions() {
-  console.log('❌ Usuario cerró el banner de instrucciones manuales');
-  showManualInstructions.value = false;
-  
-  // Store dismissal in sessionStorage
-  sessionStorage.setItem('pwa-manual-instructions-dismissed', 'true');
-}
 
 async function verifyInstallationCriteria() {
   console.log('🔍 Verificando criterios de instalación de la PWA...');
