@@ -46,6 +46,12 @@ export const SIDEBAR_LINKS: SidebarItem[] = [
     show: true,
   },
   {
+    title: "Inversores",
+    icon: icons.INVESTORS_ICON,
+    route: RoutesEnum.INVESTORS,
+    show: true,
+  },
+  {
     title: "FAQ",
     icon: icons.FAQ_ICON,
     route: RoutesEnum.FAQ,

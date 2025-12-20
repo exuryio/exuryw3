@@ -85,6 +85,14 @@
   height: 100vh;
   flex-direction: column;
   display: flex;
+  
+  @media (max-width: $screen-md) {
+    padding: clamp(8px, 2vh, 16px) !important;
+  }
+  
+  @media (max-width: $screen-xs) {
+    padding: clamp(4px, 1vh, 8px) !important;
+  }
 }
 #mainContainer {
   position: absolute;
@@ -117,6 +125,16 @@
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  
+  @media (max-width: $screen-md) {
+    padding: clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) 0 clamp(8px, 2vw, 12px);
+    gap: 0;
+  }
+  
+  @media (max-width: $screen-xs) {
+    padding: clamp(4px, 1vw, 8px) clamp(4px, 1vw, 8px) 0 clamp(4px, 1vw, 8px);
+    border-radius: 12px;
+  }
   #whatsapp-wrapper {
     position: absolute;
     bottom: 40px;
@@ -161,6 +179,14 @@
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
+  
+  @media (max-width: $screen-md) {
+    padding-top: clamp(8px, 2vh, 16px);
+  }
+  
+  @media (max-width: $screen-xs) {
+    padding-top: clamp(4px, 1vh, 8px);
+  }
 }
 
 .listInner {
@@ -320,6 +346,22 @@
         position: relative;
         left: -220px;
         min-width: calc(100% - 16px);
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+        
+        .page-view {
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          padding: 0;
+          
+          > div {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+          }
+        }
         .top-bar-wrapper.scrolling {
           padding: 20px 16px 10px 0;
           background-color: rgba(10, 17, 14, 0.86);

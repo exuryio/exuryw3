@@ -28,6 +28,8 @@ declare module 'vue-router/auto-routes' {
     '/faq': RouteRecordInfo<'/faq', '/faq', Record<never, never>, Record<never, never>>,
     '/home': RouteRecordInfo<'/home', '/home', Record<never, never>, Record<never, never>>,
     '/how-it-works': RouteRecordInfo<'/how-it-works', '/how-it-works', Record<never, never>, Record<never, never>>,
+    '/inversores': RouteRecordInfo<'/inversores', '/inversores', Record<never, never>, Record<never, never>>,
+    '/invest-private-round-2': RouteRecordInfo<'/invest-private-round-2', '/invest-private-round-2', Record<never, never>, Record<never, never>>,
     '/licencias': RouteRecordInfo<'/licencias', '/licencias', Record<never, never>, Record<never, never>>,
     '/login': RouteRecordInfo<'/login', '/login', Record<never, never>, Record<never, never>>,
     '/privacy-policy': RouteRecordInfo<'/privacy-policy', '/privacy-policy', Record<never, never>, Record<never, never>>,

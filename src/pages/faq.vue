@@ -49,6 +49,19 @@ const onDropDownQuestion = (index: number) => {
 @import "@/styles/variables.scss";
 .faq-wrapper {
    margin-top: 24px;
+   
+   @media (max-width: $screen-md) {
+     margin-top: clamp(60px, 8vw, 80px);
+   }
+   
+   @media (max-width: $screen-xs) {
+     margin-top: clamp(50px, 7vw, 70px);
+   }
+   
+  .title-wrapper {
+    margin-top: 0;
+  }
+  
   .questions-wrapper {
     display: flex;
     flex-direction: column;
@@ -85,6 +98,11 @@ const onDropDownQuestion = (index: number) => {
 @media (max-width: $screen-sm) {
   .faq-wrapper {
     padding: 0 16px;
+    margin-top: clamp(60px, 8vw, 80px);
+    
+    .title-wrapper {
+      margin-top: 0;
+    }
   }
   ul li {
     list-style: none;

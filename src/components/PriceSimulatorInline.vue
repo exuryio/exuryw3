@@ -738,18 +738,28 @@ onUnmounted(() => {
   border-radius: 16px;
   width: 100%;
   max-width: 420px;
-  min-width: 320px;
+  min-width: 0;
+  box-sizing: border-box;
+  
+  @media (max-width: 768px) {
+    max-width: 100%;
+    width: 100%;
+  }
 }
 
 .currency-box {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
+  padding: clamp(12px, 2vw, 14px) clamp(12px, 2vw, 16px);
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  min-height: 56px;
+  min-height: clamp(52px, 6vw, 56px);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  gap: 8px;
 }
 
 .currency-left {
@@ -762,13 +772,18 @@ onUnmounted(() => {
 .currency-right {
   display: flex;
   align-items: center;
-  min-width: 100px;
+  min-width: 0;
+  flex: 0 1 auto;
   justify-content: flex-end;
+  
+  @media (max-width: 768px) {
+    min-width: 80px;
+  }
 }
 
 .currency-icon {
-  width: 40px;
-  height: 40px;
+  width: clamp(36px, 5vw, 40px);
+  height: clamp(36px, 5vw, 40px);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -799,34 +814,46 @@ onUnmounted(() => {
 }
 
 .crypto-amount {
-  font-size: 16px;
+  font-size: clamp(14px, 2vw, 16px);
   font-weight: 500;
   color: white;
   text-align: right;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .amount-input {
   width: 100%;
   max-width: 120px;
+  min-width: 0;
+  
+  @media (max-width: 768px) {
+    max-width: 100px;
+  }
   
   :deep(.v-field) {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     padding: 0 !important;
+    width: 100%;
+    max-width: 100%;
   }
   
   :deep(.v-field__input) {
     padding: 0 !important;
     min-height: auto !important;
+    width: 100%;
   }
   
   :deep(input) {
     color: white !important;
     text-align: right;
-    font-size: 16px;
+    font-size: clamp(14px, 2vw, 16px);
     font-weight: 500;
     padding: 0 !important;
+    width: 100%;
+    max-width: 100%;
   }
 }
 
@@ -846,7 +873,14 @@ onUnmounted(() => {
     background: transparent;
     text-transform: none;
     font-weight: 500;
-    min-width: 100px;
+    min-width: 0;
+    flex: 1;
+    font-size: clamp(13px, 1.8vw, 14px);
+    
+    @media (max-width: 768px) {
+      min-width: 80px;
+      padding: 0 12px !important;
+    }
     
     &.v-btn--active {
       background: #1cba75;
