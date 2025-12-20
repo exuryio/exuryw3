@@ -18,22 +18,25 @@ body, html {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  /* Usar dynamic viewport height en mobile para mejor comportamiento */
-  min-height: 100vh;
-  min-height: 100dvh; /* Dynamic viewport height - se ajusta cuando la barra del navegador se oculta */
+  /* Permitir scroll natural en mobile */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling en iOS */
 }
 
-/* En mobile, asegurar que el contenido sea scrolleable */
+/* En mobile, usar dynamic viewport height para mejor comportamiento */
 @media (max-width: 768px) {
   html {
     height: 100%;
-    height: -webkit-fill-available; /* Para Safari */
+    height: -webkit-fill-available; /* Para Safari iOS */
   }
   
   body {
     min-height: 100vh;
-    min-height: -webkit-fill-available; /* Para Safari */
-    min-height: 100dvh; /* Dynamic viewport height */
+    min-height: -webkit-fill-available; /* Para Safari iOS */
+    min-height: 100dvh; /* Dynamic viewport height - se ajusta cuando la barra se oculta */
+    /* Asegurar que el scroll funcione correctamente */
+    position: relative;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 

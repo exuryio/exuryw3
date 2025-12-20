@@ -85,22 +85,22 @@
   margin: 0 !important;
   padding: 5vh !important;
   height: 100vh;
-  height: 100dvh; /* Dynamic viewport height - se ajusta cuando la barra se oculta */
   flex-direction: column;
   display: flex;
   
   @media (max-width: $screen-md) {
     padding: clamp(8px, 2vh, 16px) !important;
-    height: 100vh;
-    height: 100dvh; /* Dynamic viewport height en mobile */
-    height: -webkit-fill-available; /* Para Safari iOS */
+    /* En mobile, usar altura mínima para permitir scroll natural */
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height - se ajusta cuando la barra se oculta */
+    height: auto; /* Permitir que crezca con el contenido */
   }
   
   @media (max-width: $screen-xs) {
     padding: clamp(4px, 1vh, 8px) !important;
-    height: 100vh;
-    height: 100dvh; /* Dynamic viewport height en mobile */
-    height: -webkit-fill-available; /* Para Safari iOS */
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height - se ajusta cuando la barra se oculta */
+    height: auto; /* Permitir que crezca con el contenido */
   }
 }
 #mainContainer {
@@ -188,13 +188,22 @@
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
+  /* Smooth scrolling en mobile */
+  -webkit-overflow-scrolling: touch;
   
   @media (max-width: $screen-md) {
     padding-top: clamp(8px, 2vh, 16px);
+    /* En mobile, permitir scroll natural */
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
   
   @media (max-width: $screen-xs) {
     padding-top: clamp(4px, 1vh, 8px);
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 }
 
@@ -207,6 +216,8 @@
   overflow-y: auto !important;
   overflow-x: hidden !important;
   display: block !important;
+  /* Smooth scrolling en mobile */
+  -webkit-overflow-scrolling: touch !important;
   visibility: visible !important;
   opacity: 1 !important;
   pointer-events: auto !important;
