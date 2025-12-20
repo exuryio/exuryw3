@@ -119,10 +119,7 @@ onMounted(() => {
     setTimeout(async () => {
       if (!deferredPrompt && !showInstallButton.value) {
         console.log('⚠️ No se recibió beforeinstallprompt después de 30 segundos en desktop');
-        
-        // Verificar nuevamente los criterios antes de mostrar instrucciones manuales
-        const allCriteriaMet = await verifyInstallationCriteria();
-        
+        console.log('💡 El usuario puede usar el icono de instalación en la barra de direcciones');
         showInstallationInstructions();
       }
     }, 30000);
