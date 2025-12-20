@@ -89,12 +89,18 @@ function handleBeforeInstallPrompt(e: Event) {
   // Store the event for later use
   deferredPrompt = promptEvent;
   
-  // Show our custom install button - SOLO cuando tenemos el prompt real y válido
-  showInstallButton.value = true;
-  
-  console.log('✅ Banner de instalación mostrado.');
-  console.log('✅ El botón "Instalar ahora" abrirá el diálogo nativo de Chrome inmediatamente.');
-  console.log('✅ NO se mostrarán instrucciones manuales - solo el diálogo de instalación.');
+  // Pequeño delay antes de mostrar el banner para asegurar que todo esté listo
+  // Esto ayuda a evitar el error "too early"
+  setTimeout(() => {
+    if (deferredPrompt) {
+      // Show our custom install button - SOLO cuando tenemos el prompt real y válido
+      showInstallButton.value = true;
+      
+      console.log('✅ Banner de instalación mostrado.');
+      console.log('✅ El botón "Instalar ahora" abrirá el diálogo nativo de Chrome cuando hagas clic.');
+      console.log('✅ NO se mostrarán instrucciones manuales - solo el diálogo de instalación.');
+    }
+  }, 500); // 500ms delay para asegurar que Chrome esté completamente listo
 }
 
 function checkIfInstalled(): boolean {
@@ -133,10 +139,16 @@ async function installPWA() {
   }
 
   try {
+    console.log('🚀 Usuario hizo clic en "Instalar ahora"');
     console.log('🚀 Abriendo diálogo nativo de instalación de Chrome...');
+    
+    // Pequeño delay para asegurar que el user gesture esté completo
+    // Chrome requiere que el prompt se llame dentro de un user gesture handler
+    await new Promise(resolve => setTimeout(resolve, 100));
     
     // Show the install prompt - esto abre el diálogo nativo de Chrome
     // Este es el ÚNICO método que abre el diálogo de instalación
+    // Debe llamarse dentro de un user gesture handler (click event)
     await deferredPrompt.prompt();
     
     console.log('⏳ Esperando respuesta del usuario...');
@@ -149,14 +161,21 @@ async function installPWA() {
       showInstallButton.value = false;
     } else {
       console.log('❌ Usuario rechazó la instalación');
+      // Mantener el banner por si cambia de opinión
     }
     
     // Clear the deferred prompt después de usarlo (solo se puede usar una vez)
     deferredPrompt = null;
     showInstallButton.value = false;
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Error al instalar PWA:', error);
-    console.error('Detalles del error:', error);
+    
+    // Si el error es "too early", el prompt ya fue usado o descartado
+    if (error?.message?.includes('too early') || error?.message?.includes('dismissed')) {
+      console.warn('⚠️ El prompt fue descartado. Esto puede pasar si se llamó demasiado rápido o ya fue usado.');
+      console.warn('💡 El usuario puede usar el icono de instalación en la barra de direcciones del navegador.');
+    }
+    
     showInstallButton.value = false;
     deferredPrompt = null;
   }
