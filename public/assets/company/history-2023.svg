@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 144" style="background: transparent;">
+  <defs>
+    <linearGradient id="foundationGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00BB72;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#004645;stop-opacity:0.2" />
+    </linearGradient>
+    <filter id="foundationGlow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Building/Foundation symbol with 3D depth -->
+  <rect x="30" y="50" width="84" height="70" rx="4" fill="url(#foundationGrad)" filter="url(#foundationGlow)"/>
+  <!-- 3D perspective -->
+  <path d="M 30 50 L 50 35 L 134 35 L 114 50 Z" fill="#00BB72" opacity="0.25"/>
+  <!-- Windows -->
+  <rect x="45" y="65" width="12" height="15" fill="#00BB72" opacity="0.3" rx="1"/>
+  <rect x="65" y="65" width="12" height="15" fill="#00BB72" opacity="0.3" rx="1"/>
+  <rect x="85" y="65" width="12" height="15" fill="#00BB72" opacity="0.3" rx="1"/>
+  <rect x="45" y="90" width="12" height="15" fill="#00BB72" opacity="0.3" rx="1"/>
+  <rect x="65" y="90" width="12" height="15" fill="#00BB72" opacity="0.3" rx="1"/>
+  <rect x="85" y="90" width="12" height="15" fill="#00BB72" opacity="0.3" rx="1"/>
+  <!-- Door -->
+  <rect x="65" y="105" width="12" height="15" fill="#004645" opacity="0.4" rx="1"/>
+  <!-- Shield/Regulation badge -->
+  <path d="M 72 25 L 85 30 L 85 45 L 72 50 L 59 45 L 59 30 Z" fill="#00BB72" opacity="0.5"/>
+  <circle cx="72" cy="37" r="5" fill="#E5E5E5" opacity="0.6"/>
+</svg>
+

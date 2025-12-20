@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" style="background: transparent;">
+  <defs>
+    <linearGradient id="keyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00BB72;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#004645;stop-opacity:0.15" />
+    </linearGradient>
+  </defs>
+  <!-- Key with 3D effect -->
+  <circle cx="35" cy="48" r="12" fill="url(#keyGrad)"/>
+  <rect x="35" y="36" width="35" height="24" rx="3" fill="url(#keyGrad)"/>
+  <!-- Key teeth -->
+  <rect x="50" y="40" width="4" height="8" fill="#00BB72" opacity="0.4" rx="1"/>
+  <rect x="58" y="44" width="4" height="8" fill="#00BB72" opacity="0.4" rx="1"/>
+  <rect x="62" y="38" width="4" height="6" fill="#00BB72" opacity="0.4" rx="1"/>
+  <!-- 3D highlight on circle -->
+  <ellipse cx="32" cy="45" rx="8" ry="8" fill="#E5E5E5" opacity="0.15"/>
+</svg>
+

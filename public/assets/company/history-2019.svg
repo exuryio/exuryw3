@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" style="background: transparent;">
+  <defs>
+    <linearGradient id="visionGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00BB72;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#004645;stop-opacity:0.15" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Eye/vision symbol with 3D depth -->
+  <ellipse cx="64" cy="64" rx="45" ry="30" fill="url(#visionGrad)" filter="url(#glow)"/>
+  <circle cx="64" cy="64" r="20" fill="#00BB72" opacity="0.4"/>
+  <circle cx="70" cy="60" r="8" fill="#E5E5E5" opacity="0.6"/>
+  <!-- Light rays -->
+  <line x1="64" y1="20" x2="64" y2="44" stroke="#00BB72" stroke-width="2" opacity="0.3"/>
+  <line x1="20" y1="64" x2="44" y2="64" stroke="#00BB72" stroke-width="2" opacity="0.3"/>
+  <line x1="108" y1="64" x2="84" y2="64" stroke="#00BB72" stroke-width="2" opacity="0.3"/>
+</svg>
+

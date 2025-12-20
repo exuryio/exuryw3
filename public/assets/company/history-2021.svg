@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 144" style="background: transparent;">
+  <defs>
+    <linearGradient id="innovationGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00BB72;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#004645;stop-opacity:0.2" />
+    </linearGradient>
+    <filter id="strongGlow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Gear/Technology symbol with 3D depth -->
+  <circle cx="72" cy="72" r="50" fill="url(#innovationGrad)" filter="url(#strongGlow)"/>
+  <circle cx="72" cy="72" r="30" fill="#00BB72" opacity="0.3"/>
+  <!-- Gear teeth -->
+  <rect x="70" y="25" width="4" height="12" fill="#00BB72" opacity="0.5" rx="2"/>
+  <rect x="70" y="107" width="4" height="12" fill="#00BB72" opacity="0.5" rx="2"/>
+  <rect x="25" y="70" width="12" height="4" fill="#00BB72" opacity="0.5" rx="2"/>
+  <rect x="107" y="70" width="12" height="4" fill="#00BB72" opacity="0.5" rx="2"/>
+  <!-- Diagonal teeth -->
+  <rect x="95" y="35" width="4" height="12" fill="#00BB72" opacity="0.5" rx="2" transform="rotate(45 97 41)"/>
+  <rect x="45" y="97" width="4" height="12" fill="#00BB72" opacity="0.5" rx="2" transform="rotate(45 47 103)"/>
+  <rect x="35" y="49" width="4" height="12" fill="#00BB72" opacity="0.5" rx="2" transform="rotate(-45 37 55)"/>
+  <rect x="105" y="95" width="4" height="12" fill="#00BB72" opacity="0.5" rx="2" transform="rotate(-45 107 101)"/>
+  <!-- Center circle -->
+  <circle cx="72" cy="72" r="15" fill="#E5E5E5" opacity="0.2"/>
+</svg>
+
