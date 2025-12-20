@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" style="background: transparent;">
+  <defs>
+    <linearGradient id="heroGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00BB72;stop-opacity:0.15" />
+      <stop offset="100%" style="stop-color:#004645;stop-opacity:0.05" />
+    </linearGradient>
+    <linearGradient id="heroGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#054629;stop-opacity:0.12" />
+      <stop offset="100%" style="stop-color:#00BB72;stop-opacity:0.08" />
+    </linearGradient>
+    <filter id="blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
+    </filter>
+  </defs>
+  <!-- 3D effect circles -->
+  <circle cx="150" cy="150" r="80" fill="url(#heroGrad1)" filter="url(#blur)" opacity="0.6"/>
+  <circle cx="650" cy="200" r="100" fill="url(#heroGrad2)" filter="url(#blur)" opacity="0.5"/>
+  <circle cx="400" cy="450" r="90" fill="url(#heroGrad1)" filter="url(#blur)" opacity="0.4"/>
+  <!-- Geometric 3D shapes -->
+  <polygon points="200,100 280,100 260,180 180,180" fill="#00BB72" opacity="0.1" transform="rotate(45 230 140)"/>
+  <polygon points="600,400 680,400 660,480 580,480" fill="#054629" opacity="0.08" transform="rotate(-30 640 440)"/>
+</svg>
+

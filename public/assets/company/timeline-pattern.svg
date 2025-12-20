@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" style="background: transparent;">
+  <defs>
+    <linearGradient id="timelineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00BB72;stop-opacity:0.08" />
+      <stop offset="100%" style="stop-color:#004645;stop-opacity:0.04" />
+    </linearGradient>
+  </defs>
+  <!-- Timeline dots with 3D effect -->
+  <circle cx="96" cy="40" r="8" fill="url(#timelineGrad)"/>
+  <circle cx="96" cy="40" r="5" fill="#00BB72" opacity="0.2"/>
+  <circle cx="96" cy="96" r="8" fill="url(#timelineGrad)"/>
+  <circle cx="96" cy="96" r="5" fill="#00BB72" opacity="0.2"/>
+  <circle cx="96" cy="152" r="8" fill="url(#timelineGrad)"/>
+  <circle cx="96" cy="152" r="5" fill="#00BB72" opacity="0.2"/>
+  <!-- Connecting line -->
+  <line x1="96" y1="48" x2="96" y2="144" stroke="#00BB72" stroke-width="2" opacity="0.15"/>
+  <!-- Arrows -->
+  <path d="M 90 48 L 96 58 L 102 48" fill="#00BB72" opacity="0.2"/>
+  <path d="M 90 144 L 96 154 L 102 144" fill="#00BB72" opacity="0.2"/>
+</svg>
+

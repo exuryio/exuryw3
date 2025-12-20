@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" style="background: transparent;">
+  <defs>
+    <linearGradient id="statsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00BB72;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#004645;stop-opacity:0.05" />
+    </linearGradient>
+  </defs>
+  <!-- 3D bar chart pattern -->
+  <rect x="40" y="180" width="30" height="60" fill="#00BB72" opacity="0.15" rx="2"/>
+  <rect x="40" y="180" width="30" height="60" fill="url(#statsGrad)" transform="skewY(-5)"/>
+  <rect x="90" y="150" width="30" height="90" fill="#00BB72" opacity="0.15" rx="2"/>
+  <rect x="90" y="150" width="30" height="90" fill="url(#statsGrad)" transform="skewY(-5)"/>
+  <rect x="140" y="120" width="30" height="120" fill="#00BB72" opacity="0.15" rx="2"/>
+  <rect x="140" y="120" width="30" height="120" fill="url(#statsGrad)" transform="skewY(-5)"/>
+  <rect x="190" y="140" width="30" height="100" fill="#00BB72" opacity="0.15" rx="2"/>
+  <rect x="190" y="140" width="30" height="100" fill="url(#statsGrad)" transform="skewY(-5)"/>
+</svg>
+
