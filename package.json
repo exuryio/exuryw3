@@ -6,7 +6,9 @@
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix --ignore-path .gitignore",
-    "format": "npx prettier . --write"
+    "format": "npx prettier . --write",
+    "pwa:generate-icons": "node scripts/generate-pwa-icons.js",
+    "pwa:setup": "npm run pwa:generate-icons"
   },
   "license": "MIT",
   "author": {
@@ -44,6 +46,7 @@
     "postcss": "^8.4.49",
     "prettier": "3.3.2",
     "sass": "^1.71.1",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.4.2",
     "unplugin-auto-import": "^0.17.5",

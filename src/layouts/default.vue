@@ -69,6 +69,8 @@
         />
       </div>
       <div class="footer-space"></div>
+      <!-- PWA Install Prompt -->
+      <PWAInstallPrompt />
     </v-main>
   </v-app>
 </template>
@@ -573,6 +575,7 @@
 //
 import AvatarMenu from "@/components/AvatarMenu.vue";
 import Footer from "@/components/Footer.vue";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt.vue";
 import { ref, onMounted } from "vue";
 const searchQuery = ref("");
 const whatsappNumber = '+34604117851';

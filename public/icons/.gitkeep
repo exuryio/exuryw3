@@ -1,0 +1,5 @@
+# PWA Icons Directory
+
+This directory contains the generated PWA icons.
+Run `npm run pwa:generate-icons` to generate them from the source icon.
+
