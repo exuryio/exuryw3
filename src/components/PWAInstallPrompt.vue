@@ -1,4 +1,5 @@
 <template>
+  <!-- Banner cuando Chrome está listo (tiene beforeinstallprompt) -->
   <div
     v-if="showInstallButton && deferredPrompt"
     class="pwa-install-prompt"
@@ -40,6 +41,40 @@
       </div>
     </div>
   </div>
+  
+  <!-- Banner informativo cuando todos los criterios se cumplen pero el evento no se dispara -->
+  <div
+    v-if="showManualInstructions && !showInstallButton"
+    class="pwa-install-prompt pwa-manual-instructions"
+    role="banner"
+    aria-label="Instalar Exury como app"
+  >
+    <div class="pwa-install-content">
+      <div class="pwa-install-icon">
+        <v-icon icon="mdi-download" size="24" />
+      </div>
+      <div class="pwa-install-text">
+        <p class="pwa-install-title">
+          Instala Exury
+        </p>
+        <p class="pwa-install-subtitle">
+          Usa el icono de instalación (➕) en la barra de direcciones
+        </p>
+      </div>
+      <div class="pwa-install-actions">
+        <v-btn
+          icon
+          variant="text"
+          size="small"
+          @click="dismissManualInstructions"
+          class="pwa-install-close"
+          aria-label="Cerrar"
+        >
+          <v-icon icon="mdi-close" size="20" />
+        </v-btn>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -49,6 +84,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 console.log('🚀 PWAInstallPrompt: Script ejecutándose...');
 
 const showInstallButton = ref(false);
+const showManualInstructions = ref(false);
 let deferredPrompt: BeforeInstallPromptEvent | null = null;
 
 interface BeforeInstallPromptEvent extends Event {
@@ -89,7 +125,12 @@ onMounted(() => {
   setTimeout(async () => {
     if (!deferredPrompt && !showInstallButton.value) {
       console.log('🔍 Verificando criterios de instalación de la PWA...');
-      await verifyInstallationCriteria();
+      const allCriteriaMet = await verifyInstallationCriteria();
+      
+      // Si todos los criterios se cumplen pero no hay prompt, verificar si el usuario ya descartó las instrucciones
+      if (allCriteriaMet && !sessionStorage.getItem('pwa-manual-instructions-dismissed')) {
+        // No mostrar aún, esperar a los 30 segundos
+      }
     }
   }, 5000); // Verificar después de 5 segundos
   
@@ -100,12 +141,21 @@ onMounted(() => {
     console.log('💡 En mobile, Chrome puede requerir más interacción antes de mostrar el prompt');
     
     // Verificar después de 30 segundos si el evento se disparó
-    setTimeout(() => {
+    setTimeout(async () => {
       if (!deferredPrompt && !showInstallButton.value) {
         console.log('⚠️ No se recibió beforeinstallprompt después de 30 segundos en mobile');
         console.log('💡 Esto es normal en mobile - Chrome puede requerir más visitas o interacción');
-        console.log('💡 El usuario puede usar el menú del navegador para instalar la app');
-        showInstallationInstructions();
+        
+        // Verificar nuevamente los criterios antes de mostrar instrucciones manuales
+        const allCriteriaMet = await verifyInstallationCriteria();
+        
+        if (allCriteriaMet) {
+          console.log('💡 Todos los criterios se cumplen. Mostrando banner informativo...');
+          showManualInstructions.value = true;
+        } else {
+          console.log('💡 El usuario puede usar el menú del navegador para instalar la app');
+          showInstallationInstructions();
+        }
       }
     }, 30000);
   } else {
@@ -113,10 +163,19 @@ onMounted(() => {
     console.log('💡 El banner solo aparecerá cuando Chrome esté listo para instalar');
     
     // En desktop, verificar después de 30 segundos también
-    setTimeout(() => {
+    setTimeout(async () => {
       if (!deferredPrompt && !showInstallButton.value) {
         console.log('⚠️ No se recibió beforeinstallprompt después de 30 segundos en desktop');
-        showInstallationInstructions();
+        
+        // Verificar nuevamente los criterios antes de mostrar instrucciones manuales
+        const allCriteriaMet = await verifyInstallationCriteria();
+        
+        if (allCriteriaMet) {
+          console.log('💡 Todos los criterios se cumplen. Mostrando banner informativo...');
+          showManualInstructions.value = true;
+        } else {
+          showInstallationInstructions();
+        }
       }
     }, 30000);
   }
@@ -258,6 +317,14 @@ function dismissPrompt() {
   
   // No limpiar deferredPrompt - puede que el usuario quiera instalar más tarde
   // El banner volverá a aparecer si el usuario recarga la página
+}
+
+function dismissManualInstructions() {
+  console.log('❌ Usuario cerró el banner de instrucciones manuales');
+  showManualInstructions.value = false;
+  
+  // Store dismissal in sessionStorage
+  sessionStorage.setItem('pwa-manual-instructions-dismissed', 'true');
 }
 
 async function verifyInstallationCriteria() {
@@ -491,6 +558,20 @@ function showInstallationInstructions() {
 /* Hide if already dismissed in this session */
 .pwa-install-prompt[data-dismissed="true"] {
   display: none;
+}
+
+/* Estilo para el banner de instrucciones manuales */
+.pwa-manual-instructions .pwa-install-content {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 193, 7, 0.1) 100%);
+  border-color: rgba(255, 193, 7, 0.4);
+}
+
+.pwa-manual-instructions .pwa-install-title {
+  color: #FFC107;
+}
+
+.pwa-manual-instructions .pwa-install-icon {
+  background: rgba(255, 193, 7, 0.2);
 }
 </style>
 
