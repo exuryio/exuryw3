@@ -1,7 +1,8 @@
 <template>
   <!-- Banner cuando Chrome está listo (tiene beforeinstallprompt) -->
+  <!-- SOLO se muestra si deferredPrompt existe Y tiene el método prompt() -->
   <div
-    v-if="showInstallButton && deferredPrompt"
+    v-if="showInstallButton && deferredPrompt && typeof deferredPrompt.prompt === 'function'"
     class="pwa-install-prompt"
     role="banner"
     aria-label="Instalar Exury como app"
@@ -15,7 +16,8 @@
           Instala Exury
         </p>
         <p class="pwa-install-subtitle">
-          Acceso rápido desde tu escritorio
+          <span v-if="isMobile">Experiencia tipo app sin barra del navegador</span>
+          <span v-else>Acceso rápido desde tu escritorio</span>
         </p>
       </div>
       <div class="pwa-install-actions">
@@ -157,19 +159,26 @@ function handleBeforeInstallPrompt(e: Event) {
   // Pequeño delay antes de mostrar el banner para asegurar que todo esté listo
   // Esto ayuda a evitar el error "too early"
   setTimeout(() => {
-    if (deferredPrompt) {
+    // Validación estricta: SOLO mostrar si deferredPrompt existe Y tiene el método prompt()
+    if (deferredPrompt && typeof deferredPrompt.prompt === 'function') {
       // Show our custom install button - SOLO cuando tenemos el prompt real y válido
       showInstallButton.value = true;
       
       console.log('✅ Banner de instalación mostrado.');
+      console.log('✅ deferredPrompt disponible:', !!deferredPrompt);
+      console.log('✅ deferredPrompt.prompt disponible:', typeof deferredPrompt.prompt === 'function');
       console.log('✅ El botón "Instalar ahora" abrirá el diálogo nativo de Chrome cuando hagas clic.');
-      console.log('✅ NO se mostrarán instrucciones manuales - solo el diálogo de instalación.');
       
       // Log adicional para mobile
       if (isMobile.value) {
         console.log('📱 En mobile, el diálogo de instalación aparecerá como un modal nativo de Android');
         console.log('📱 Después de instalar, la app se abrirá sin barra del navegador - experiencia tipo app nativa');
       }
+    } else {
+      console.error('❌ ERROR: deferredPrompt no está disponible o no tiene el método prompt()');
+      console.error('❌ deferredPrompt:', deferredPrompt);
+      console.error('❌ No se mostrará el banner porque no hay funcionalidad de instalación disponible');
+      showInstallButton.value = false;
     }
   }, delay);
 }
@@ -194,26 +203,30 @@ function checkIfInstalled(): boolean {
 }
 
 async function installPWA() {
-  console.log('🔍 Estado actual:');
+  console.log('🔍 Estado actual cuando se hace clic en "Instalar ahora":');
   console.log('  - showInstallButton:', showInstallButton.value);
-  console.log('  - deferredPrompt:', deferredPrompt ? 'Disponible' : 'NO disponible');
-  console.log('  - deferredPrompt.prompt:', deferredPrompt && typeof deferredPrompt.prompt === 'function' ? 'Función disponible' : 'NO disponible');
+  console.log('  - deferredPrompt:', deferredPrompt ? 'Disponible' : '❌ NO disponible');
+  console.log('  - deferredPrompt.prompt:', deferredPrompt && typeof deferredPrompt.prompt === 'function' ? 'Función disponible' : '❌ NO disponible');
   
   // Validación estricta: NO hacer nada si no hay prompt real
   if (!deferredPrompt) {
-    console.error('❌ ERROR: No hay prompt de instalación disponible.');
+    console.error('❌ ERROR CRÍTICO: No hay prompt de instalación disponible.');
     console.error('❌ El banner se está mostrando pero deferredPrompt es null.');
-    console.error('❌ Esto puede pasar si el evento beforeinstallprompt no se recibió correctamente.');
+    console.error('❌ Esto NO debería pasar - el banner solo debería aparecer si deferredPrompt existe.');
+    console.error('❌ Posible causa: El evento beforeinstallprompt no se recibió correctamente o se perdió.');
     showInstallButton.value = false;
+    alert('Error: No se puede instalar la app en este momento. Por favor, usa el menú del navegador para instalar.');
     return;
   }
 
   // Verificar que el prompt tenga el método prompt()
   if (typeof deferredPrompt.prompt !== 'function') {
-    console.error('❌ ERROR: El prompt no tiene el método prompt().');
+    console.error('❌ ERROR CRÍTICO: El prompt no tiene el método prompt().');
     console.error('❌ deferredPrompt:', deferredPrompt);
+    console.error('❌ Esto NO debería pasar - el banner solo debería aparecer si prompt() está disponible.');
     showInstallButton.value = false;
     deferredPrompt = null;
+    alert('Error: No se puede instalar la app en este momento. Por favor, usa el menú del navegador para instalar.');
     return;
   }
 
