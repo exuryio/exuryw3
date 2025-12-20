@@ -85,23 +85,40 @@ onMounted(() => {
   // Listen for the beforeinstallprompt event - this is the ONLY way to show the banner
   window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
   
+  // Verificar manualmente los criterios de instalación después de un tiempo
+  setTimeout(async () => {
+    if (!deferredPrompt && !showInstallButton.value) {
+      console.log('🔍 Verificando criterios de instalación de la PWA...');
+      await verifyInstallationCriteria();
+    }
+  }, 5000); // Verificar después de 5 segundos
+  
   // En mobile, el evento puede tardar más en dispararse
   // Agregar un timeout para verificar si el evento se dispara
   if (isMobile) {
     console.log('⏳ Esperando evento beforeinstallprompt en mobile...');
     console.log('💡 En mobile, Chrome puede requerir más interacción antes de mostrar el prompt');
     
-    // Verificar después de 10 segundos si el evento se disparó
+    // Verificar después de 30 segundos si el evento se disparó
     setTimeout(() => {
       if (!deferredPrompt && !showInstallButton.value) {
-        console.log('⚠️ No se recibió beforeinstallprompt después de 10 segundos en mobile');
+        console.log('⚠️ No se recibió beforeinstallprompt después de 30 segundos en mobile');
         console.log('💡 Esto es normal en mobile - Chrome puede requerir más visitas o interacción');
         console.log('💡 El usuario puede usar el menú del navegador para instalar la app');
+        showInstallationInstructions();
       }
-    }, 10000);
+    }, 30000);
   } else {
     console.log('⏳ Esperando evento beforeinstallprompt en desktop...');
     console.log('💡 El banner solo aparecerá cuando Chrome esté listo para instalar');
+    
+    // En desktop, verificar después de 30 segundos también
+    setTimeout(() => {
+      if (!deferredPrompt && !showInstallButton.value) {
+        console.log('⚠️ No se recibió beforeinstallprompt después de 30 segundos en desktop');
+        showInstallationInstructions();
+      }
+    }, 30000);
   }
 });
 
@@ -241,6 +258,109 @@ function dismissPrompt() {
   
   // No limpiar deferredPrompt - puede que el usuario quiera instalar más tarde
   // El banner volverá a aparecer si el usuario recarga la página
+}
+
+async function verifyInstallationCriteria() {
+  console.log('🔍 Verificando criterios de instalación de la PWA...');
+  
+  const checks = {
+    manifest: false,
+    icons: false,
+    serviceWorker: false,
+    https: false,
+    notInstalled: true,
+  };
+  
+  // Verificar manifest
+  try {
+    const manifestResponse = await fetch('/manifest.json');
+    if (manifestResponse.ok) {
+      const manifest = await manifestResponse.json();
+      checks.manifest = !!(manifest.name && manifest.icons && manifest.icons.length > 0);
+      console.log(`✅ Manifest: ${checks.manifest ? 'Válido' : 'Incompleto'}`);
+    }
+  } catch (error) {
+    console.error('❌ Error al verificar manifest:', error);
+  }
+  
+  // Verificar iconos
+  try {
+    const icon192 = await fetch('/icons/icon-192x192.png');
+    const icon512 = await fetch('/icons/icon-512x512.png');
+    checks.icons = icon192.ok && icon512.ok;
+    console.log(`✅ Iconos: ${checks.icons ? 'Disponibles' : 'Faltan'}`);
+  } catch (error) {
+    console.error('❌ Error al verificar iconos:', error);
+  }
+  
+  // Verificar Service Worker
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.getRegistration();
+      checks.serviceWorker = !!registration;
+      console.log(`✅ Service Worker: ${checks.serviceWorker ? 'Registrado' : 'No registrado'}`);
+    } catch (error) {
+      console.error('❌ Error al verificar Service Worker:', error);
+    }
+  } else {
+    console.warn('⚠️ Service Worker: Navegador no soporta Service Workers');
+  }
+  
+  // Verificar HTTPS
+  checks.https = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
+  console.log(`✅ HTTPS: ${checks.https ? 'Sí' : 'No'}`);
+  
+  // Verificar si ya está instalada
+  checks.notInstalled = !window.matchMedia('(display-mode: standalone)').matches;
+  console.log(`✅ No instalada: ${checks.notInstalled ? 'Sí' : 'No (ya está instalada)'}`);
+  
+  // Resumen
+  const allChecksPass = Object.values(checks).every(check => check === true);
+  console.log(`\n📊 Resumen de verificación: ${allChecksPass ? '✅ Todos los criterios cumplidos' : '⚠️ Algunos criterios no se cumplen'}`);
+  
+  if (!allChecksPass) {
+    console.log('💡 Razones por las que Chrome puede no disparar beforeinstallprompt:');
+    if (!checks.manifest) console.log('   - Manifest incompleto o inválido');
+    if (!checks.icons) console.log('   - Faltan iconos (192x192 o 512x512)');
+    if (!checks.serviceWorker) console.log('   - Service Worker no registrado');
+    if (!checks.https) console.log('   - No está en HTTPS (requerido en producción)');
+    if (!checks.notInstalled) console.log('   - La PWA ya está instalada');
+  } else {
+    console.log('💡 Todos los criterios se cumplen. Chrome puede requerir:');
+    console.log('   - Más tiempo en la página');
+    console.log('   - Más interacción del usuario (scroll, clics)');
+    console.log('   - Múltiples visitas a la página');
+    console.log('   - Que el usuario no haya rechazado la instalación anteriormente');
+  }
+  
+  return allChecksPass;
+}
+
+function showInstallationInstructions() {
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  
+  console.log('\n📱 INSTRUCCIONES PARA INSTALAR LA APP:');
+  console.log('════════════════════════════════════════');
+  
+  if (isIOS) {
+    console.log('🍎 iOS:');
+    console.log('   1. Toca el botón "Compartir" (cuadrado con flecha)');
+    console.log('   2. Desplázate hacia abajo y toca "Agregar a pantalla de inicio"');
+    console.log('   3. Toca "Agregar"');
+  } else if (isMobile) {
+    console.log('📱 Android:');
+    console.log('   1. Toca el menú (⋮) en la esquina superior derecha');
+    console.log('   2. Busca "Instalar app" o "Agregar a pantalla de inicio"');
+    console.log('   3. Toca "Instalar"');
+  } else {
+    console.log('🖥️ Desktop:');
+    console.log('   1. Busca el icono de instalación (➕) en la barra de direcciones');
+    console.log('   2. O ve al menú (⋮) → "Instalar Exury..."');
+    console.log('   3. Haz clic en "Instalar"');
+  }
+  
+  console.log('════════════════════════════════════════\n');
 }
 
 
