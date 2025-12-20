@@ -58,7 +58,8 @@
           Instala Exury
         </p>
         <p class="pwa-install-subtitle">
-          Usa el icono de instalación (➕) en la barra de direcciones
+          <span v-if="isMobile">Instala para una experiencia tipo app sin barra del navegador</span>
+          <span v-else>Usa el icono de instalación (➕) en la barra de direcciones</span>
         </p>
       </div>
       <div class="pwa-install-actions">
@@ -85,6 +86,7 @@ console.log('🚀 PWAInstallPrompt: Script ejecutándose...');
 
 const showInstallButton = ref(false);
 const showManualInstructions = ref(false);
+const isMobile = ref(false);
 let deferredPrompt: BeforeInstallPromptEvent | null = null;
 
 interface BeforeInstallPromptEvent extends Event {
@@ -95,11 +97,11 @@ interface BeforeInstallPromptEvent extends Event {
 onMounted(() => {
   console.log('✅ PWAInstallPrompt: onMounted ejecutado');
   
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  isMobile.value = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   
   console.log('🔍 PWAInstallPrompt: Componente montado, escuchando eventos...');
-  console.log(`📱 Dispositivo: ${isMobile ? 'Mobile' : 'Desktop'} ${isIOS ? '(iOS)' : ''}`);
+  console.log(`📱 Dispositivo: ${isMobile.value ? 'Mobile' : 'Desktop'} ${isIOS ? '(iOS)' : ''}`);
   console.log(`🌐 User Agent: ${navigator.userAgent.substring(0, 50)}...`);
   
   // Check if already installed first
@@ -121,22 +123,33 @@ onMounted(() => {
   // Listen for the beforeinstallprompt event - this is the ONLY way to show the banner
   window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
   
-  // Verificar manualmente los criterios de instalación después de un tiempo
-  setTimeout(async () => {
-    if (!deferredPrompt && !showInstallButton.value) {
-      console.log('🔍 Verificando criterios de instalación de la PWA...');
-      const allCriteriaMet = await verifyInstallationCriteria();
-      
-      // Si todos los criterios se cumplen pero no hay prompt, verificar si el usuario ya descartó las instrucciones
-      if (allCriteriaMet && !sessionStorage.getItem('pwa-manual-instructions-dismissed')) {
-        // No mostrar aún, esperar a los 30 segundos
+  // En mobile, mostrar el banner informativo más rápido (después de 3 segundos)
+  // para incentivar la instalación y que se sienta como app
+  if (isMobile && !isIOS) {
+    setTimeout(async () => {
+      if (!deferredPrompt && !showInstallButton.value && !sessionStorage.getItem('pwa-manual-instructions-dismissed')) {
+        console.log('🔍 Verificando criterios de instalación en mobile...');
+        const allCriteriaMet = await verifyInstallationCriteria();
+        
+        if (allCriteriaMet) {
+          console.log('💡 Mostrando banner de instalación en mobile para mejor experiencia tipo app');
+          showManualInstructions.value = true;
+        }
       }
-    }
-  }, 5000); // Verificar después de 5 segundos
+    }, 3000); // Mostrar después de 3 segundos en mobile
+  } else {
+    // En desktop, verificar después de 5 segundos
+    setTimeout(async () => {
+      if (!deferredPrompt && !showInstallButton.value) {
+        console.log('🔍 Verificando criterios de instalación de la PWA...');
+        await verifyInstallationCriteria();
+      }
+    }, 5000);
+  }
   
   // En mobile, el evento puede tardar más en dispararse
   // Agregar un timeout para verificar si el evento se dispara
-  if (isMobile) {
+  if (isMobile.value) {
     console.log('⏳ Esperando evento beforeinstallprompt en mobile...');
     console.log('💡 En mobile, Chrome puede requerir más interacción antes de mostrar el prompt');
     
@@ -151,7 +164,9 @@ onMounted(() => {
         
         if (allCriteriaMet) {
           console.log('💡 Todos los criterios se cumplen. Mostrando banner informativo...');
-          showManualInstructions.value = true;
+          if (!sessionStorage.getItem('pwa-manual-instructions-dismissed')) {
+            showManualInstructions.value = true;
+          }
         } else {
           console.log('💡 El usuario puede usar el menú del navegador para instalar la app');
           showInstallationInstructions();
@@ -186,10 +201,8 @@ onBeforeUnmount(() => {
 });
 
 function handleBeforeInstallPrompt(e: Event) {
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  
   console.log('🎉 beforeinstallprompt event recibido! Chrome está listo para instalar.');
-  console.log(`📱 Dispositivo: ${isMobile ? 'Mobile' : 'Desktop'}`);
+  console.log(`📱 Dispositivo: ${isMobile.value ? 'Mobile' : 'Desktop'}`);
   
   // Validar que el evento tenga las propiedades necesarias
   const promptEvent = e as BeforeInstallPromptEvent;
@@ -207,7 +220,7 @@ function handleBeforeInstallPrompt(e: Event) {
   
   // En mobile, usar un delay más corto porque el evento ya está listo
   // En desktop, usar el delay normal
-  const delay = isMobile ? 200 : 500;
+  const delay = isMobile.value ? 200 : 500;
   
   console.log(`⏳ Esperando ${delay}ms antes de mostrar el banner...`);
   
@@ -223,8 +236,9 @@ function handleBeforeInstallPrompt(e: Event) {
       console.log('✅ NO se mostrarán instrucciones manuales - solo el diálogo de instalación.');
       
       // Log adicional para mobile
-      if (isMobile) {
+      if (isMobile.value) {
         console.log('📱 En mobile, el diálogo de instalación aparecerá como un modal nativo de Android');
+        console.log('📱 Después de instalar, la app se abrirá sin barra del navegador - experiencia tipo app nativa');
       }
     }
   }, delay);
@@ -404,7 +418,6 @@ async function verifyInstallationCriteria() {
 }
 
 function showInstallationInstructions() {
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   
   console.log('\n📱 INSTRUCCIONES PARA INSTALAR LA APP:');
@@ -415,11 +428,12 @@ function showInstallationInstructions() {
     console.log('   1. Toca el botón "Compartir" (cuadrado con flecha)');
     console.log('   2. Desplázate hacia abajo y toca "Agregar a pantalla de inicio"');
     console.log('   3. Toca "Agregar"');
-  } else if (isMobile) {
+  } else if (isMobile.value) {
     console.log('📱 Android:');
     console.log('   1. Toca el menú (⋮) en la esquina superior derecha');
     console.log('   2. Busca "Instalar app" o "Agregar a pantalla de inicio"');
     console.log('   3. Toca "Instalar"');
+    console.log('   💡 Después de instalar, la app se abrirá sin barra del navegador');
   } else {
     console.log('🖥️ Desktop:');
     console.log('   1. Busca el icono de instalación (➕) en la barra de direcciones');

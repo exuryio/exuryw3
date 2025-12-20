@@ -22,7 +22,7 @@
 
     <meta charset="UTF-8" />
     <link rel="icon" href="assets/iconoblack.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Exury</title>
 
     <!-- PWA Meta Tags -->
@@ -106,5 +106,81 @@
 
     <div id="app" class="fill-width" style="height: fit-content"></div>
     <script type="module" src="/src/main.ts"></script>
+    
+    <!-- Script para ocultar barra del navegador en mobile al hacer scroll -->
+    <script>
+      (function() {
+        // Solo ejecutar en mobile
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (!isMobile) return;
+        
+        let lastScrollTop = 0;
+        let ticking = false;
+        
+        // Función para ocultar/mostrar la barra del navegador
+        function handleScroll() {
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          
+          // Forzar scroll mínimo para activar el comportamiento nativo del navegador
+          if (scrollTop > lastScrollTop && scrollTop > 10) {
+            // Scrolling down - el navegador ocultará la barra automáticamente
+            // Forzar un pequeño scroll adicional para asegurar que se oculte
+            if (scrollTop < 50) {
+              window.scrollTo(0, Math.max(scrollTop + 1, 50));
+            }
+          }
+          
+          lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+          ticking = false;
+        }
+        
+        // Throttle del scroll para mejor performance
+        window.addEventListener('scroll', function() {
+          if (!ticking) {
+            window.requestAnimationFrame(handleScroll);
+            ticking = true;
+          }
+        }, { passive: true });
+        
+        // Forzar altura mínima para permitir scroll
+        function setMinHeight() {
+          const vh = window.innerHeight * 0.01;
+          document.documentElement.style.setProperty('--vh', `${vh}px`);
+          
+          // Asegurar que el body tenga altura suficiente para scroll
+          const body = document.body;
+          const html = document.documentElement;
+          const height = Math.max(
+            body.scrollHeight,
+            body.offsetHeight,
+            html.clientHeight,
+            html.scrollHeight,
+            html.offsetHeight
+          );
+          
+          // Si el contenido es más corto que el viewport, agregar padding
+          if (height <= window.innerHeight) {
+            body.style.minHeight = `${window.innerHeight + 100}px`;
+          }
+        }
+        
+        // Ejecutar al cargar y al redimensionar
+        setMinHeight();
+        window.addEventListener('resize', setMinHeight);
+        window.addEventListener('orientationchange', function() {
+          setTimeout(setMinHeight, 100);
+        });
+        
+        // Pequeño scroll inicial para activar el comportamiento
+        setTimeout(function() {
+          if (window.pageYOffset === 0) {
+            window.scrollTo(0, 1);
+            setTimeout(function() {
+              window.scrollTo(0, 0);
+            }, 10);
+          }
+        }, 100);
+      })();
+    </script>
   </body>
 </html>

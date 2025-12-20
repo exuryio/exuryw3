@@ -85,15 +85,22 @@
   margin: 0 !important;
   padding: 5vh !important;
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height - se ajusta cuando la barra se oculta */
   flex-direction: column;
   display: flex;
   
   @media (max-width: $screen-md) {
     padding: clamp(8px, 2vh, 16px) !important;
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height en mobile */
+    height: -webkit-fill-available; /* Para Safari iOS */
   }
   
   @media (max-width: $screen-xs) {
     padding: clamp(4px, 1vh, 8px) !important;
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height en mobile */
+    height: -webkit-fill-available; /* Para Safari iOS */
   }
 }
 #mainContainer {
