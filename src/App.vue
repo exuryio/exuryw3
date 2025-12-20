@@ -22,11 +22,13 @@ body, html {
   -webkit-overflow-scrolling: touch; /* Smooth scrolling en iOS */
 }
 
-/* En mobile, usar dynamic viewport height para mejor comportamiento */
+/* Mobile-First: Optimizaciones para PWA */
 @media (max-width: 768px) {
   html {
     height: 100%;
     height: -webkit-fill-available; /* Para Safari iOS */
+    /* Prevenir zoom accidental en iOS */
+    touch-action: manipulation;
   }
   
   body {
@@ -37,6 +39,25 @@ body, html {
     position: relative;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    /* Mejorar rendimiento en mobile */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Prevenir selección accidental de texto */
+    -webkit-tap-highlight-color: transparent;
+    /* Mejorar rendimiento de scroll */
+    overscroll-behavior-y: contain;
+  }
+  
+  /* Optimizar interacciones táctiles */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  /* Mejorar rendimiento de animaciones */
+  button, a, [role="button"] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 

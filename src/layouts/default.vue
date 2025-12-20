@@ -138,15 +138,20 @@
   @media (max-width: $screen-md) {
     padding: clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) 0 clamp(8px, 2vw, 12px);
     gap: 0;
+    /* Mobile: Mejor rendimiento */
+    will-change: scroll-position;
+    transform: translateZ(0); /* Force GPU acceleration */
   }
   
   @media (max-width: $screen-xs) {
     padding: clamp(4px, 1vw, 8px) clamp(4px, 1vw, 8px) 0 clamp(4px, 1vw, 8px);
     border-radius: 12px;
+    /* Mobile pequeño: Optimizaciones adicionales */
+    backdrop-filter: blur(2px); /* Reducir blur en móviles pequeños para mejor rendimiento */
   }
   #whatsapp-wrapper {
-    position: absolute;
-    bottom: 40px;
+    position: fixed;
+    bottom: 80px; /* Espacio para el banner PWA */
     right: 16px;
     border-radius: 100px;
     background-color: #1cba75;
@@ -155,13 +160,30 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    z-index: 1;
+    z-index: 999;
+    /* Mobile: Mejor área de toque */
+    min-width: 56px;
+    min-height: 56px;
+    /* Mejor feedback táctil */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 12px rgba(28, 186, 117, 0.4);
+    
+    &:active {
+      transform: scale(0.95);
+      box-shadow: 0 2px 8px rgba(28, 186, 117, 0.3);
+    }
+    
     #stateLayer {
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      padding: 8px;
+      padding: 12px; /* Más padding para mejor área de toque */
+    }
+    
+    @media (max-width: $screen-md) {
+      bottom: 100px; /* Más espacio en mobile para banner PWA */
+      right: 16px;
     }
   }
 }
@@ -190,6 +212,10 @@
   max-width: 100%;
   /* Smooth scrolling en mobile */
   -webkit-overflow-scrolling: touch;
+  /* Mejorar rendimiento de scroll */
+  overscroll-behavior-y: contain;
+  /* GPU acceleration para scroll suave */
+  transform: translateZ(0);
   
   @media (max-width: $screen-md) {
     padding-top: clamp(8px, 2vh, 16px);
@@ -197,6 +223,10 @@
     height: auto;
     min-height: 100vh;
     min-height: 100dvh;
+    /* Optimizar scroll en mobile */
+    scroll-behavior: smooth;
+    /* Prevenir scroll horizontal accidental */
+    overscroll-behavior-x: none;
   }
   
   @media (max-width: $screen-xs) {
@@ -222,12 +252,21 @@
   opacity: 1 !important;
   pointer-events: auto !important;
   left: auto !important;
+  /* Mobile: Mejorar rendimiento de scroll */
+  overscroll-behavior-y: contain !important;
+  scroll-behavior: smooth !important;
+  /* GPU acceleration */
+  transform: translateZ(0) !important;
+  will-change: scroll-position !important;
+  
   .page-view {
     height: fit-content;
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
     box-sizing: border-box;
+    /* Mobile: Optimizar renderizado */
+    contain: layout style paint;
   }
 }
 

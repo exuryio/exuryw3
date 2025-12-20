@@ -13,22 +13,29 @@ const urlsToCache = [
 
 // Install event - Cache essential files
 self.addEventListener('install', (event) => {
+  console.log('Service Worker: Instalando...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('Service Worker: Cache abierto');
         return cache.addAll(urlsToCache);
       })
+      .then(() => {
+        console.log('Service Worker: Instalación completada');
+        // Force activation of new service worker
+        return self.skipWaiting();
+      })
       .catch((error) => {
         console.error('Service Worker: Error al cachear', error);
+        // Aún así, activar el service worker
+        return self.skipWaiting();
       })
   );
-  // Force activation of new service worker
-  self.skipWaiting();
 });
 
 // Activate event - Clean up old caches
 self.addEventListener('activate', (event) => {
+  console.log('Service Worker: Activando...');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -40,9 +47,15 @@ self.addEventListener('activate', (event) => {
         })
       );
     })
+    .then(() => {
+      console.log('Service Worker: Activación completada');
+      // Take control of all pages immediately
+      return self.clients.claim();
+    })
+    .then(() => {
+      console.log('Service Worker: Control de páginas tomado');
+    })
   );
-  // Take control of all pages immediately
-  return self.clients.claim();
 });
 
 // Fetch event - Network first strategy (no cache for dynamic content)

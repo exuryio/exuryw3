@@ -22,18 +22,26 @@
 
     <meta charset="UTF-8" />
     <link rel="icon" href="assets/iconoblack.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <!-- Mobile-First Viewport: Optimizado para PWA -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover, user-scalable=yes" />
     <title>Exury</title>
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#00BB72" />
     <meta name="description" content="Plataforma regulada para intercambio de criptomonedas en la Unión Europea" />
     
-    <!-- iOS PWA Support -->
+    <!-- iOS PWA Support - Mobile First -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Exury" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="apple-touch-startup-image" href="/icons/apple-touch-icon.png" />
+    
+    <!-- Mobile Performance -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="MobileOptimized" content="320" />
     
     <!-- Android/Chrome PWA Support -->
     <link rel="manifest" href="/manifest.json" />

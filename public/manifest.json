@@ -5,9 +5,11 @@
   "description": "Plataforma regulada para intercambio de criptomonedas en la Unión Europea",
   "start_url": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "background_color": "#000000",
   "theme_color": "#00BB72",
   "orientation": "portrait-primary",
+  "prefer_related_applications": false,
   "scope": "/",
   "icons": [
     {
