@@ -84,5 +84,8 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    // Permitir acceso desde la red local (para probar en móvil)
+    host: true, // Escuchar en todas las interfaces de red
+    // O usar host: '0.0.0.0' para ser más explícito
   },
 });
