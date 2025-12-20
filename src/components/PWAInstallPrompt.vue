@@ -75,16 +75,26 @@ onBeforeUnmount(() => {
 function handleBeforeInstallPrompt(e: Event) {
   console.log('🎉 beforeinstallprompt event recibido! Chrome está listo para instalar.');
   
+  // Validar que el evento tenga las propiedades necesarias
+  const promptEvent = e as BeforeInstallPromptEvent;
+  
+  if (!promptEvent.prompt || typeof promptEvent.prompt !== 'function') {
+    console.error('❌ ERROR: El evento beforeinstallprompt no tiene el método prompt()');
+    return;
+  }
+  
   // Prevent the default browser install prompt
   e.preventDefault();
   
   // Store the event for later use
-  deferredPrompt = e as BeforeInstallPromptEvent;
+  deferredPrompt = promptEvent;
   
-  // Show our custom install button - SOLO cuando tenemos el prompt real
+  // Show our custom install button - SOLO cuando tenemos el prompt real y válido
   showInstallButton.value = true;
   
-  console.log('✅ Banner de instalación mostrado. El botón "Instalar ahora" funcionará inmediatamente.');
+  console.log('✅ Banner de instalación mostrado.');
+  console.log('✅ El botón "Instalar ahora" abrirá el diálogo nativo de Chrome inmediatamente.');
+  console.log('✅ NO se mostrarán instrucciones manuales - solo el diálogo de instalación.');
 }
 
 function checkIfInstalled(): boolean {
@@ -107,35 +117,48 @@ function checkIfInstalled(): boolean {
 }
 
 async function installPWA() {
+  // Validación estricta: NO hacer nada si no hay prompt real
   if (!deferredPrompt) {
-    console.warn('⚠️ No hay prompt de instalación disponible');
+    console.error('❌ ERROR: No hay prompt de instalación disponible. El banner no debería estar visible.');
     showInstallButton.value = false;
     return;
   }
 
+  // Verificar que el prompt tenga el método prompt()
+  if (typeof deferredPrompt.prompt !== 'function') {
+    console.error('❌ ERROR: El prompt no tiene el método prompt(). Esto no debería pasar.');
+    showInstallButton.value = false;
+    deferredPrompt = null;
+    return;
+  }
+
   try {
-    console.log('🚀 Mostrando prompt de instalación de Chrome...');
+    console.log('🚀 Abriendo diálogo nativo de instalación de Chrome...');
     
     // Show the install prompt - esto abre el diálogo nativo de Chrome
+    // Este es el ÚNICO método que abre el diálogo de instalación
     await deferredPrompt.prompt();
+    
+    console.log('⏳ Esperando respuesta del usuario...');
     
     // Wait for the user's response
     const choiceResult = await deferredPrompt.userChoice;
     
     if (choiceResult.outcome === 'accepted') {
-      console.log('✅ Usuario aceptó la instalación - La app se está instalando');
+      console.log('✅ Usuario aceptó la instalación - La app se está instalando ahora');
       showInstallButton.value = false;
     } else {
       console.log('❌ Usuario rechazó la instalación');
-      // Mantener el banner visible por si el usuario cambia de opinión
     }
     
-    // Clear the deferred prompt después de usarlo
+    // Clear the deferred prompt después de usarlo (solo se puede usar una vez)
     deferredPrompt = null;
     showInstallButton.value = false;
   } catch (error) {
     console.error('❌ Error al instalar PWA:', error);
+    console.error('Detalles del error:', error);
     showInstallButton.value = false;
+    deferredPrompt = null;
   }
 }
 
