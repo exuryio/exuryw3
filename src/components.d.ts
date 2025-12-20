@@ -34,6 +34,7 @@ declare module 'vue' {
     OnBoardingCardGroup: typeof import('./components/cards/OnBoardingCardGroup.vue')['default']
     PriceSimulator: typeof import('./components/PriceSimulator.vue')['default']
     PriceSimulatorInline: typeof import('./components/PriceSimulatorInline.vue')['default']
+    PWAInstallPrompt: typeof import('./components/PWAInstallPrompt.vue')['default']
     RoundSummaryCards: typeof import('./components/invest/RoundSummaryCards.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

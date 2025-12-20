@@ -1,7 +1,7 @@
 <template>
   <!-- Debug: Mostrar siempre para verificar que el componente se renderiza -->
   <div
-    v-if="showInstallButton || showDebug"
+    v-if="showInstallButton"
     class="pwa-install-prompt"
     role="banner"
     aria-label="Instalar Exury como app"
@@ -15,7 +15,7 @@
           Instala Exury
         </p>
         <p class="pwa-install-subtitle">
-          {{ showInstallButton ? 'Acceso rápido desde tu escritorio' : 'Esperando a que Chrome esté listo...' }}
+          {{ showInstallButton ? 'Acceso rápido desde tu escritorio' : 'Usa el icono de instalación en la barra de direcciones' }}
         </p>
       </div>
       <div class="pwa-install-actions">
@@ -30,15 +30,14 @@
           Instalar ahora
         </v-btn>
         <v-btn
-          v-else
+          v-else-if="canInstall"
           color="primary"
           variant="flat"
           size="small"
-          :disabled="!canInstall"
           @click="tryForceInstall"
           class="pwa-install-btn"
         >
-          {{ canInstall ? 'Instalar' : 'Esperando...' }}
+          Intentar instalar
         </v-btn>
         <v-btn
           icon
@@ -72,15 +71,17 @@ interface BeforeInstallPromptEvent extends Event {
 onMounted(() => {
   console.log('🔍 PWAInstallPrompt: Componente montado, escuchando eventos...');
   
+  // Check if already installed first
+  if (checkIfInstalled()) {
+    return; // Don't show prompt if already installed
+  }
+  
   // Listen for the beforeinstallprompt event
   window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
   
-  // Check if already installed
-  checkIfInstalled();
-  
-  // Verificar periódicamente si Chrome está listo (para casos donde el evento no se dispara)
+  // Verificar periódicamente si Chrome está listo
   setTimeout(() => {
-    console.log('🔍 PWAInstallPrompt: Verificando estado después de 2 segundos...');
+    console.log('🔍 PWAInstallPrompt: Verificando estado después de 3 segundos...');
     
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.ready.then(() => {
@@ -88,32 +89,33 @@ onMounted(() => {
       });
     }
     
-    // Si después de 10 segundos no hay prompt, verificar si podemos mostrar el banner de todas formas
+    // Si después de 15 segundos no hay prompt, verificar si podemos mostrar el banner
     setTimeout(async () => {
-      if (!showInstallButton.value && !deferredPrompt) {
-        console.log('⚠️ No se recibió beforeinstallprompt después de 10 segundos');
+      if (!showInstallButton.value && !deferredPrompt && !showDebug.value) {
+        console.log('⚠️ No se recibió beforeinstallprompt después de 15 segundos');
         
-        // Verificar si la PWA es instalable (todos los requisitos cumplidos)
+        // Verificar si la PWA es instalable
         const isInstallable = await checkInstallability();
         
         if (isInstallable) {
-          console.log('✅ PWA es instalable, mostrando banner aunque Chrome no haya disparado el evento');
-          // Mostrar banner para que el usuario sepa que puede instalar
-          showDebug.value = true;
-          canInstall.value = true; // Permitir intentar instalar
+          console.log('✅ PWA es instalable, pero Chrome no ha disparado el evento aún');
+          console.log('💡 El usuario puede usar el icono de instalación en la barra de direcciones');
+          // No mostrar banner automáticamente - dejar que el usuario use el icono del navegador
+          // El banner solo se mostrará cuando Chrome dispare el evento beforeinstallprompt
         }
       }
-    }, 8000);
+    }, 12000);
     
-    // Verificar cada 5 segundos si Chrome dispara el evento
+    // Verificar cada 2 segundos si Chrome dispara el evento
     checkInterval = setInterval(() => {
       if (deferredPrompt && !showInstallButton.value) {
         console.log('✅ Prompt disponible, mostrando banner');
         showInstallButton.value = true;
+        showDebug.value = false;
         if (checkInterval) clearInterval(checkInterval);
       }
-    }, 5000);
-  }, 2000);
+    }, 2000);
+  }, 3000);
 });
 
 onBeforeUnmount(() => {
@@ -142,22 +144,25 @@ function handleBeforeInstallPrompt(e: Event) {
   console.log('📱 deferredPrompt guardado:', deferredPrompt);
 }
 
-function checkIfInstalled() {
+function checkIfInstalled(): boolean {
   // Check if running in standalone mode (already installed)
   if (window.matchMedia('(display-mode: standalone)').matches) {
     console.log('ℹ️ PWA ya está instalada (standalone mode)');
     showInstallButton.value = false;
-    return;
+    showDebug.value = false;
+    return true;
   }
   
   // Check if it's in the installed apps list (not 100% reliable)
   if ((window.navigator as any).standalone === true) {
     console.log('ℹ️ PWA ya está instalada (iOS standalone)');
     showInstallButton.value = false;
-    return;
+    showDebug.value = false;
+    return true;
   }
   
   console.log('ℹ️ PWA no está instalada, esperando evento beforeinstallprompt...');
+  return false;
 }
 
 async function installPWA() {
@@ -255,43 +260,28 @@ async function tryForceInstall() {
     
     window.addEventListener('beforeinstallprompt', handler, { once: true });
     
-    // Esperar hasta 3 segundos
+    // Esperar hasta 2 segundos
     setTimeout(() => {
       window.removeEventListener('beforeinstallprompt', handler);
       resolve(null);
-    }, 3000);
+    }, 2000);
   });
   
   if (event) {
     deferredPrompt = event;
     showInstallButton.value = true;
+    showDebug.value = false;
     canInstall.value = true;
     await installPWA();
   } else {
-    // Si no hay prompt disponible después de esperar, mostrar instrucciones
-    console.log('⚠️ No se pudo obtener el prompt, mostrando instrucciones');
-    showManualInstallGuide();
+    // Si no hay prompt disponible, mostrar instrucciones sin alert
+    console.log('⚠️ No se pudo obtener el prompt');
+    // No mostrar alert automáticamente - el usuario puede usar el icono del navegador
+    showDebug.value = false;
+    showInstallButton.value = false;
   }
 }
 
-function showManualInstallGuide() {
-  const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-  
-  let message = '📱 Para instalar Exury como app:\n\n';
-  
-  if (isChrome) {
-    message += '1. Busca el icono de instalación en la barra de direcciones (lado derecho)\n';
-    message += '2. O ve al menú (⋮) → "Instalar Exury..."\n';
-    message += '3. Haz clic en "Instalar"\n\n';
-    message += '💡 El icono puede tardar unos segundos en aparecer.';
-  } else {
-    message += '1. Usa Chrome o Edge para instalar PWAs\n';
-    message += '2. Busca el icono de instalación en la barra de direcciones\n';
-    message += '3. O ve al menú → "Instalar aplicación"';
-  }
-  
-  alert(message);
-}
 </script>
 
 <style scoped>
