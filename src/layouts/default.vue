@@ -86,17 +86,19 @@
   font-size: 16px;
   color: #c7d4cf;
   margin: 0 !important;
-  padding: 5vh !important;
-  height: 100vh;
+  padding: clamp(12px, 2vw, 24px) !important;
+  min-height: 100vh;
+  min-height: 100dvh;
   flex-direction: column;
   display: flex;
+  box-sizing: border-box;
   
   @media (max-width: $screen-md) {
-    padding: clamp(8px, 2vh, 16px) !important;
+    padding: clamp(8px, 2vw, 16px) !important;
   }
   
   @media (max-width: $screen-xs) {
-    padding: clamp(4px, 1vh, 8px) !important;
+    padding: clamp(6px, 1.5vw, 10px) !important;
   }
 }
 #mainContainer {
@@ -113,31 +115,30 @@
 }
 .list {
   flex: 1;
+  min-height: 0;
   backdrop-filter: blur(4px);
   border-radius: 16px;
   background-color: rgba(13, 21, 19, 0.5);
   border: 1px solid #2d4740;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: flex-start;
-  padding: 16px 16px 0 0;
-  gap: 92px;
+  padding: clamp(12px, 1.5vw, 20px) clamp(12px, 1.5vw, 20px) 0 clamp(12px, 1.5vw, 20px);
+  gap: clamp(16px, 2.5vw, 40px);
   z-index: 0;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  height: 100vh;
+  overflow: hidden;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
   
   @media (max-width: $screen-md) {
-    padding: clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) 0 clamp(8px, 2vw, 12px);
+    padding: clamp(8px, 2vw, 12px);
     gap: 0;
   }
   
   @media (max-width: $screen-xs) {
-    padding: clamp(4px, 1vw, 8px) clamp(4px, 1vw, 8px) 0 clamp(4px, 1vw, 8px);
+    padding: clamp(6px, 1.5vw, 10px);
     border-radius: 12px;
   }
   #whatsapp-wrapper {
@@ -168,29 +169,34 @@
 }
 #sidebarWrapper {
   flex-shrink: 0;
-  width: 160px;
+  width: auto;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
-  padding-right: 44px;
+  align-items: stretch;
+  padding-right: 0;
+}
+#sidebarWrapper :deep(.sidebar) {
+  flex: 0 0 auto;
 }
 
 .scroll-container {
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-top: 5vh;
+  padding-top: clamp(8px, 1.5vw, 24px);
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
   
   @media (max-width: $screen-md) {
-    padding-top: clamp(8px, 2vh, 16px);
+    padding-top: clamp(8px, 2vw, 16px);
   }
   
   @media (max-width: $screen-xs) {
-    padding-top: clamp(4px, 1vh, 8px);
+    padding-top: clamp(6px, 1.5vw, 10px);
   }
 }
 

@@ -180,9 +180,10 @@ const handleSignup = () => {
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    max-width: 100%;
-    min-height: 100vh;
-    padding: clamp(16px, 3vw, 24px) clamp(16px, 5%, 80px) 0 clamp(16px, 5%, 80px);
+    max-width: min(100%, 1400px);
+    margin: 0 auto;
+    min-height: min(100vh, 100dvh);
+    padding: clamp(12px, 2.5vw, 28px) clamp(12px, 3vw, 48px) 0 clamp(12px, 3vw, 48px);
     overflow-x: hidden;
     box-sizing: border-box;
 
@@ -193,33 +194,33 @@ const handleSignup = () => {
       justify-content: space-between;
       width: 100%;
       max-width: 100%;
-      gap: clamp(32px, 5vw, 64px);
+      gap: clamp(20px, 3vw, 48px);
       margin-top: 0;
       z-index: 2;
       overflow-x: hidden;
       overflow-y: visible;
-      padding-left: clamp(0px, 2vw, 20px);
+      padding-left: 0;
       box-sizing: border-box;
     }
 
     .simulator-wrapper {
       flex: 0 0 auto;
-      width: clamp(320px, 30vw, 420px);
+      width: clamp(300px, 28vw, 400px);
       min-width: 0;
-      max-width: 420px;
+      max-width: 400px;
       z-index: 10;
       position: sticky;
-      top: clamp(60px, 8vw, 100px);
+      top: clamp(56px, 6vw, 88px);
       align-self: flex-start;
     }
 
     .content-wrapper {
       flex: 1;
+      min-width: 0;
       max-height: fit-content;
       display: flex;
       flex-direction: column;
       align-items: start;
-      min-width: 0; // Prevents flex item from overflowing
       width: 100%;
       overflow: visible;
         .title-wrapper {
@@ -229,7 +230,7 @@ const handleSignup = () => {
           align-items: start;
           justify-content: start;
           width: 100%;
-          max-width: 550px;
+          max-width: min(100%, 520px);
           margin-bottom: clamp(16px, 2.5vw, 24px);
           
           .trust-badge {
@@ -565,6 +566,24 @@ const handleSignup = () => {
 .title-top-space {
   height: 15dvh;
 }
+
+@media (max-width: 1100px) {
+  .home-wrapper .main-content {
+    .home-layout {
+      flex-direction: column;
+      align-items: stretch;
+      gap: clamp(20px, 3vw, 32px);
+    }
+    .simulator-wrapper {
+      width: 100%;
+      max-width: 100%;
+      position: relative;
+      top: 0;
+      align-self: stretch;
+    }
+  }
+}
+
 @media (max-width: $screen-md) {
   .home-wrapper {
     min-height: 100%;
