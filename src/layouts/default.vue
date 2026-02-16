@@ -177,8 +177,15 @@
   align-items: stretch;
   padding-right: 0;
 }
+/* Drawer en el flujo para que no solape el contenido al expandir/colapsar */
+#sidebarWrapper :deep(.v-navigation-drawer) {
+  position: relative !important;
+  height: 100%;
+  min-height: 0;
+}
 #sidebarWrapper :deep(.sidebar) {
   flex: 0 0 auto;
+  height: 100%;
 }
 
 .scroll-container {
