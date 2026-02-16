@@ -4,15 +4,36 @@ meta:
 </route>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, onErrorCaptured, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import CoinGroupModel from "@/components/coin/CoinGroupModel.vue";
-import PriceSimulatorInline from "@/components/PriceSimulatorInline.vue";
 
 const router = useRouter();
 const { t } = useI18n();
 const email = ref('');
+const homeError = ref<unknown>(null);
+
+onErrorCaptured((err) => {
+  homeError.value = err;
+  return false;
+});
+
+const CoinGroupModel = defineAsyncComponent({
+  loader: () => import('@/components/coin/CoinGroupModel.vue'),
+  loadingComponent: { template: '<div class="coins-placeholder" />' },
+  errorComponent: { template: '<div class="coins-placeholder" />' },
+  delay: 0,
+});
+const PriceSimulatorInline = defineAsyncComponent({
+  loader: () => import('@/components/PriceSimulatorInline.vue'),
+  loadingComponent: { template: '<div class="sim-placeholder" />' },
+  errorComponent: { template: '<div class="sim-placeholder" />' },
+  delay: 0,
+});
+
+const reloadPage = () => {
+  if (typeof window !== 'undefined') window.location.reload();
+};
 
 const handleSignup = () => {
   // Always redirect to register page
@@ -29,11 +50,15 @@ const handleSignup = () => {
 };
 </script>
 <template>
-  <div class="home-wrapper">
-
+  <div class="home-wrapper" data-page="home">
+    <div v-if="homeError" class="home-error">
+      <p>Error al cargar la página.</p>
+      <v-btn color="primary" size="small" @click="reloadPage">Recargar</v-btn>
+    </div>
+    <template v-else>
     <div class="main-content">
       <div class="coins-wrapper">
-        <CoinGroupModel></CoinGroupModel>
+        <CoinGroupModel />
       </div>
 
       <div class="home-layout">
@@ -116,6 +141,7 @@ const handleSignup = () => {
       </div>
       <div></div>
     </div>
+    </template>
   </div>
 </template>
 
@@ -136,8 +162,19 @@ const handleSignup = () => {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+
+  .home-error {
+    padding: 24px;
+    text-align: center;
+    color: rgba(255,255,255,0.9);
+    p { margin: 0 0 12px; }
+  }
+  .coins-placeholder, .sim-placeholder {
+    min-height: 1px;
+    width: 100%;
+  }
   .main-content {
-    position: relative;
+  position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -844,5 +881,5 @@ const handleSignup = () => {
       }
     }
   }
-}
+  }
 </style>

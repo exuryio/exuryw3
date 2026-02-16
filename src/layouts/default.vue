@@ -1,8 +1,7 @@
 <template>
-  <v-app>
-    <v-main class="main">
-      <div id="mainContainer" class="rounded-circle" />
-      <div class="list">
+  <div class="main">
+    <div id="mainContainer" class="rounded-circle" />
+    <div class="list">
         <!-- Sidebar with padding -->
         <div id="sidebarWrapper">
           <SideBar />
@@ -76,8 +75,7 @@
         />
       </div>
       <div v-if="showFooter" class="footer-space"></div>
-    </v-main>
-  </v-app>
+  </div>
 </template>
 
 <style lang="scss" scoped>
