@@ -176,12 +176,12 @@ meta:
           <div class="payment-details">
             <div class="detail-row">
               <span class="detail-label">Importe a transferir</span>
-              <span class="detail-value amount">{{ formatEur(order.amount_eur ?? order.fiat_amount ?? 0) }} EUR</span>
+              <span class="detail-value amount">{{ formatEur(Number(order.amount_eur ?? order.fiat_amount ?? 0)) }} EUR</span>
               <v-btn
                 class="copy-btn"
                 variant="tonal"
                 size="small"
-                @click="onCopy(formatEur(order.amount_eur ?? order.fiat_amount ?? 0) + ' EUR')"
+                @click="onCopy(formatEur(Number(order.amount_eur ?? order.fiat_amount ?? 0)) + ' EUR')"
               >
                 <v-icon start size="18">mdi-content-copy</v-icon>
                 Copiar
@@ -198,7 +198,7 @@ meta:
                   class="copy-reference-btn"
                   color="primary"
                   variant="flat"
-                  @click="onCopy(order.reference || order.payment_reference || orderId)"
+                  @click="onCopy(String(order.reference ?? order.payment_reference ?? orderId))"
                 >
                   <v-icon start size="18">mdi-content-copy</v-icon>
                   Copiar referencia
@@ -214,7 +214,7 @@ meta:
                 class="copy-btn"
                 variant="tonal"
                 size="small"
-                @click="onCopy(order.iban)"
+                @click="onCopy(String(order.iban ?? ''))"
               >
                 <v-icon start size="18">mdi-content-copy</v-icon>
                 Copiar
@@ -280,7 +280,7 @@ meta:
         <!-- Order summary footer -->
         <div class="order-summary">
           <span class="order-id">Orden {{ orderId }}</span>
-          <span class="order-amount">{{ formatEur(order.amount_eur ?? order.fiat_amount ?? 0) }} EUR → {{ order.amount_crypto ?? order.crypto_amount ?? '—' }} {{ order.asset || 'USDC' }}</span>
+          <span class="order-amount">{{ formatEur(Number(order.amount_eur ?? order.fiat_amount ?? 0)) }} EUR → {{ order.amount_crypto ?? order.crypto_amount ?? '—' }} {{ order.asset || 'USDC' }}</span>
         </div>
       </template>
     </div>

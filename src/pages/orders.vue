@@ -26,13 +26,13 @@
 
       <div v-else class="orders-list">
         <router-link
-          v-for="ord in orders"
-          :key="ord.id || ord.order_id"
-          :to="`/order/${ord.order_id || ord.id}`"
+          v-for="(ord, idx) in orders"
+          :key="String(ord.id ?? ord.order_id ?? idx)"
+          :to="`/order/${String(ord.order_id ?? ord.id ?? '')}`"
           class="order-item"
         >
-          <span class="order-id">{{ ord.order_id || ord.id }}</span>
-          <span class="order-amount">{{ formatEur(ord.amount_eur ?? ord.fiat_amount ?? 0) }} EUR → {{ ord.asset || 'USDC' }}</span>
+          <span class="order-id">{{ ord.order_id ?? ord.id }}</span>
+          <span class="order-amount">{{ formatEur(Number(ord.amount_eur ?? ord.fiat_amount ?? 0)) }} EUR → {{ ord.asset || 'USDC' }}</span>
           <span class="order-status" :class="statusClass(ord)">{{ statusLabel(ord) }}</span>
           <v-icon size="20">mdi-chevron-right</v-icon>
         </router-link>
