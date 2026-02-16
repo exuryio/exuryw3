@@ -33,6 +33,7 @@ declare module 'vue-router/auto-routes' {
     '/invest-private-round-2': RouteRecordInfo<'/invest-private-round-2', '/invest-private-round-2', Record<never, never>, Record<never, never>>,
     '/licencias': RouteRecordInfo<'/licencias', '/licencias', Record<never, never>, Record<never, never>>,
     '/login': RouteRecordInfo<'/login', '/login', Record<never, never>, Record<never, never>>,
+    '/order/[id]': RouteRecordInfo<'/order/[id]', '/order/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/privacy-policy': RouteRecordInfo<'/privacy-policy', '/privacy-policy', Record<never, never>, Record<never, never>>,
     '/register': RouteRecordInfo<'/register', '/register', Record<never, never>, Record<never, never>>,
     '/terms-conditions': RouteRecordInfo<'/terms-conditions', '/terms-conditions', Record<never, never>, Record<never, never>>,

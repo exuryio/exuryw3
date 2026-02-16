@@ -197,26 +197,34 @@ onUnmounted(() => {
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    gap: 8px;
-    padding: 32px 0 16px 0;
+    gap: 16px;
+    padding: 16px 0 16px 0;
     height: fit-content;
     width: 100%;
     max-width: 100%;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: visible;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    scroll-behavior: smooth;
+  }
+  
+  .cards-transition-group::-webkit-scrollbar {
+    display: none;
   }
 
   .card-left-navigation-wrapper {
     position: absolute;
     top: calc(40% - 20px);
     left: 10px;
+    z-index: 10;
   }
 
   .card-right-navigation-wrapper {
     position: absolute;
     top: calc(40% - 20px);
     right: 10px;
+    z-index: 10;
   }
 }
 
@@ -260,27 +268,31 @@ onUnmounted(() => {
   justify-content: center;
   padding-bottom: 6px;
   gap: 4px;
-  z-index: 100;
+  z-index: 1;
 }
 
 
 @media (max-width: $screen-lg) {
   .cards-wrapper {
+    position: relative;
     top: 0;
-    margin-top: -20px;
+    margin-top: 0;
     max-height: fit-content;
-    overflow: hidden;
+    overflow: visible;
     .cards-transition-group {
-      min-height: 550px;
-      max-height: 550px;
-      padding-left: 10px;
+      min-height: auto;
+      max-height: none;
+      padding: 12px 16px 16px 16px;
+      gap: 12px;
+      overflow-x: auto;
+      overflow-y: visible;
     }
   }
   .dotParent {
-    position: absolute;
+    position: relative;
     top: 0;
-    justify-content: end;
-    padding: 0 16px 0 0;
+    justify-content: center;
+    padding: 12px 0 0 0;
   }
 }
 </style>

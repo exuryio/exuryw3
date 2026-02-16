@@ -46,6 +46,8 @@ const selectFrame = () => {
   height: 537px;
   width: 414px;
   min-width: 414px;
+  max-width: 414px;
+  flex-shrink: 0;
   overflow: hidden;
   display: flex;
   flex-direction: row;
@@ -65,6 +67,8 @@ const selectFrame = () => {
   height: 587px;
   width: 453px;
   min-width: 453px;
+  max-width: 453px;
+  flex-shrink: 0;
   overflow: hidden;
   display: flex;
   flex-direction: row;
@@ -130,6 +134,8 @@ const selectFrame = () => {
     height: 460px;
     width: 270px;
     min-width: 270px;
+    max-width: 270px;
+    flex-shrink: 0;
     overflow: hidden;
     display: flex;
     flex-direction: row;
@@ -148,6 +154,8 @@ const selectFrame = () => {
     height: 460px;
     width: 270px;
     min-width: 270px;
+    max-width: 270px;
+    flex-shrink: 0;
     overflow: hidden;
     display: flex;
     flex-direction: row;
@@ -164,6 +172,8 @@ const selectFrame = () => {
     height: 460px;
     width: 270px;
     min-width: 270px;
+    max-width: 270px;
+    flex-shrink: 0;
     overflow: hidden;
     display: flex;
     flex-direction: row;

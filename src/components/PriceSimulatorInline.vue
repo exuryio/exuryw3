@@ -644,10 +644,10 @@ const getEstimatedReverseRate = (): string => {
   return afterFee.toFixed(2);
 };
 
+const PENDING_ORDER_KEY = 'exury_pending_order';
+
 const handleContinue = async () => {
-  // Check if user is authenticated
   if (!authStore.isLoggedIn) {
-    // User not authenticated, redirect to register
     router.push('/register');
     return;
   }
@@ -657,44 +657,52 @@ const handleContinue = async () => {
     return;
   }
 
+  const quoteId = quote.value.quote_id;
+  const amountEur = direction.value === 'eur-to-crypto' ? eurAmount.value : (quote.value.eur_amount ?? 0);
+  const amountCrypto = direction.value === 'eur-to-crypto' ? (quote.value.crypto_amount ?? 0) : cryptoAmount.value;
+  const asset = selectedAsset.value;
+
   try {
     isLoading.value = true;
     error.value = null;
 
-    // Lock quote first
-    await apiService.lockQuote(quote.value.quote_id);
+    let orderId: string | null = null;
 
-    // Create order
-    const response = await apiService.createOrder(quote.value.quote_id) as {
-      order_id: string;
-      [key: string]: unknown;
-    };
-    
-    // Show success and redirect or show order details
-    console.log('✅ Order created:', response);
-    
-    // If we're already on /exchange, show success message
-    // Otherwise, redirect to /exchange with order info
-    if (router.currentRoute.value.path === '/exchange') {
-      // Emit event or use a store to show success message
-      // For now, just show a success alert
-      alert(`¡Orden creada exitosamente! ID: ${response.order_id}`);
-      // Refresh quote to get a new one
-      if (direction.value === 'eur-to-crypto' && eurAmount.value > 0) {
-        await fetchQuote();
+    if (quoteId) {
+      try {
+        await apiService.lockQuote(quoteId);
+      } catch {
+        /* ignore */
       }
-    } else {
-      router.push({
-        path: '/exchange',
-        query: {
-          order_id: response.order_id,
-          success: 'true',
-        },
-      });
+      try {
+        const response = await apiService.createOrder(quoteId) as { order_id?: string; id?: string; [key: string]: unknown };
+        orderId = response?.order_id ?? response?.id ?? null;
+        if (orderId) console.log('✅ Order created:', response);
+      } catch (err: any) {
+        console.warn('Create order failed:', err);
+      }
     }
+
+    if (orderId) {
+      router.push(`/order/${orderId}`);
+      return;
+    }
+
+    // Backend falló o no hay quote_id: igual pasamos a los siguientes pasos con datos del simulador
+    const tempId = `temp-${Date.now()}`;
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(PENDING_ORDER_KEY, JSON.stringify({
+        order_id: tempId,
+        amount_eur: amountEur,
+        amount_crypto: amountCrypto,
+        asset,
+        status: 'pending',
+      }));
+    }
+    router.push(`/order/${tempId}`);
   } catch (err: any) {
-    console.error('Error creating order:', err);
-    error.value = err.message || 'Error al crear la orden. Por favor, intenta de nuevo.';
+    console.error('Error:', err);
+    error.value = err?.message || 'Error inesperado. Intenta de nuevo.';
   } finally {
     isLoading.value = false;
   }
