@@ -25,56 +25,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Exury</title>
 
-    <script id="Cookiebot"
-    src="https://consent.cookiebot.com/uc.js"
-    data-cbid="85e40a95-9a9c-473a-9775-bdd34899ef02"
-    data-blockingmode="auto" 
-    type="text/javascript">
+    <!-- Cookiebot solo en producción para no bloquear la app en previews/PR (dominio no autorizado) -->
+    <script>
+      (function() {
+        var h = window.location.hostname || '';
+        if (h === 'exury.io' || h === 'www.exury.io') {
+          var s = document.createElement('script');
+          s.id = 'Cookiebot';
+          s.src = 'https://consent.cookiebot.com/uc.js';
+          s.setAttribute('data-cbid', '85e40a95-9a9c-473a-9775-bdd34899ef02');
+          s.setAttribute('data-blockingmode', 'auto');
+          s.type = 'text/javascript';
+          document.head.appendChild(s);
+        }
+      })();
     </script>
   </head>
 
   <script>
-    // Función para obtener la ubicación basada en la IP sin mostrar popup
-    async function getLocationByIP() {
-      try {
-        const res = await fetch('https://ipapi.co/json/');
-        const data = await res.json();
-  
-        const locationData = {
-          latitude: data.latitude,
-          longitude: data.longitude,
-          address: `${data.city}, ${data.region}, ${data.country_name}`
-        };
-  
-        // Enviar al backend de Exury_tracking
-        sendToBackend("track", locationData);
-      } catch (error) {
-        console.error("Error al obtener ubicación por IP:", error);
-      }
+    // Ubicación por IP (tracking): no bloquea la app si falla (CORS en algunos dominios)
+    function getLocationByIP() {
+      fetch('https://ipapi.co/json/')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          var payload = {
+            latitude: data.latitude,
+            longitude: data.longitude,
+            address: (data.city || '') + ', ' + (data.region || '') + ', ' + (data.country_name || '')
+          };
+          fetch('https://exury-tracking.onrender.com/api/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          }).catch(function() {});
+        })
+        .catch(function() {});
     }
-  
-    // Función para enviar los datos al backend
-    function sendToBackend(endpoint, data) {
-      fetch("https://exury-tracking.onrender.com/api/" + endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.json())
-      .then(result => {
-        console.log("Ubicación enviada a backend:", result);
-      })
-      .catch(error => {
-        console.error("Error al enviar datos al backend:", error);
-      });
+    if (window.addEventListener) {
+      window.addEventListener('load', getLocationByIP);
+    } else {
+      window.onload = getLocationByIP;
     }
-  
-    // Llamar al cargar la página
-    window.onload = function() {
-      getLocationByIP();
-    };
   </script>
   
 
