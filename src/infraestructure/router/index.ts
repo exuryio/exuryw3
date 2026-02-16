@@ -12,11 +12,13 @@ import type { RouteLocationNormalized } from "vue-router";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   extendRoutes: (routes: RouteRecordRaw[]) => {
+    // Redirigir siempre / a /home (evitar que index.vue se muestre como home)
+    const rest = (routes as RouteRecordRaw[]).filter((r) => r.path !== '/');
     return setupLayouts([
       { path: '/', redirect: '/home' },
       { path: '/dashboard', name: 'dashboard', component: () => import('@/pages/dashboard.vue') },
       { path: '/orders', name: 'orders', component: () => import('@/pages/orders.vue') },
-      ...routes,
+      ...rest,
     ]);
   },
 });

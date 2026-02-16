@@ -1,3 +1,8 @@
+<route lang="yaml">
+meta:
+  layout: default
+</route>
+
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
