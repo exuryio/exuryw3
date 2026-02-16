@@ -15,12 +15,12 @@
     <!-- TECHNIQUE: Visual Hierarchy + 8pt Grid System -->
     <section class="faq-section hero-animate mx-auto w-full max-w-7xl px-4 pt-8 sm:px-6 sm:pt-10 lg:px-8 lg:pt-16">
       <div class="mb-10 lg:mb-14">
-        <h2 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">Preguntas Frecuentes (FAQ)</h2>
+        <h2 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">{{ t('faq.title') }}</h2>
         <!-- TECHNIQUE: Gestalt Continuity - Línea divisoria -->
         <div class="mt-4 h-px w-20 bg-exury-green/40 sm:mt-5" />
         <!-- TECHNIQUE: Scannable Content -->
         <p class="mt-6 text-sm leading-relaxed text-exury-offwhite/80 sm:text-base">
-          Encuentra respuestas rápidas a las preguntas más comunes y descubre cómo empezar con EXURY. ¡Todo lo que necesitas saber para intercambiar criptomonedas de forma segura está aquí!
+          {{ t('faq.intro') }}
         </p>
       </div>
 
@@ -63,18 +63,21 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted, nextTick } from 'vue';
+import { computed, ref, onMounted, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
 
-const items = ref([
-  {title: "1.1. ¿Cómo me registro en EXURY?", answer: "Regístrate en EXURY visitando nuestra web, completando el formulario y verificando tu cuenta a través del correo de confirmación."},
-  {title: "1.2. ¿De que se trata el proceso de KYC?", answer: "KYC es un proceso de verificación de identidad que garantiza la seguridad de los usuarios, cumpliendo con normativas internacionales."},
-  {title: "1.3. ¿Cuanto dura el proceso de verificación?", answer: "El proceso de verificación suele completarse en menos de 24 horas, dependiendo de la documentación"},
-  {title: "2.1. ¿Cómo realizo un intercambio de criptomonedas a euros o viceversa?", answer: "Recibiras un mensaje con la cantidad que solicites intercambiar, junto a una oferta personalizada por parte de nuestros agentes, una vez confirmada la transacción, tus fondos estarán disponibles en minutos en la wallet que nos indiques"},
-  {title: "2.2. ¿Cuáles son las tarifas de intercambio en EXURY?", answer:"Ofrecemos tarifas bajas y transparentes, que pueden variar según la criptomoneda y el volumen, al registrate nuestra asistencia personalizada te brindará todos los detalles"},
-  {title: "2.3. ¿Cómo puedo asegurar la seguridad de mis criptomonedas en EXURY?", answer: "EXURY protege tus fondos con tecnología avanzada y al ser sin custodia, tú mantienes el control total de tus claves privadas."},
-  {title: "3.1. ¿Cómo funciona el soporte al cliente en EXURY?", answer: "Nuestro soporte al cliente está disponible 24/7 a través de chat, correo electrónico y teléfono para asistencia personalizada."},
-  {title: "3.3. ¿Hay límites de intercambio en la plataforma?", answer: "Los límites dependen de la criptomoneda y tu nivel de verificación; aumenta tu verificación para ampliar tus límites de intercambio."},
-])
+const { t } = useI18n();
+
+const items = computed(() => [
+  { title: t('faq.item1Title'), answer: t('faq.item1Answer') },
+  { title: t('faq.item2Title'), answer: t('faq.item2Answer') },
+  { title: t('faq.item3Title'), answer: t('faq.item3Answer') },
+  { title: t('faq.item4Title'), answer: t('faq.item4Answer') },
+  { title: t('faq.item5Title'), answer: t('faq.item5Answer') },
+  { title: t('faq.item6Title'), answer: t('faq.item6Answer') },
+  { title: t('faq.item7Title'), answer: t('faq.item7Answer') },
+  { title: t('faq.item8Title'), answer: t('faq.item8Answer') },
+]);
 
 const openQuestions = ref<Set<number>>(new Set());
 

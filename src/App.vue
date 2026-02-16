@@ -1,10 +1,16 @@
 <template>
   <v-app class="fill-width" style="height: fit-content">
     <v-main>
-      <router-view />
+      <router-view :key="locale" />
     </v-main>
   </v-app>
 </template>
+
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
+const { locale } = useI18n();
+</script>
 
 <style>
 .v-list-item__prepend {

@@ -13,7 +13,9 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   extendRoutes: (routes: RouteRecordRaw[]) => {
     return setupLayouts([
-      { path: '/', redirect: '/home' }, // Redirigir la raíz a /home
+      { path: '/', redirect: '/home' },
+      { path: '/dashboard', name: 'dashboard', component: () => import('@/pages/dashboard.vue') },
+      { path: '/orders', name: 'orders', component: () => import('@/pages/orders.vue') },
       ...routes,
     ]);
   },

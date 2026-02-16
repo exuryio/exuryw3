@@ -1,18 +1,30 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useHead } from "@vueuse/head";
-import { SIDEBAR_LINKS } from "@/domain/constants/sidebar.constant";
+import {
+  SIDEBAR_LINKS,
+  SIDEBAR_LINKS_FOCUSED,
+  SIDEBAR_LINKS_MORE,
+  isFocusedRoute,
+} from "@/domain/constants/sidebar.constant";
 import { useAppStore } from "@/infraestructure/stores/app";
 import { useAuthStore } from "@/infraestructure/stores/auth";
 import { SidebarItem } from "@/domain/models/sidebar-item";
 import { linksToShow } from "@/application/mappers/sidebar-mapper";
+import { useI18n } from "vue-i18n";
 
 const router = useRouter();
 const route = useRoute();
 
 const appStore = useAppStore();
 const authStore = useAuthStore();
+const { t } = useI18n();
+
+function sidebarTitle(link: SidebarItem | { titleKey?: string; title?: string }): string {
+  if (link.titleKey) return t(`sidebar.${link.titleKey}`);
+  return (link as SidebarItem).title ?? "";
+}
 
 // Check if mobile on mount and set initial state
 const isMobile = () => {
@@ -21,6 +33,15 @@ const isMobile = () => {
 };
 
 const isCollapsed = ref(isMobile());
+const moreExpanded = ref(false);
+
+const isFocusedMode = computed(() => isFocusedRoute(route.path));
+const primaryLinks = computed(() =>
+  isFocusedMode.value ? SIDEBAR_LINKS_FOCUSED : linksToShow
+);
+const showMoreSection = computed(
+  () => isFocusedMode.value && SIDEBAR_LINKS_MORE.length > 0
+);
 
 watch(route, (newRoute) => {
   const currentLink = SIDEBAR_LINKS.find(
@@ -105,15 +126,15 @@ const handleBuyCrypto = (): void => {
         >
           <v-list-item
             rounded="xl"
-            v-for="(link, index) in linksToShow"
-            :key="link.title"
+            v-for="(link, index) in primaryLinks"
+            :key="`primary-${link.route}`"
             @click="handleItem(link)"
-            :title="link.title"
+            :title="sidebarTitle(link)"
             :class="[
-                        'nav-item',
-                        { 'active-link': route.path === link.route },
-                        { 'mb-2': index === 4 },
-                    ]"
+              'nav-item',
+              { 'active-link': route.path === link.route },
+              { 'mb-2': showMoreSection && index === primaryLinks.length - 1 },
+            ]"
           >
             <template v-slot:prepend>
               <v-icon
@@ -130,10 +151,54 @@ const handleBuyCrypto = (): void => {
               />
             </template>
             <hr
-              v-if="index === 4"
+              v-if="showMoreSection && index === primaryLinks.length - 1"
               class="position-absolute left-0 mt-4 w-100 opacity-20"
             />
           </v-list-item>
+          <template v-if="showMoreSection">
+            <v-list-item
+              rounded="xl"
+              class="nav-item more-trigger"
+              :class="{ 'active-link': moreExpanded }"
+              @click="moreExpanded = !moreExpanded"
+              :title="isCollapsed ? undefined : sidebarTitle({ titleKey: 'mas' })"
+            >
+              <template v-slot:prepend>
+                <v-icon
+                  class="mr-3"
+                  :color="moreExpanded ? '#1CBA75' : 'white'"
+                >{{ moreExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+              </template>
+            </v-list-item>
+            <template v-if="moreExpanded">
+              <v-list-item
+                rounded="xl"
+                v-for="link in SIDEBAR_LINKS_MORE"
+                :key="`more-${link.route}`"
+                @click="handleItem(link)"
+                :title="sidebarTitle(link)"
+                :class="[
+                  'nav-item',
+                  { 'active-link': route.path === link.route },
+                ]"
+              >
+                <template v-slot:prepend>
+                  <v-icon
+                    v-if="link.icon"
+                    :color="route.path === link.route ? '#1CBA75' : 'white'"
+                    class="mr-3"
+                  >{{ link.icon }}</v-icon>
+                  <img
+                    v-else-if="link.svg"
+                    :src="link.svg"
+                    :alt="link.title"
+                    class="custom-svg-icon mr-3 mt-2"
+                    :class="{ active: route.path === link.route }"
+                  />
+                </template>
+              </v-list-item>
+            </template>
+          </template>
         </v-list-item-group>
       </v-list>
     </div>
@@ -148,7 +213,7 @@ const handleBuyCrypto = (): void => {
           @click="handleBuyCrypto"
         >
           <v-icon :class="{ 'mr-2': !isCollapsed }">mdi-currency-btc</v-icon>
-          <span v-if="!isCollapsed" class="text-capitalize">Buy Crypto</span>
+          <span v-if="!isCollapsed" class="text-capitalize">{{ t('sidebar.buyCrypto') }}</span>
         </v-btn>
       </div>
     </template>

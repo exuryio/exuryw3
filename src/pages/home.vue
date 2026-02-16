@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import CoinGroupModel from "@/components/coin/CoinGroupModel.vue";
 import PriceSimulatorInline from "@/components/PriceSimulatorInline.vue";
-// Removed unused import
 
 const router = useRouter();
+const { t } = useI18n();
 const email = ref('');
 
 const handleSignup = () => {
@@ -35,32 +36,25 @@ const handleSignup = () => {
         <div class="content-wrapper">
 
         <div class="title-wrapper">
-          <!-- Trust Badge / Social Proof -->
           <div class="trust-badge">
             <v-icon color="#1cba75" size="16">mdi-shield-check</v-icon>
-            <span>VASP Regulado en la UE</span>
+            <span>{{ t('home.vaspRegulated') }}</span>
           </div>
-          
-          <!-- Main Headline (Short, direct, pain-focused) -->
           <h1 class="title-top">
-            Sin esperas.<br />
-            Sin comisiones ocultas.
+            {{ t('home.heroLine1') }}<br />
+            {{ t('home.heroLine2') }}
           </h1>
-          
-          <!-- Value Proposition Subheadline -->
           <h2 class="title-accent">
-            Cambia euros por cripto en segundos<br />
-            vía transferencia bancaria SEPA Instant.
+            {{ t('home.heroSubline') }}<br />
+            {{ t('home.heroSubline2') }}
           </h2>
         </div>
-        
-        <!-- Email Signup CTA (Like Coinbase/Kraken/Binance) - PRIMARY ACTION - Right after headline -->
         <div class="cta-section">
           <div class="cta-wrapper">
             <v-text-field
               v-model="email"
               type="email"
-              placeholder="tu@email.com"
+              :placeholder="t('home.emailPlaceholder')"
               variant="outlined"
               density="comfortable"
               hide-details
@@ -73,33 +67,29 @@ const handleSignup = () => {
               class="signup-btn"
               @click="handleSignup"
             >
-              Empieza ahora
+              {{ t('home.startNow') }}
             </v-btn>
           </div>
-          
-          <!-- Social Proof / Trust - Below CTA (Like Kraken) -->
           <p class="pain-hook">
-            Miles de usuarios confían en Exury.
+            {{ t('home.trustLine') }}
           </p>
         </div>
-        
-        <!-- Key Benefits (Pain-focused, direct communication) -->
         <div class="benefits-list">
           <div class="benefit-item highlight">
             <v-icon color="#1cba75" size="18">mdi-lightning-bolt</v-icon>
-            <span>SEPA Instant</span>
+            <span>{{ t('home.benefitSepa') }}</span>
           </div>
           <div class="benefit-item highlight">
             <v-icon color="#1cba75" size="18">mdi-shield-check</v-icon>
-            <span>Tú controlas tus fondos</span>
+            <span>{{ t('home.benefitControl') }}</span>
           </div>
           <div class="benefit-item highlight">
             <v-icon color="#1cba75" size="18">mdi-cash-multiple</v-icon>
-            <span>Mínimo 0.5%</span>
+            <span>{{ t('home.benefitMin') }}</span>
           </div>
           <div class="benefit-item highlight">
             <v-icon color="#1cba75" size="18">mdi-chart-line</v-icon>
-            <span>Mejor precio</span>
+            <span>{{ t('home.benefitPrice') }}</span>
           </div>
         </div>
         

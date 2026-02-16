@@ -1,7 +1,7 @@
 <template>
   <div class="footer-wrapper">
     <hr />
-    <p class="footer-top">La inversión en criptoactivos no está regulada, puede no ser adecuada para inversores minoristas y perderse la totalidad del importe invertido Es importante leer y comprender los riesgos de esta inversión que se explican detalladamente en esta <a href="#">ubicación</a>.</p>
+    <p class="footer-top">{{ t('footer.disclaimerBefore') }}<a href="#">{{ t('footer.disclaimerLink') }}</a>{{ t('footer.disclaimerAfter') }}</p>
     <div class="footer-mid">
       <div>
         <img
@@ -9,33 +9,32 @@
           alt=""
           src="/LogoExury1.png"
         />
-        <p>Calle Hermosilla 48, 1. dcha.
-          Madrid, Spain</p>
+        <p>{{ t('footer.address') }}</p>
         <p>contact@exury.io</p>
       </div>
       <div class="legal-section">
-        <h2>Seguridad y Legal</h2>
+        <h2>{{ t('footer.securityLegal') }}</h2>
         <ul class="legal-links">
-          <li><router-link to="/privacy-policy" class="footer-link">Política de Privacidad</router-link></li>
-          <li><router-link to="/terms-conditions" class="footer-link">Términos y Condiciones</router-link></li>        
-          <li><router-link to="/cookies-use" class="footer-link">Cookies</router-link></li> 
-          <li><router-link to="/licencias" class="footer-link">Licencias</router-link></li> 
+          <li><router-link to="/privacy-policy" class="footer-link">{{ t('footer.privacyPolicy') }}</router-link></li>
+          <li><router-link to="/terms-conditions" class="footer-link">{{ t('footer.termsConditions') }}</router-link></li>
+          <li><router-link to="/cookies-use" class="footer-link">{{ t('footer.cookies') }}</router-link></li>
+          <li><router-link to="/licencias" class="footer-link">{{ t('footer.licenses') }}</router-link></li>
         </ul>
       </div><div>
-      <h2>Tendencias</h2>
+      <h2>{{ t('footer.trends') }}</h2>
       <ul>
-        <li>Cambiar criptomonedas a euros</li>
-        <li>Exchange criptomonedas españa</li>
-        <li>Comprar bitcoin con euros</li>
-        <li>Comprar bitcoin con euros</li>
+        <li>{{ t('footer.trend1') }}</li>
+        <li>{{ t('footer.trend2') }}</li>
+        <li>{{ t('footer.trend3') }}</li>
+        <li>{{ t('footer.trend3') }}</li>
       </ul>
     </div>
       <div class="newsletter-section">
-        <h2 class="newsletter">Newsletter</h2>
+        <h2 class="newsletter">{{ t('footer.newsletter') }}</h2>
         <v-text-field
           v-model="newsletterEmail"
           append-inner-icon="mdi-email-outline"
-          label="Email"
+          :label="t('footer.email')"
           variant="outlined"
           class="input-newsletter"
           :disabled="isSubscribed"
@@ -49,7 +48,7 @@
           :loading="isLoading"
           @click="handleSubscribe"
         >
-          {{ isSubscribed ? 'Suscrito' : 'Suscribirse' }}
+          {{ isSubscribed ? t('footer.subscribed') : t('footer.subscribe') }}
         </v-btn>
         <v-alert
           v-if="subscribeMessage"
@@ -74,7 +73,7 @@
       </div>
 
       <div class="a-product-of">
-        <p>A product of <svg xmlns="http://www.w3.org/2000/svg" width="36" height="39" viewBox="0 0 36 39" fill="none">
+        <p>{{ t('footer.productOf') }} <svg xmlns="http://www.w3.org/2000/svg" width="36" height="39" viewBox="0 0 36 39" fill="none">
           <g clip-path="url(#clip0_5068_2210)">
             <path d="M31.6968 0.146484H4.30316C2.20273 0.146484 0.5 1.84922 0.5 3.94965V34.6364C0.5 36.7368 2.20273 38.4396 4.30316 38.4396H31.6968C33.7973 38.4396 35.5 36.7368 35.5 34.6364V3.94965C35.5 1.84922 33.7973 0.146484 31.6968 0.146484Z" fill="#00BE6A"/>
             <path d="M22.9347 12.2135V20.0652C22.9347 22.3317 23.8282 23.4641 25.6183 23.4641C27.4084 23.4641 28.3018 22.3317 28.3018 20.0652V9.43848H31.4617V20.1358C31.4617 21.2313 31.3254 22.1777 31.0543 22.9733C30.7913 23.6855 30.3373 24.3271 29.6925 24.8981C28.6242 25.8253 27.2672 26.2888 25.6199 26.2888C23.9725 26.2888 22.6283 25.8253 21.5601 24.8981C20.904 24.3271 20.4404 23.6855 20.1694 22.9733C19.9063 22.3365 19.7764 21.3901 19.7764 20.1358V12.2135H22.9363H22.9347Z" fill="black"/>
@@ -89,7 +88,7 @@
         </svg></p>
       </div>
       <div>
-        <p>© 2025 Exury. All rights reserved</p>
+        <p>{{ t('footer.copyright') }}</p>
       </div>
     </div>
     
@@ -97,7 +96,7 @@
     <div class="paydo-info">
       <div class="paydo-content">
         <p class="paydo-registration">
-          DIVISY APP, S.L. (CIF: B-56826183) está registrada en el Banco de España como proveedora de servicios de cambio de moneda virtual por moneda fiduciaria y viceversa con número de registro E102 y opera bajo la marca registrada Exury®.
+          {{ t('footer.registration') }}
         </p>
       </div>
     </div>
@@ -106,6 +105,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const newsletterEmail = ref('');
 const isSubscribed = ref(false);
@@ -115,7 +117,7 @@ const subscribeSuccess = ref(false);
 
 const handleSubscribe = async () => {
   if (!newsletterEmail.value || !newsletterEmail.value.trim()) {
-    subscribeMessage.value = 'Por favor, ingresa un correo electrónico válido';
+    subscribeMessage.value = t('footer.subscribeInvalidEmail');
     subscribeSuccess.value = false;
     setTimeout(() => {
       subscribeMessage.value = '';
@@ -126,7 +128,7 @@ const handleSubscribe = async () => {
   // Validate email format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(newsletterEmail.value.trim())) {
-    subscribeMessage.value = 'Por favor, ingresa un correo electrónico válido';
+    subscribeMessage.value = t('footer.subscribeInvalidEmail');
     subscribeSuccess.value = false;
     setTimeout(() => {
       subscribeMessage.value = '';
@@ -143,14 +145,14 @@ const handleSubscribe = async () => {
     const subscribedEmails = JSON.parse(localStorage.getItem('newsletter_subscriptions') || '[]');
     
     if (subscribedEmails.includes(newsletterEmail.value.trim().toLowerCase())) {
-      subscribeMessage.value = 'Ya estás suscrito a nuestro newsletter';
+      subscribeMessage.value = t('footer.subscribeAlreadySubscribed');
       subscribeSuccess.value = true;
       isSubscribed.value = true;
     } else {
       subscribedEmails.push(newsletterEmail.value.trim().toLowerCase());
       localStorage.setItem('newsletter_subscriptions', JSON.stringify(subscribedEmails));
       
-      subscribeMessage.value = '¡Te has suscrito exitosamente!';
+      subscribeMessage.value = t('footer.subscribeSuccess');
       subscribeSuccess.value = true;
       isSubscribed.value = true;
     }
@@ -161,7 +163,7 @@ const handleSubscribe = async () => {
     }, 5000);
   } catch (error) {
     console.error('Error subscribing to newsletter:', error);
-    subscribeMessage.value = 'Error al suscribirse. Por favor, intenta de nuevo.';
+    subscribeMessage.value = t('footer.subscribeError');
     subscribeSuccess.value = false;
     setTimeout(() => {
       subscribeMessage.value = '';

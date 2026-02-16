@@ -16,35 +16,42 @@
             <transition name="scroll-x-transition" mode="out-in">
               <div>
                 <div class="top-bar-wrapper">
-                  <div class="searchBarWrapper">
-                    <div class="searchBar">
-                      <v-text-field
-                        v-model="searchQuery"
-                        label="Buscar"
-                        single-line
-                        hide-details
-                        @input="onSearch"
-                        class="custom-search-bar"
+                  <template v-if="showFooter">
+                    <div class="searchBarWrapper">
+                      <div class="searchBar">
+                        <v-text-field
+                          v-model="searchQuery"
+                          label="Buscar"
+                          single-line
+                          hide-details
+                          @input="onSearch"
+                          class="custom-search-bar"
+                        >
+                          <template v-slot:prepend-inner>
+                            <v-icon color="white">mdi-magnify</v-icon>
+                          </template>
+                        </v-text-field>
+                      </div>
+                      <v-btn
+                        class="btn-search"
                       >
-                        <template v-slot:prepend-inner>
-                          <v-icon color="white">mdi-magnify</v-icon>
-                        </template>
-                      </v-text-field>
+                        <v-icon style="font-size: 28px; opacity: 0.8" color="white">mdi-magnify</v-icon>
+                      </v-btn>
                     </div>
-                    <v-btn
-                      class="btn-search"
-                    >
-                      <v-icon style="font-size: 28px; opacity: 0.8" color="white">mdi-magnify</v-icon>
-                    </v-btn>
-                  </div>
-                  <div id="iconButtonParent">
-                    <div  id="search-small">
-                      <div id="container">
-                        <div id="stateLayer">
-                          <v-icon icon="mdi-magnify"></v-icon>
+                    <div id="iconButtonParent">
+                      <div id="search-small">
+                        <div id="container">
+                          <div id="stateLayer">
+                            <v-icon icon="mdi-magnify"></v-icon>
+                          </div>
                         </div>
                       </div>
+                      <LanguageSelector />
+                      <AvatarMenu />
                     </div>
+                  </template>
+                  <div v-else id="iconButtonParent" class="iconButtonParent-no-search">
+                    <LanguageSelector />
                     <AvatarMenu />
                   </div>
                 </div>
@@ -52,7 +59,7 @@
               </div>
             </transition>
           </div>
-          <Footer />
+          <Footer v-if="showFooter" />
         </div>
         </div>
         <div id="whatsapp-wrapper">
@@ -68,7 +75,7 @@
           src="/LogoExury1.png"
         />
       </div>
-      <div class="footer-space"></div>
+      <div v-if="showFooter" class="footer-space"></div>
     </v-main>
   </v-app>
 </template>
@@ -340,6 +347,9 @@
   #logoExury {
     left: 74px;
   }
+}
+
+@media (max-width: 640px) {
   .main {
     .list {
       .listInner {
@@ -572,8 +582,15 @@
 <script lang="ts" setup>
 //
 import AvatarMenu from "@/components/AvatarMenu.vue";
+import LanguageSelector from "@/components/LanguageSelector.vue";
 import Footer from "@/components/Footer.vue";
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { isFocusedRoute } from "@/domain/constants/sidebar.constant";
+
+const route = useRoute();
+const showFooter = computed(() => !isFocusedRoute(route.path));
+
 const searchQuery = ref("");
 const whatsappNumber = '+34604117851';
 const message = 'Hola quiero saber más detalles de vuestro servicio';

@@ -15,12 +15,12 @@
     <!-- TECHNIQUE: Visual Hierarchy + 8pt Grid System -->
     <section class="contact-section hero-animate mx-auto w-full max-w-7xl px-4 pt-8 sm:px-6 sm:pt-10 lg:px-8 lg:pt-16">
       <div class="mb-10 lg:mb-14">
-        <h1 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">Contact</h1>
+        <h1 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">{{ t('contact.title') }}</h1>
         <!-- TECHNIQUE: Gestalt Continuity - Línea divisoria -->
         <div class="mt-4 h-px w-20 bg-exury-green/40 sm:mt-5" />
         <!-- TECHNIQUE: Scannable Content -->
         <p class="mt-6 text-sm leading-relaxed text-exury-offwhite/80 sm:text-base">
-          Contacta con nuestro equipo para recibir asistencia inmediata con tus operaciones o para cualquier consulta.
+          {{ t('contact.intro') }}
         </p>
       </div>
 
@@ -53,7 +53,7 @@
             </p>
 
             <!-- TECHNIQUE: Affordances - Botones con hover effects -->
-            <template v-if="card.title === 'Whatsapp'">
+            <template v-if="card.id === 'whatsapp'">
               <a :href="card.link" target="_blank" class="contact-button">
                 <v-btn
                   rounded
@@ -64,7 +64,7 @@
                 </v-btn>
               </a>
             </template>
-            <template v-else-if="card.title === 'Email'">
+            <template v-else-if="card.id === 'email'">
               <a :href="`mailto:direccion@exury.io?subject=Consulta%20desde%20la%20web&body=Hola,%20tengo%20una%20consulta`" class="contact-button">
                 <v-btn
                   rounded
@@ -92,28 +92,32 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick } from "vue";
+import { computed, onMounted, nextTick } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const whatsappNumber = '+34604117851';
-const message = 'Hola estoy interesadx en saber más';
-const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+const whatsappLink = computed(() => `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t('contact.whatsappMessage'))}`);
 
-const contents = [
+const contents = computed(() => [
   {
-    title: 'Whatsapp',
-    description: '¿Necesitas ayuda o quieres hacer una operación? Escríbenos y te asistiremos al instante.',
-    button: '¡Chatea con Nosotros!',
-    link: whatsappLink,
+    id: 'whatsapp',
+    title: t('contact.whatsappTitle'),
+    description: t('contact.whatsappDesc'),
+    button: t('contact.whatsappButton'),
+    link: whatsappLink.value,
     image: '/assets/contact/Contactusexury-01.svg'
   },
   {
-    title: 'Email',
-    description: 'Para consultas escríbenos al email direccion@exury.io responderemos rápido con la información solicitada.',
-    button: '¡Escríbenos ahora!',
-    link: '', // No es necesario un enlace aquí, se usará mailto
+    id: 'email',
+    title: t('contact.emailTitle'),
+    description: t('contact.emailDesc'),
+    button: t('contact.emailButton'),
+    link: '',
     image: '/assets/contact/Contactusexury-02.svg'
   }
-];
+]);
 
 // TECHNIQUE: Progressive Enhancement - Animaciones scroll-triggered
 onMounted(() => {

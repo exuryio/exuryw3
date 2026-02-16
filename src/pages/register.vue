@@ -177,7 +177,7 @@ onMounted(() => {
   // If user is already authenticated, redirect to exchange
   if (authStore.isLoggedIn) {
     console.log('User already authenticated, redirecting to /exchange');
-    router.push('/exchange');
+    router.push('/dashboard');
     return;
   }
   

@@ -1,51 +1,26 @@
 <script setup lang="ts">
-const milestones = [
-  {
-    year: "2023",
-    quarter: "Q1",
-    title: "Inicio de operaciones en Colombia",
-    description: "Exury comienza sus operaciones en Colombia, expandiendo su alcance en Latinoamérica.",
-    type: "operation",
-  },
-  {
-    year: "2023",
-    quarter: "Q2",
-    title: "Inicio de operaciones en España",
-    description: "Fundación oficial en Madrid, España. Comienza la operación en el mercado europeo.",
-    type: "operation",
-  },
-  {
-    year: "2024",
-    quarter: "Q1",
-    title: "Licencia del Banco de España",
-    description: "Obtención de la licencia como institución financiera regulada por el Banco de España.",
-    type: "regulation",
-  },
-  {
-    year: "2025",
-    quarter: "Q1",
-    title: "Partnership con Binance",
-    description: "Alianza estratégica con Binance para mejorar la infraestructura y servicios.",
-    type: "partnership",
-  },
-  {
-    year: "2025",
-    quarter: "Q1",
-    title: "Partnership con Paydo",
-    description: "Colaboración con Paydo como proveedor de infraestructura de pagos.",
-    type: "partnership",
-  },
-] as const;
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
+const milestones = computed(() => [
+  { year: '2023', quarter: 'Q1', title: t('company.timeline.m1Title'), description: t('company.timeline.m1Desc'), type: 'operation' as const },
+  { year: '2023', quarter: 'Q2', title: t('company.timeline.m2Title'), description: t('company.timeline.m2Desc'), type: 'operation' as const },
+  { year: '2024', quarter: 'Q1', title: t('company.timeline.m3Title'), description: t('company.timeline.m3Desc'), type: 'regulation' as const },
+  { year: '2025', quarter: 'Q1', title: t('company.timeline.m4Title'), description: t('company.timeline.m4Desc'), type: 'partnership' as const },
+  { year: '2025', quarter: 'Q1', title: t('company.timeline.m5Title'), description: t('company.timeline.m5Desc'), type: 'partnership' as const },
+]);
 </script>
 
 <template>
   <section class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
     <div class="grid gap-10 lg:grid-cols-12 lg:items-start">
       <div class="lg:col-span-5">
-        <h2 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">Nuestros logros</h2>
+        <h2 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">{{ t('company.timeline.title') }}</h2>
         <div class="mt-4 h-px w-20 bg-exury-green/40 sm:mt-5" />
         <p class="mt-6 text-sm leading-relaxed text-exury-offwhite/70 sm:text-base">
-          Hitos importantes que marcan nuestro crecimiento y consolidación como plataforma regulada.
+          {{ t('company.timeline.intro') }}
         </p>
       </div>
 
@@ -111,13 +86,13 @@ const milestones = [
                     v-if="milestone.type === 'regulation'"
                     class="rounded-full border-2 border-exury-green/50 bg-exury-green/25 px-4 py-1.5 text-xs font-semibold text-exury-offwhite shadow-[0_0_0_2px_rgba(0,187,114,0.15)]"
                   >
-                    Regulación
+                    {{ t('company.timeline.regulation') }}
                   </span>
                   <span
                     v-else-if="milestone.type === 'partnership'"
                     class="rounded-full border border-white/25 bg-white/8 px-4 py-1.5 text-xs font-semibold text-exury-offwhite/90"
                   >
-                    Partnership
+                    {{ t('company.timeline.partnership') }}
                   </span>
                 </div>
                 <!-- TECHNIQUE: Visual Hierarchy - Título destacado para escaneo -->

@@ -1,3 +1,8 @@
+<route lang="yaml">
+meta:
+  layout: default
+</route>
+
 <template>
   <div class="order-page">
     <div class="order-container">

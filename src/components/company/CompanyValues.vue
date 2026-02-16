@@ -1,46 +1,26 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import Company3DIcon from "./Company3DIcon.vue";
 
-const values = [
-  {
-    title: "Excelencia regulatoria",
-    description:
-      "Cumplimos con todas las normativas del Banco de España y nos preparamos para MiCA 2026. La excelencia requiere orden y disciplina.",
-    icon: "mdi-shield-check",
-    icon3d: "shield" as const,
-  },
-  {
-    title: "Transparencia absoluta",
-    description:
-      "Sin comisiones ocultas, sin sorpresas. Comunicación clara y honesta en cada interacción.",
-    icon: "mdi-eye",
-    icon3d: "eye" as const,
-  },
-  {
-    title: "Soberanía del usuario",
-    description:
-      "Operamos sin custodia. Tú controlas tus activos y decides dónde recibir tus criptomonedas en todo momento.",
-    icon: "mdi-account-key",
-    icon3d: "key" as const,
-  },
-  {
-    title: "Éxito",
-    description:
-      "Nos enfocamos en resultados excepcionales y crecimiento continuo. Cada logro es un paso hacia un estándar más alto.",
-    icon: "mdi-trophy",
-    icon3d: "trophy" as const,
-  },
-] as const;
+const { t } = useI18n();
+
+const values = computed(() => [
+  { title: t('company.values.v1Title'), description: t('company.values.v1Desc'), icon: 'mdi-shield-check', icon3d: 'shield' as const },
+  { title: t('company.values.v2Title'), description: t('company.values.v2Desc'), icon: 'mdi-eye', icon3d: 'eye' as const },
+  { title: t('company.values.v3Title'), description: t('company.values.v3Desc'), icon: 'mdi-account-key', icon3d: 'key' as const },
+  { title: t('company.values.v4Title'), description: t('company.values.v4Desc'), icon: 'mdi-trophy', icon3d: 'trophy' as const },
+]);
 </script>
 
 <template>
   <section class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
     <div class="grid gap-10 lg:grid-cols-12 lg:items-start">
       <div class="lg:col-span-5">
-        <h2 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">Nuestros valores</h2>
+        <h2 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">{{ t('company.values.title') }}</h2>
         <div class="mt-4 h-px w-20 bg-exury-green/40 sm:mt-5" />
         <p class="mt-6 text-sm leading-relaxed text-exury-offwhite/80 sm:text-base">
-          Los principios que guían cada decisión y acción en Exury.
+          {{ t('company.values.intro') }}
         </p>
       </div>
 
@@ -48,7 +28,7 @@ const values = [
         <div class="grid gap-4 sm:grid-cols-2">
           <div
             v-for="(value, idx) in values"
-            :key="value.title"
+            :key="value.icon3d"
             class="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.02] to-white/[0.01] p-5 transition-all duration-300 sm:rounded-3xl sm:p-6 hover:border-exury-green/30 hover:bg-gradient-to-br hover:from-exury-green/10 hover:to-exury-greenDeep/10 hover:shadow-[0_0_0_1px_rgba(0,187,114,0.2),0_12px_32px_rgba(0,187,114,0.12)] hover:-translate-y-1 active:scale-[0.98] motion-reduce:transition-none"
             :style="`animation-delay: ${idx * 0.1}s`"
           >

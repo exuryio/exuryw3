@@ -1,55 +1,35 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import Company3DIcon from "./Company3DIcon.vue";
 
-const pillars = [
-  {
-    title: "Libertad con propósito",
-    description:
-      "Trabajamos desde donde queramos porque confiamos en la autonomía de quienes buscan la excelencia.",
-    icon: "mdi-lock-open-variant",
-    icon3d: "lock" as const,
-  },
-  {
-    title: "Excelencia como estándar",
-    description:
-      "Resultados excepcionales y crecimiento continuo. Cada logro es un paso hacia un estándar más alto.",
-    icon: "mdi-trophy",
-    icon3d: "star" as const,
-  },
-  {
-    title: "Sabiduría consciente",
-    description:
-      "Actuamos con plena conciencia del impacto de nuestras decisiones. Transparencia e integridad en cada acción.",
-    icon: "mdi-lightbulb-on",
-    icon3d: "lightbulb" as const,
-  },
-  {
-    title: "Liderazgo desde el poder",
-    description:
-      "Buscamos líderes que contribuyan al crecimiento de Exury desde su propia autoridad y conocimiento.",
-    icon: "mdi-lightning-bolt",
-    icon3d: "lightning" as const,
-  },
-] as const;
+const { t } = useI18n();
+
+const pillars = computed(() => [
+  { title: t('company.culture.p1Title'), description: t('company.culture.p1Desc'), icon: 'mdi-lock-open-variant', icon3d: 'lock' as const },
+  { title: t('company.culture.p2Title'), description: t('company.culture.p2Desc'), icon: 'mdi-trophy', icon3d: 'star' as const },
+  { title: t('company.culture.p3Title'), description: t('company.culture.p3Desc'), icon: 'mdi-lightbulb-on', icon3d: 'lightbulb' as const },
+  { title: t('company.culture.p4Title'), description: t('company.culture.p4Desc'), icon: 'mdi-lightning-bolt', icon3d: 'lightning' as const },
+]);
 </script>
 
 <template>
   <section class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
     <div class="grid gap-10 lg:grid-cols-12 lg:items-start">
       <div class="lg:col-span-5">
-        <h2 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">Nuestra cultura</h2>
+        <h2 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">{{ t('company.culture.title') }}</h2>
         <div class="mt-4 h-px w-20 bg-exury-green/40 sm:mt-5" />
         <p class="mt-6 text-sm leading-relaxed text-exury-offwhite/80 sm:text-base">
-          Un equipo unido por una visión: construir el futuro de las finanzas desde la sabiduría y el liderazgo consciente.
+          {{ t('company.culture.intro') }}
         </p>
         
         <div class="mt-6 rounded-xl border border-exury-green/25 bg-exury-green/12 p-4 sm:rounded-2xl sm:p-5">
-          <p class="text-xs font-semibold text-exury-offwhite/70 uppercase tracking-wide sm:text-sm">Modalidad</p>
+          <p class="text-xs font-semibold text-exury-offwhite/70 uppercase tracking-wide sm:text-sm">{{ t('company.culture.modalityLabel') }}</p>
           <p class="mt-1 text-base font-bold text-exury-offwhite sm:text-lg">
-            Full Remote
+            {{ t('company.culture.modalityValue') }}
           </p>
           <p class="mt-2 text-xs leading-relaxed text-exury-offwhite/80 sm:text-sm">
-            Trabaja desde donde quieras. Valoramos la autonomía y confiamos en tu disciplina.
+            {{ t('company.culture.modalityDesc') }}
           </p>
         </div>
       </div>
@@ -58,7 +38,7 @@ const pillars = [
         <div class="grid gap-4 sm:grid-cols-2">
           <div
             v-for="(pillar, idx) in pillars"
-            :key="pillar.title"
+            :key="pillar.icon3d"
             class="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.02] to-white/[0.01] p-5 transition-all duration-300 sm:rounded-3xl sm:p-6 hover:border-exury-green/30 hover:bg-gradient-to-br hover:from-exury-green/10 hover:to-exury-greenDeep/10 hover:shadow-[0_0_0_1px_rgba(0,187,114,0.2),0_12px_32px_rgba(0,187,114,0.12)] hover:-translate-y-1 active:scale-[0.98] motion-reduce:transition-none"
             :style="`animation-delay: ${idx * 0.1}s`"
           >
