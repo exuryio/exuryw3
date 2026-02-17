@@ -2,8 +2,10 @@
   <div class="main">
     <div id="mainContainer" class="rounded-circle" />
     <div class="list">
-        <!-- Sidebar with padding -->
-        <div id="sidebarWrapper">
+        <!-- Espaciador que reserva el ancho del sidebar (evita solapamiento y hueco a la derecha) -->
+        <div class="sidebar-spacer" :style="{ width: sidebarWidthPx }" aria-hidden="true" />
+        <!-- Sidebar fijo sobre el espaciador -->
+        <div id="sidebarWrapper" class="sidebar-fixed" :style="{ width: sidebarWidthPx }">
           <SideBar />
         </div>
         <!-- Main content area -->
@@ -114,6 +116,7 @@
   mix-blend-mode: normal;
 }
 .list {
+  position: relative;
   flex: 1;
   min-height: 0;
   backdrop-filter: blur(4px);
@@ -167,17 +170,26 @@
   bottom: 0;
   background: transparent;
 }
-#sidebarWrapper {
+/* Espaciador: reserva ancho para que el contenido no se solape ni quede hueco a la derecha */
+.sidebar-spacer {
   flex-shrink: 0;
-  width: auto;
   min-width: 0;
+}
+
+/* Sidebar fijo sobre el espaciador: siempre visible, sin solapar contenido */
+#sidebarWrapper.sidebar-fixed {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
   padding-right: 0;
+  z-index: 2;
 }
-/* Drawer en el flujo para que no solape el contenido al expandir/colapsar */
 #sidebarWrapper :deep(.v-navigation-drawer) {
   position: relative !important;
   height: 100%;
@@ -598,9 +610,14 @@ import Footer from "@/components/Footer.vue";
 import { ref, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { isFocusedRoute } from "@/domain/constants/sidebar.constant";
+import { useAppStore } from "@/infraestructure/stores/app";
 
 const route = useRoute();
+const appStore = useAppStore();
 const showFooter = computed(() => !isFocusedRoute(route.path));
+
+/** Ancho del sidebar en px: 216 expandido, 90 colapsado (igual que SideBar.vue) */
+const sidebarWidthPx = computed(() => (appStore.getSidebarCollapsed ? "90px" : "216px"));
 
 const searchQuery = ref("");
 const whatsappNumber = '+34604117851';

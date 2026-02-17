@@ -35,6 +35,9 @@ const isMobile = () => {
 const isCollapsed = ref(isMobile());
 const moreExpanded = ref(false);
 
+// Sincronizar estado con el store para que el layout reserve el ancho correcto
+appStore.setSidebarCollapsed(isCollapsed.value);
+
 const isFocusedMode = computed(() => isFocusedRoute(route.path));
 const primaryLinks = computed(() =>
   isFocusedMode.value ? SIDEBAR_LINKS_FOCUSED : linksToShow
@@ -70,10 +73,12 @@ onMounted(() => {
   resizeHandler = () => {
     if (isMobile()) {
       isCollapsed.value = true;
+      appStore.setSidebarCollapsed(true);
     }
   };
   
   window.addEventListener('resize', resizeHandler);
+  appStore.setSidebarCollapsed(isCollapsed.value);
 });
 
 onUnmounted(() => {
@@ -84,6 +89,7 @@ onUnmounted(() => {
 
 const toggle = () => {
   isCollapsed.value = !isCollapsed.value;
+  appStore.setSidebarCollapsed(isCollapsed.value);
 };
 
 const handleItem = (item: SidebarItem): void => {
