@@ -1,9 +1,9 @@
 <template>
-  <v-app class="empty-layout-app">
-    <v-main class="empty-layout-main">
+  <div class="empty-layout-app">
+    <div class="empty-layout-main">
       <router-view />
-    </v-main>
-  </v-app>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
