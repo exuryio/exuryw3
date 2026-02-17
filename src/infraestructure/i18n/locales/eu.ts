@@ -30,7 +30,7 @@ export default {
     heroLine2: 'Ezkutuko komisiorik gabe.',
     heroSubline: 'Aldatu euroak kriptora segundotan',
     heroSubline2: 'SEPA Instant banku-transferentzia bidez.',
-    emailPlaceholder: 'zu@email.com',
+    emailPlaceholder: "zu{'@'}email.com",
     startNow: 'Hasi orain',
     trustLine: 'Mila erabiltzailek fidatzen dira Exury-n.',
     benefitSepa: 'SEPA Instant',

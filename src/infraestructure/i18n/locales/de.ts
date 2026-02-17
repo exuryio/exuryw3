@@ -30,7 +30,7 @@ export default {
     heroLine2: 'Keine versteckten Gebühren.',
     heroSubline: 'Tauschen Sie Euro in Krypto in Sekunden',
     heroSubline2: 'per SEPA-Instant-Überweisung.',
-    emailPlaceholder: 'sie@email.com',
+    emailPlaceholder: "sie{'@'}email.com",
     startNow: 'Jetzt starten',
     trustLine: 'Tausende Nutzer vertrauen Exury.',
     benefitSepa: 'SEPA Instant',

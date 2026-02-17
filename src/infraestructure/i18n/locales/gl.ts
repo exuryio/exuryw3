@@ -30,7 +30,7 @@ export default {
     heroLine2: 'Sen comisións ocultas.',
     heroSubline: 'Cambia euros por cripto en segundos',
     heroSubline2: 'vía transferencia bancaria SEPA Instant.',
-    emailPlaceholder: 'tu@email.com',
+    emailPlaceholder: "tu{'@'}email.com",
     startNow: 'Comeza agora',
     trustLine: 'Miles de usuarios confían en Exury.',
     benefitSepa: 'SEPA Instant',

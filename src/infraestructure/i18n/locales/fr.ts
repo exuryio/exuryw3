@@ -30,7 +30,7 @@ export default {
     heroLine2: 'Sans frais cachés.',
     heroSubline: 'Échangez des euros contre des crypto en secondes',
     heroSubline2: 'par virement bancaire SEPA Instant.',
-    emailPlaceholder: 'vous@email.com',
+    emailPlaceholder: "vous{'@'}email.com",
     startNow: 'Commencer',
     trustLine: 'Des milliers d\'utilisateurs font confiance à Exury.',
     benefitSepa: 'SEPA Instant',

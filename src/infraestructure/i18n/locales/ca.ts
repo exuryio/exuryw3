@@ -30,7 +30,7 @@ export default {
     heroLine2: 'Sense comissions ocultes.',
     heroSubline: 'Canvia euros per cripto en segons',
     heroSubline2: 'via transferència bancària SEPA Instant.',
-    emailPlaceholder: 'tu@email.com',
+    emailPlaceholder: "tu{'@'}email.com",
     startNow: 'Comença ara',
     trustLine: 'Milers d\'usuaris confien en Exury.',
     benefitSepa: 'SEPA Instant',
