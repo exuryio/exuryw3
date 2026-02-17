@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" :key="route.fullPath">
     <div id="mainContainer" class="rounded-circle" />
     <div class="list">
         <!-- Sidebar with padding -->
@@ -168,12 +168,22 @@
 }
 #sidebarWrapper {
   flex-shrink: 0;
-  width: 160px;
+  width: auto;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
-  padding-right: 44px;
+  align-items: stretch;
+  padding-right: 0;
+}
+/* Un solo drawer en flujo: evita capa fija duplicada en deploy/preview */
+#sidebarWrapper :deep(.v-navigation-drawer) {
+  position: relative !important;
+  height: 100%;
+  min-height: 0;
+}
+#sidebarWrapper :deep(.sidebar) {
+  height: 100%;
 }
 
 .scroll-container {
