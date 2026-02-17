@@ -34,6 +34,7 @@ const isMobile = () => {
 
 const isCollapsed = ref(isMobile());
 const moreExpanded = ref(false);
+appStore.setSidebarCollapsed(isCollapsed.value);
 
 const isFocusedMode = computed(() => isFocusedRoute(route.path));
 const primaryLinks = computed(() =>
@@ -70,10 +71,11 @@ onMounted(() => {
   resizeHandler = () => {
     if (isMobile()) {
       isCollapsed.value = true;
+      appStore.setSidebarCollapsed(true);
     }
   };
-  
   window.addEventListener('resize', resizeHandler);
+  appStore.setSidebarCollapsed(isCollapsed.value);
 });
 
 onUnmounted(() => {
@@ -84,6 +86,7 @@ onUnmounted(() => {
 
 const toggle = () => {
   isCollapsed.value = !isCollapsed.value;
+  appStore.setSidebarCollapsed(isCollapsed.value);
 };
 
 const handleItem = (item: SidebarItem): void => {
@@ -230,6 +233,9 @@ const handleBuyCrypto = (): void => {
   background-color: $nav-background-color;
   color: $nav-default-text-color;
   border-radius: 16px;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
   .v-list-item {
     padding: 0 12px;
     white-space: nowrap;
@@ -263,9 +269,21 @@ const handleBuyCrypto = (): void => {
   box-shadow: none !important;
   border: none !important;
 }
+/* Contenido central con scroll: el append (Buy Crypto) queda fijo abajo */
+.sidebar :deep(.v-navigation-drawer__content) {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sidebar :deep(.v-navigation-drawer__append) {
+  flex-shrink: 0;
+}
 .scrollable-content {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  max-height: calc(100vh - 20px);
 }
 
 .btn-menu-wrapper {

@@ -26,6 +26,10 @@ body, html {
   box-sizing: border-box;
 }
 
+/* Evitar que v-main cambie de tamaño al desplegar el sidebar (Vuetify inyecta --v-layout-left) */
+.v-main {
+  --v-layout-left: 0 !important;
+}
 .main {
   overflow-x: hidden;
   overflow-y: auto;

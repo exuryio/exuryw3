@@ -2,9 +2,11 @@
   <div class="main" :key="route.fullPath">
     <div id="mainContainer" class="rounded-circle" />
     <div class="list">
-        <!-- Sidebar with padding -->
-        <div id="sidebarWrapper">
-          <SideBar />
+        <!-- Zona fija 216px: el área de contenido no cambia al colapsar el sidebar -->
+        <div class="sidebar-zone">
+          <div id="sidebarWrapper" class="sidebar-in-flow" :style="{ width: sidebarWidthPx }">
+            <SideBar />
+          </div>
         </div>
         <!-- Main content area -->
         <div class="scroll-container">
@@ -112,21 +114,22 @@
   mix-blend-mode: normal;
 }
 .list {
+  position: relative;
   flex: 1;
+  min-height: 0;
   backdrop-filter: blur(4px);
   border-radius: 16px;
   background-color: rgba(13, 21, 19, 0.5);
   border: 1px solid #2d4740;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: flex-start;
   padding: 16px 16px 0 0;
-  gap: 92px;
+  gap: 0;
   z-index: 0;
   overflow-x: hidden;
   overflow-y: hidden;
-  height: 100vh;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -166,17 +169,22 @@
   bottom: 0;
   background: transparent;
 }
-#sidebarWrapper {
+.sidebar-zone {
+  width: 216px;
+  min-width: 216px;
+  min-height: 0;
   flex-shrink: 0;
-  width: auto;
-  min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: stretch;
-  padding-right: 0;
 }
-/* Un solo drawer en flujo: evita capa fija duplicada en deploy/preview */
+#sidebarWrapper.sidebar-in-flow {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
 #sidebarWrapper :deep(.v-navigation-drawer) {
   position: relative !important;
   height: 100%;
@@ -595,9 +603,12 @@ import Footer from "@/components/Footer.vue";
 import { ref, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { isFocusedRoute } from "@/domain/constants/sidebar.constant";
+import { useAppStore } from "@/infraestructure/stores/app";
 
 const route = useRoute();
+const appStore = useAppStore();
 const showFooter = computed(() => !isFocusedRoute(route.path));
+const sidebarWidthPx = computed(() => (appStore.getSidebarCollapsed ? "90px" : "216px"));
 
 const searchQuery = ref("");
 const whatsappNumber = '+34604117851';
