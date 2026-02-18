@@ -1,19 +1,16 @@
 <script setup lang="ts">
-const founders = [
-  {
-    name: "Rafael Tuta",
-    role: "Co-Founder & CEO",
-    linkedin: "https://www.linkedin.com/in/senior-product-manager-owner-rafael-tuta/",
-  },
-  {
-    name: "Yisell Puentes",
-    role: "Co-Founder & CTO",
-    linkedin: "https://www.linkedin.com/in/yizpuentesc/",
-  },
-] as const;
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
+const founders = computed(() => [
+  { name: 'Rafael Tuta', role: t('company.founders.founder1Role'), linkedin: 'https://www.linkedin.com/in/senior-product-manager-owner-rafael-tuta/' },
+  { name: 'Yisell Puentes', role: t('company.founders.founder2Role'), linkedin: 'https://www.linkedin.com/in/yizpuentesc/' },
+]);
 
 function openLinkedIn(url: string) {
-  window.open(url, "_blank", "noopener,noreferrer");
+  window.open(url, '_blank', 'noopener,noreferrer');
 }
 </script>
 
@@ -21,10 +18,10 @@ function openLinkedIn(url: string) {
   <section class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
     <div class="grid gap-10 lg:grid-cols-12 lg:items-start">
       <div class="lg:col-span-5">
-        <h2 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">Los fundadores</h2>
+        <h2 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">{{ t('company.founders.title') }}</h2>
         <div class="mt-4 h-px w-20 bg-exury-green/40 sm:mt-5" />
         <p class="mt-6 text-sm leading-relaxed text-exury-offwhite/80 sm:text-base">
-          Dos líderes que combinaron visión estratégica, conocimiento técnico y disciplina operativa para construir una institución financiera regulada.
+          {{ t('company.founders.intro') }}
         </p>
       </div>
 
@@ -79,10 +76,10 @@ function openLinkedIn(url: string) {
                 type="button"
                 @click="openLinkedIn(founder.linkedin)"
                 class="inline-flex items-center gap-2 rounded-xl border border-exury-green/40 bg-exury-green/20 px-5 py-2.5 text-sm font-medium text-exury-offwhite transition-all duration-200 hover:border-exury-green/60 hover:bg-exury-green/30 hover:scale-105 hover:shadow-[0_0_0_1px_rgba(0,187,114,0.3),0_8px_16px_rgba(0,187,114,0.15)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-exury-green focus-visible:ring-offset-2 focus-visible:ring-offset-black motion-reduce:transition-none"
-                :aria-label="`Ver perfil de ${founder.name} en LinkedIn`"
+                :aria-label="t('company.founders.linkedInAria', { name: founder.name })"
               >
                 <v-icon icon="mdi-linkedin" size="20" />
-                <span>LinkedIn</span>
+                <span>{{ t('company.founders.linkedIn') }}</span>
               </button>
             </div>
           </div>

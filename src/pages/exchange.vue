@@ -1,34 +1,36 @@
 <template>
   <div class="exchange-wrapper">
     <div class="exchange-container">
+      <!-- Desktop: two columns; mobile: stacked -->
       <div class="exchange-header">
-        <h1 class="exchange-title">Cambia euros por cripto</h1>
-        <p class="exchange-subtitle">Intercambia al instante con las mejores tasas</p>
+        <h1 class="exchange-title">{{ t('exchange.title') }}</h1>
+        <p class="exchange-subtitle">{{ t('exchange.subtitle') }}</p>
       </div>
 
-      <!-- Price Simulator - Same as home page -->
       <div class="simulator-container">
         <PriceSimulatorInline />
       </div>
 
-      <!-- Success/Error Messages -->
-      <v-alert
-        v-if="error"
-        type="error"
-        class="mt-4 alert-message"
-        dismissible
-        @click:close="error = null"
-      >
-        {{ error }}
-      </v-alert>
+      <!-- Success/Error Messages (full width below content) -->
+      <div class="alerts-container">
+        <v-alert
+          v-if="error"
+          type="error"
+          class="alert-message"
+          dismissible
+          @click:close="error = null"
+        >
+          {{ error }}
+        </v-alert>
 
-      <v-alert
-        v-if="success"
-        type="success"
-        class="mt-4 alert-message"
-      >
-        ¡Orden creada exitosamente! ID de orden: {{ orderId }}
-      </v-alert>
+        <v-alert
+          v-if="success"
+          type="success"
+          class="alert-message"
+        >
+          {{ t('exchange.orderSuccess', { id: orderId }) }}
+        </v-alert>
+      </div>
     </div>
   </div>
 </template>
@@ -36,9 +38,11 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import PriceSimulatorInline from '@/components/PriceSimulatorInline.vue';
 import { useAuthStore } from '@/infraestructure/stores/auth';
 
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
@@ -83,28 +87,31 @@ watch(() => route.query, (newQuery) => {
 
 <style lang="scss" scoped>
 .exchange-wrapper {
-  padding: clamp(24px, 4vw, 48px);
+  padding: clamp(16px, 3vw, 32px) clamp(24px, 4vw, 48px);
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   min-height: calc(100vh - 200px);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-start;
+  box-sizing: border-box;
 }
 
 .exchange-container {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 32px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px 48px;
+  align-items: start;
+  justify-items: center;
 }
 
 .exchange-header {
   text-align: center;
   width: 100%;
-  max-width: 600px;
+  max-width: 500px;
 }
 
 .exchange-title {
@@ -123,24 +130,71 @@ watch(() => route.query, (newQuery) => {
 
 .simulator-container {
   width: 100%;
-  max-width: 500px;
+  max-width: 480px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
+}
+
+.alerts-container {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-self: center;
 }
 
 .alert-message {
-  max-width: 500px;
   width: 100%;
 }
 
-// Responsive adjustments
+/* Desktop: two columns – title left, simulator right, better use of space */
+@media (min-width: 900px) {
+  .exchange-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px 56px;
+    align-items: start;
+    justify-items: stretch;
+  }
+
+  .exchange-header {
+    text-align: left;
+    max-width: none;
+    padding-top: 0.5rem;
+  }
+
+  .simulator-container {
+    max-width: none;
+    min-width: 0;
+    justify-content: flex-end;
+  }
+
+  .alerts-container {
+    grid-column: 1 / -1;
+    max-width: 560px;
+    justify-self: center;
+  }
+}
+
+/* Large desktop: cap simulator width so card doesn't get too wide */
+@media (min-width: 1100px) {
+  .simulator-container {
+    max-width: 520px;
+    justify-content: flex-start;
+  }
+}
+
 @media (max-width: 768px) {
   .exchange-wrapper {
-    padding: clamp(16px, 3vw, 32px);
+    padding: clamp(16px, 3vw, 24px);
   }
-  
+
   .simulator-container {
+    max-width: 100%;
+  }
+
+  .alerts-container {
     max-width: 100%;
   }
 }

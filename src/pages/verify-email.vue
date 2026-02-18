@@ -110,8 +110,8 @@ const devCode = ref<string>('');
 onMounted(() => {
   // Check if user is already authenticated
   if (authStore.isLoggedIn) {
-    console.log('User already authenticated, redirecting to /exchange');
-    router.push('/exchange');
+    console.log('User already authenticated, redirecting to /dashboard');
+    router.push('/dashboard');
     return;
   }
   
@@ -256,16 +256,14 @@ const handleVerify = async () => {
       // Redirect to exchange or dashboard (use replace to avoid back button issues)
       // Ensure we're using the current origin, not hardcoded localhost
       const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
-      console.log('🔀 Redirecting to /exchange on origin:', currentOrigin);
+      console.log('🔀 Redirecting to /dashboard on origin:', currentOrigin);
       console.log('🔀 Current URL:', typeof window !== 'undefined' ? window.location.href : 'N/A');
       
       // Force navigation using current origin to prevent localhost redirects
       if (typeof window !== 'undefined' && currentOrigin && !currentOrigin.includes('localhost')) {
-        // If we're on preview/production, ensure we stay on that domain
-        await router.replace('/exchange');
+        await router.replace('/dashboard');
       } else {
-        // Fallback to router navigation
-        await router.replace('/exchange');
+        await router.replace('/dashboard');
       }
       
       // Ensure visibility after navigation

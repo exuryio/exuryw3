@@ -1,11 +1,12 @@
 <template>
-  <v-app>
-    <v-main class="main">
-      <div id="mainContainer" class="rounded-circle" />
-      <div class="list">
-        <!-- Sidebar with padding -->
-        <div id="sidebarWrapper">
-          <SideBar />
+  <div class="main" :key="route.fullPath">
+    <div id="mainContainer" class="rounded-circle" />
+    <div class="list">
+        <!-- Zona fija 216px: el área de contenido no cambia al colapsar el sidebar -->
+        <div class="sidebar-zone">
+          <div id="sidebarWrapper" class="sidebar-in-flow" :style="{ width: sidebarWidthPx }">
+            <SideBar />
+          </div>
         </div>
         <!-- Main content area -->
         <div class="scroll-container">
@@ -16,35 +17,42 @@
             <transition name="scroll-x-transition" mode="out-in">
               <div>
                 <div class="top-bar-wrapper">
-                  <div class="searchBarWrapper">
-                    <div class="searchBar">
-                      <v-text-field
-                        v-model="searchQuery"
-                        label="Buscar"
-                        single-line
-                        hide-details
-                        @input="onSearch"
-                        class="custom-search-bar"
+                  <template v-if="showFooter">
+                    <div class="searchBarWrapper">
+                      <div class="searchBar">
+                        <v-text-field
+                          v-model="searchQuery"
+                          label="Buscar"
+                          single-line
+                          hide-details
+                          @input="onSearch"
+                          class="custom-search-bar"
+                        >
+                          <template v-slot:prepend-inner>
+                            <v-icon color="white">mdi-magnify</v-icon>
+                          </template>
+                        </v-text-field>
+                      </div>
+                      <v-btn
+                        class="btn-search"
                       >
-                        <template v-slot:prepend-inner>
-                          <v-icon color="white">mdi-magnify</v-icon>
-                        </template>
-                      </v-text-field>
+                        <v-icon style="font-size: 28px; opacity: 0.8" color="white">mdi-magnify</v-icon>
+                      </v-btn>
                     </div>
-                    <v-btn
-                      class="btn-search"
-                    >
-                      <v-icon style="font-size: 28px; opacity: 0.8" color="white">mdi-magnify</v-icon>
-                    </v-btn>
-                  </div>
-                  <div id="iconButtonParent">
-                    <div  id="search-small">
-                      <div id="container">
-                        <div id="stateLayer">
-                          <v-icon icon="mdi-magnify"></v-icon>
+                    <div id="iconButtonParent">
+                      <div id="search-small">
+                        <div id="container">
+                          <div id="stateLayer">
+                            <v-icon icon="mdi-magnify"></v-icon>
+                          </div>
                         </div>
                       </div>
+                      <LanguageSelector />
+                      <AvatarMenu />
                     </div>
+                  </template>
+                  <div v-else id="iconButtonParent" class="iconButtonParent-no-search">
+                    <LanguageSelector />
                     <AvatarMenu />
                   </div>
                 </div>
@@ -52,7 +60,7 @@
               </div>
             </transition>
           </div>
-          <Footer />
+          <Footer v-if="showFooter" />
         </div>
         </div>
         <div id="whatsapp-wrapper">
@@ -68,9 +76,8 @@
           src="/LogoExury1.png"
         />
       </div>
-      <div class="footer-space"></div>
-    </v-main>
-  </v-app>
+    <div v-if="showFooter" class="footer-space"></div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -107,21 +114,22 @@
   mix-blend-mode: normal;
 }
 .list {
+  position: relative;
   flex: 1;
+  min-height: 0;
   backdrop-filter: blur(4px);
   border-radius: 16px;
   background-color: rgba(13, 21, 19, 0.5);
   border: 1px solid #2d4740;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: flex-start;
   padding: 16px 16px 0 0;
-  gap: 92px;
+  gap: 0;
   z-index: 0;
   overflow-x: hidden;
   overflow-y: hidden;
-  height: 100vh;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -161,14 +169,29 @@
   bottom: 0;
   background: transparent;
 }
-#sidebarWrapper {
+.sidebar-zone {
+  width: 216px;
+  min-width: 216px;
+  min-height: 0;
   flex-shrink: 0;
-  width: 160px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  padding-right: 44px;
+  align-items: stretch;
+}
+#sidebarWrapper.sidebar-in-flow {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+#sidebarWrapper :deep(.v-navigation-drawer) {
+  position: relative !important;
+  height: 100%;
+  min-height: 0;
+}
+#sidebarWrapper :deep(.sidebar) {
+  height: 100%;
 }
 
 .scroll-container {
@@ -340,6 +363,9 @@
   #logoExury {
     left: 74px;
   }
+}
+
+@media (max-width: 640px) {
   .main {
     .list {
       .listInner {
@@ -572,8 +598,18 @@
 <script lang="ts" setup>
 //
 import AvatarMenu from "@/components/AvatarMenu.vue";
+import LanguageSelector from "@/components/LanguageSelector.vue";
 import Footer from "@/components/Footer.vue";
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { isFocusedRoute } from "@/domain/constants/sidebar.constant";
+import { useAppStore } from "@/infraestructure/stores/app";
+
+const route = useRoute();
+const appStore = useAppStore();
+const showFooter = computed(() => !isFocusedRoute(route.path));
+const sidebarWidthPx = computed(() => (appStore.getSidebarCollapsed ? "90px" : "216px"));
+
 const searchQuery = ref("");
 const whatsappNumber = '+34604117851';
 const message = 'Hola quiero saber más detalles de vuestro servicio';

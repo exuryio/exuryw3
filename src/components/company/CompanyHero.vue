@@ -37,45 +37,50 @@
           <div
             class="inline-flex items-center rounded-full border-2 border-exury-green/40 bg-exury-green/20 px-5 py-2.5 text-xs font-semibold tracking-wide text-exury-offwhite shadow-[0_0_0_2px_rgba(0,187,114,0.15),0_4px_12px_rgba(0,187,114,0.2)] sm:px-6 sm:py-3 sm:text-sm"
             role="status"
-            aria-label="Regulada por el Banco de España"
+            :aria-label="t('company.hero.regulatedBadge')"
           >
             <span class="mr-2.5 inline-block h-2 w-2 rounded-full bg-exury-green animate-pulse shadow-[0_0_8px_rgba(0,187,114,0.6)]" aria-hidden="true" />
-            Regulada por el Banco de España
+            {{ t('company.hero.regulatedBadge') }}
           </div>
           <div
             class="inline-flex items-center rounded-full border border-white/20 bg-white/8 px-5 py-2.5 text-xs font-medium tracking-wide text-exury-offwhite/90 sm:px-6 sm:py-3 sm:text-sm"
           >
-            Fundada en 2023
+            {{ t('company.hero.foundedBadge') }}
           </div>
         </div>
 
         <!-- TECHNIQUE: Visual Hierarchy - Título más grande y bold para jerarquía clara -->
         <h1 class="max-w-5xl text-4xl font-bold leading-[1.1] tracking-tight text-exury-offwhite sm:text-5xl sm:leading-[1.1] lg:text-7xl lg:leading-[1.05] mb-6">
-          Construyendo servicios financieros para Europa
+          {{ t('company.hero.title') }}
         </h1>
 
         <!-- TONO ASPIRACIONAL + ARQUETIPO SABIO/GOBERNANTE - Visión elevada, autoridad, sabiduría -->
         <p class="max-w-3xl text-base leading-relaxed text-exury-offwhite/90 sm:text-lg sm:leading-relaxed lg:text-xl lg:leading-relaxed mb-10">
-          Exury es una institución financiera regulada por el Banco de España que transforma cómo las personas acceden a los activos digitales. Construida desde la sabiduría de quienes comprenden los mercados y la autoridad de quienes establecen estándares. Nacida de la convicción de que el futuro de las finanzas requiere <strong class="text-exury-green font-semibold">excelencia, orden y un enfoque humano</strong>.
+          {{ t('company.hero.introBefore') }}<strong class="text-exury-green font-semibold">{{ t('company.hero.introHighlight') }}</strong>{{ t('company.hero.introAfter') }}
         </p>
 
         <!-- TECHNIQUE: Chunking + Card-based Design - Stats en cards escaneables (8pt grid: gap-6 = 24px) -->
         <div class="grid gap-6 sm:grid-cols-3 sm:gap-6">
           <div class="group rounded-2xl border border-white/12 bg-white/[0.03] p-6 backdrop-blur-sm transition-all duration-300 hover:border-exury-green/30 hover:bg-white/[0.06] hover:shadow-[0_0_0_1px_rgba(0,187,114,0.2),0_8px_24px_rgba(0,187,114,0.1)] hover:-translate-y-1 active:scale-[0.98] sm:p-7">
-            <p class="text-xs font-medium tracking-wide text-exury-offwhite/60 uppercase mb-2 sm:text-sm">Fundada</p>
+            <p class="text-xs font-medium tracking-wide text-exury-offwhite/60 uppercase mb-2 sm:text-sm">{{ t('company.hero.foundedLabel') }}</p>
             <p class="text-2xl font-bold text-exury-offwhite transition-colors duration-300 group-hover:text-exury-green sm:text-3xl">2023</p>
           </div>
           <div class="group rounded-2xl border border-white/12 bg-white/[0.03] p-6 backdrop-blur-sm transition-all duration-300 hover:border-exury-green/30 hover:bg-white/[0.06] hover:shadow-[0_0_0_1px_rgba(0,187,114,0.2),0_8px_24px_rgba(0,187,114,0.1)] hover:-translate-y-1 active:scale-[0.98] sm:p-7">
-            <p class="text-xs font-medium tracking-wide text-exury-offwhite/60 uppercase mb-2 sm:text-sm">Ubicación</p>
-            <p class="text-2xl font-bold text-exury-offwhite transition-colors duration-300 group-hover:text-exury-green sm:text-3xl">Madrid, España</p>
+            <p class="text-xs font-medium tracking-wide text-exury-offwhite/60 uppercase mb-2 sm:text-sm">{{ t('company.hero.locationLabel') }}</p>
+            <p class="text-2xl font-bold text-exury-offwhite transition-colors duration-300 group-hover:text-exury-green sm:text-3xl">{{ t('company.hero.locationValue') }}</p>
           </div>
           <div class="group rounded-2xl border border-white/12 bg-white/[0.03] p-6 backdrop-blur-sm transition-all duration-300 hover:border-exury-green/30 hover:bg-white/[0.06] hover:shadow-[0_0_0_1px_rgba(0,187,114,0.2),0_8px_24px_rgba(0,187,114,0.1)] hover:-translate-y-1 active:scale-[0.98] sm:p-7">
-            <p class="text-xs font-medium tracking-wide text-exury-offwhite/60 uppercase mb-2 sm:text-sm">Cobertura</p>
-            <p class="text-2xl font-bold text-exury-offwhite transition-colors duration-300 group-hover:text-exury-green sm:text-3xl">Unión Europea</p>
+            <p class="text-xs font-medium tracking-wide text-exury-offwhite/60 uppercase mb-2 sm:text-sm">{{ t('company.hero.coverageLabel') }}</p>
+            <p class="text-2xl font-bold text-exury-offwhite transition-colors duration-300 group-hover:text-exury-green sm:text-3xl">{{ t('company.hero.coverageValue') }}</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+</script>
 

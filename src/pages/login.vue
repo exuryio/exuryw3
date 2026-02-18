@@ -133,7 +133,7 @@ onMounted(() => {
     authStore.loadFromStorage();
     if (authStore.isLoggedIn) {
       console.log('User already authenticated, redirecting to /exchange');
-      router.replace('/exchange');
+      router.replace('/dashboard');
       return;
     }
   }
