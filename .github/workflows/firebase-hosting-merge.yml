@@ -15,6 +15,9 @@ jobs:
         env:
           VITE_INVEST_LEADS_EMAIL: ${{ secrets.VITE_INVEST_LEADS_EMAIL }}
           VITE_SCHEDULING_URL: ${{ secrets.VITE_SCHEDULING_URL }}
+          VITE_BANK_BENEFICIARY: ${{ secrets.VITE_BANK_BENEFICIARY }}
+          VITE_BANK_IBAN: ${{ secrets.VITE_BANK_IBAN }}
+          VITE_BANK_NAME: ${{ secrets.VITE_BANK_NAME }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
