@@ -109,6 +109,21 @@ const handleBuyCrypto = (): void => {
   }
 };
 
+const showLogoutButton = computed(
+  () => isFocusedMode.value && authStore.isLoggedIn
+);
+
+const handleLogout = async (): Promise<void> => {
+  try {
+    await authStore.logout();
+    router.push('/home');
+  } catch (error) {
+    console.error('Error during logout:', error);
+    authStore.clearAuth();
+    router.push('/home');
+  }
+};
+
 
 </script>
 
@@ -214,6 +229,18 @@ const handleBuyCrypto = (): void => {
     <template v-slot:append>
       <div class="pa-3">
         <v-btn
+          v-if="showLogoutButton"
+          elevation="0"
+          block
+          class="justify-center extended-fab py-6"
+          :class="{ 'button-buy-crypto': isCollapsed }"
+          @click="handleLogout"
+        >
+          <v-icon :class="{ 'mr-2': !isCollapsed }">mdi-logout</v-icon>
+          <span v-if="!isCollapsed" class="text-capitalize">{{ t('sidebar.logout') }}</span>
+        </v-btn>
+        <v-btn
+          v-else
           elevation="0"
           block
           class="justify-center extended-fab py-6"

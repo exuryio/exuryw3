@@ -23,6 +23,7 @@ export default {
     faq: 'FAQ',
     contact: 'Kontaktua',
     buyCrypto: 'Buy Crypto',
+    logout: 'Saio hasi',
   },
   home: {
     vaspRegulated: 'VASP Erregulatuena EE-n',

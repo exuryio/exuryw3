@@ -23,6 +23,7 @@ export default {
     faq: 'FAQ',
     contact: 'Contact',
     buyCrypto: 'Acheter des crypto',
+    logout: 'Se déconnecter',
   },
   home: {
     vaspRegulated: 'VASP régulé dans l\'UE',
