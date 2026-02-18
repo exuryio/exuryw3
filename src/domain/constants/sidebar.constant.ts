@@ -2,15 +2,15 @@ import { SidebarItem } from "@/domain/models/sidebar-item";
 import * as icons from "@/domain/constants/icons.constant";
 import { RoutesEnum } from "@/domain/enums/routes.enum";
 
-/** Rutas donde se usa layout "producto": sidebar reducido, sin footer ni buscador */
+/** Rutas donde siempre se usa layout "producto": sidebar producto (Inicio, Cambiar, Mis órdenes, Más). */
 export const FOCUSED_ROUTES = [
   "/dashboard",
   "/exchange",
   "/orders",
-  "/faq",
-  "/company",
-  "/contact",
 ] as const;
+
+/** Rutas que, si el usuario está logueado, usan sidebar producto; si no, sidebar general. */
+export const FOCUSED_WHEN_LOGGED_IN_ROUTES = ["/faq", "/company", "/contact"] as const;
 
 /** Prefijos de ruta que también son "producto" (ej. /order/:id) */
 export const FOCUSED_ROUTE_PREFIXES = ["/order/"] as const;
@@ -19,6 +19,10 @@ export function isFocusedRoute(path: string): boolean {
   if (FOCUSED_ROUTES.some((r) => r === path)) return true;
   if (path.startsWith("/order/") || path === "/order") return true;
   return false;
+}
+
+export function isFocusedWhenLoggedInRoute(path: string): boolean {
+  return FOCUSED_WHEN_LOGGED_IN_ROUTES.some((r) => r === path);
 }
 
 /** Navegación reducida: Inicio, Cambiar, Mis órdenes (+ "Más" expandible en SideBar) */

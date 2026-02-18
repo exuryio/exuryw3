@@ -7,6 +7,7 @@ import {
   SIDEBAR_LINKS_FOCUSED,
   SIDEBAR_LINKS_MORE,
   isFocusedRoute,
+  isFocusedWhenLoggedInRoute,
 } from "@/domain/constants/sidebar.constant";
 import { useAppStore } from "@/infraestructure/stores/app";
 import { useAuthStore } from "@/infraestructure/stores/auth";
@@ -36,7 +37,11 @@ const isCollapsed = ref(isMobile());
 const moreExpanded = ref(false);
 appStore.setSidebarCollapsed(isCollapsed.value);
 
-const isFocusedMode = computed(() => isFocusedRoute(route.path));
+const isFocusedMode = computed(
+  () =>
+    isFocusedRoute(route.path) ||
+    (authStore.isLoggedIn && isFocusedWhenLoggedInRoute(route.path))
+);
 const primaryLinks = computed(() =>
   isFocusedMode.value ? SIDEBAR_LINKS_FOCUSED : linksToShow
 );

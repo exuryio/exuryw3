@@ -533,12 +533,19 @@ import LanguageSelector from "@/components/LanguageSelector.vue";
 import Footer from "@/components/Footer.vue";
 import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { isFocusedRoute } from "@/domain/constants/sidebar.constant";
+import { isFocusedRoute, isFocusedWhenLoggedInRoute } from "@/domain/constants/sidebar.constant";
 import { useAppStore } from "@/infraestructure/stores/app";
+import { useAuthStore } from "@/infraestructure/stores/auth";
 
 const route = useRoute();
 const appStore = useAppStore();
-const showFooter = computed(() => !isFocusedRoute(route.path));
+const authStore = useAuthStore();
+const isProductMode = computed(
+  () =>
+    isFocusedRoute(route.path) ||
+    (authStore.isLoggedIn && isFocusedWhenLoggedInRoute(route.path))
+);
+const showFooter = computed(() => !isProductMode.value);
 const sidebarWidthPx = computed(() => (appStore.getSidebarCollapsed ? "90px" : "216px"));
 
 const whatsappNumber = '+34604117851';
