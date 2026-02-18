@@ -114,7 +114,7 @@ const handleBuyCrypto = (): void => {
     :rail="isCollapsed"
     permanent
   >
-    <v-list-item class="btn-menu-wrapper justify-center pt-2 pb-3 ml-2 mb-6">
+    <v-list-item class="btn-menu-wrapper align-center ml-2">
       <v-btn icon="mdi-menu" @click="toggle" class="menu-fab">
       </v-btn>
     </v-list-item>
@@ -286,11 +286,19 @@ const handleBuyCrypto = (): void => {
   overflow-y: auto;
 }
 
+/* Header del sidebar: más altura para que el hamburger quede bien dentro y no solape el logo */
 .btn-menu-wrapper {
   position: sticky;
-  top: 10px;
+  top: 0;
   z-index: 1;
   background-color: inherit;
+  min-height: 64px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 0;
+  margin-bottom: 0;
+  gap: 12px;
 }
 .extended-fab {
   width: 56px;
