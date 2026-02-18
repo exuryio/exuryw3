@@ -102,7 +102,7 @@ export default {
     whatsappDesc: 'Need help or want to make a transaction? Message us and we will assist you right away.',
     whatsappButton: 'Chat with us!',
     emailTitle: 'Email',
-    emailDesc: 'For enquiries email us at direccion@exury.io. We will reply quickly with the information you need.',
+    emailDesc: 'For enquiries email us at direccion{\'@\'}exury.io. We will reply quickly with the information you need.',
     emailButton: 'Email us now!',
     whatsappMessage: 'Hello, I am interested in learning more',
   },

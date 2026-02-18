@@ -102,7 +102,7 @@ export default {
     whatsappDesc: 'Brauchen Sie Hilfe oder möchten Sie eine Transaktion durchführen? Schreiben Sie uns, wir helfen Ihnen sofort weiter.',
     whatsappButton: 'Chat mit uns!',
     emailTitle: 'E-Mail',
-    emailDesc: 'Für Anfragen schreiben Sie uns an direccion@exury.io. Wir antworten schnell mit den gewünschten Informationen.',
+    emailDesc: 'Für Anfragen schreiben Sie uns an direccion{\'@\'}exury.io. Wir antworten schnell mit den gewünschten Informationen.',
     emailButton: 'Jetzt schreiben!',
     whatsappMessage: 'Hallo, ich möchte mehr erfahren',
   },
