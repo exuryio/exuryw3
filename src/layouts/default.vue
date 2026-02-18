@@ -531,7 +531,7 @@ $header-logo-left: calc(5vh + 16px + 44px); /* después del hamburger en el side
 import AvatarMenu from "@/components/AvatarMenu.vue";
 import LanguageSelector from "@/components/LanguageSelector.vue";
 import Footer from "@/components/Footer.vue";
-import { ref, computed, onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { isFocusedRoute } from "@/domain/constants/sidebar.constant";
 import { useAppStore } from "@/infraestructure/stores/app";
