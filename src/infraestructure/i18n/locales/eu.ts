@@ -23,6 +23,7 @@ export default {
     faq: 'FAQ',
     contact: 'Kontaktua',
     buyCrypto: 'Buy Crypto',
+    logout: 'Saio hasi',
   },
   home: {
     vaspRegulated: 'VASP Erregulatuena EE-n',
@@ -102,7 +103,7 @@ export default {
     whatsappDesc: 'Laguntza behar duzu edo eragiketa bat egin nahi duzu? Idatzi guri eta berehala lagunduko dizugu.',
     whatsappButton: 'Txateatu gurekin!',
     emailTitle: 'Email',
-    emailDesc: 'Galderetarako idatzi direccion@exury.io helbidera. Azkar erantzungo dugu eskatutako informazioarekin.',
+    emailDesc: 'Galderetarako idatzi direccion{\'@\'}exury.io helbidera. Azkar erantzungo dugu eskatutako informazioarekin.',
     emailButton: 'Idatzi guri orain!',
     whatsappMessage: 'Kaixo, gehiago jakiteko interesatuta nago',
   },

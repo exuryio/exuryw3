@@ -122,6 +122,11 @@ const contents = computed(() => [
 // TECHNIQUE: Progressive Enhancement - Animaciones scroll-triggered
 onMounted(() => {
   nextTick(() => {
+    const sections = document.querySelectorAll(".contact-section");
+    const revealAll = () => {
+      sections.forEach((s) => s instanceof HTMLElement && s.classList.add("animate-in-view"));
+    };
+
     const observerOptions = {
       threshold: 0.05,
       rootMargin: "0px 0px -30px 0px",
@@ -139,22 +144,29 @@ onMounted(() => {
       observerOptions
     );
 
-    const sections = document.querySelectorAll(".contact-section");
     sections.forEach((section, index) => {
       if (section instanceof HTMLElement) {
         section.style.setProperty("--animation-delay", `${index * 0.1}s`);
+        observer.observe(section);
       }
-      observer.observe(section);
     });
 
-    // Show first section immediately if already visible
+    // Primera sección visible de inmediato para evitar pantalla en blanco (p. ej. en preview)
     if (sections.length > 0 && sections[0] instanceof HTMLElement) {
-      const firstSection = sections[0];
-      const rect = firstSection.getBoundingClientRect();
-      if (rect.top < window.innerHeight) {
-        firstSection.classList.add("animate-in-view");
-      }
+      requestAnimationFrame(() => {
+        sections[0].classList.add("animate-in-view");
+      });
     }
+
+    // Fallback: revelar todo tras 400ms por si el observer no dispara (p. ej. preview/iframe)
+    const fallbackTimer = setTimeout(revealAll, 400);
+    const cleanup = () => clearTimeout(fallbackTimer);
+    try {
+      if (typeof window !== "undefined" && window.addEventListener) {
+        window.addEventListener("beforeunload", cleanup);
+      }
+    } catch (_) {}
+    setTimeout(cleanup, 500);
   });
 });
 </script>

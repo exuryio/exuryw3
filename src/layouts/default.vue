@@ -17,41 +17,7 @@
             <transition name="scroll-x-transition" mode="out-in">
               <div>
                 <div class="top-bar-wrapper">
-                  <template v-if="showFooter">
-                    <div class="searchBarWrapper">
-                      <div class="searchBar">
-                        <v-text-field
-                          v-model="searchQuery"
-                          label="Buscar"
-                          single-line
-                          hide-details
-                          @input="onSearch"
-                          class="custom-search-bar"
-                        >
-                          <template v-slot:prepend-inner>
-                            <v-icon color="white">mdi-magnify</v-icon>
-                          </template>
-                        </v-text-field>
-                      </div>
-                      <v-btn
-                        class="btn-search"
-                      >
-                        <v-icon style="font-size: 28px; opacity: 0.8" color="white">mdi-magnify</v-icon>
-                      </v-btn>
-                    </div>
-                    <div id="iconButtonParent">
-                      <div id="search-small">
-                        <div id="container">
-                          <div id="stateLayer">
-                            <v-icon icon="mdi-magnify"></v-icon>
-                          </div>
-                        </div>
-                      </div>
-                      <LanguageSelector />
-                      <AvatarMenu />
-                    </div>
-                  </template>
-                  <div v-else id="iconButtonParent" class="iconButtonParent-no-search">
+                  <div id="iconButtonParent" :class="{ 'iconButtonParent-no-search': !showFooter }">
                     <LanguageSelector />
                     <AvatarMenu />
                   </div>
@@ -70,10 +36,12 @@
             </div>
           </a>
         </div>
+        <!-- Logo fijo en el header: mismo tamaño siempre, no depende del estado del sidebar -->
         <img
           id="logoExury"
-          alt=""
+          alt="Exury"
           src="/LogoExury1.png"
+          class="header-logo-fixed"
         />
       </div>
     <div v-if="showFooter" class="footer-space"></div>
@@ -129,7 +97,7 @@
   gap: 0;
   z-index: 0;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: visible;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -169,6 +137,7 @@
   bottom: 0;
   background: transparent;
 }
+/* Sidebar llega hasta el top del viewport: sin padding en la zona, el drawer y su borde empiezan arriba */
 .sidebar-zone {
   width: 216px;
   min-width: 216px;
@@ -177,6 +146,9 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  margin-top: calc(-5vh - 16px);
+  height: calc(100% + 5vh + 16px);
+  box-sizing: border-box;
 }
 #sidebarWrapper.sidebar-in-flow {
   flex: 1;
@@ -192,6 +164,30 @@
 }
 #sidebarWrapper :deep(.sidebar) {
   height: 100%;
+}
+/* Padding en el contenido del drawer para que el menú no quede pegado al top; el borde del drawer sí llega al top */
+#sidebarWrapper :deep(.v-navigation-drawer__content) {
+  padding-top: calc(5vh + 16px);
+  box-sizing: border-box;
+}
+
+@media (max-width: $screen-md) {
+  .sidebar-zone {
+    margin-top: calc(-1 * (clamp(8px, 2vh, 16px) + clamp(8px, 2vw, 12px)));
+    height: calc(100% + clamp(8px, 2vh, 16px) + clamp(8px, 2vw, 12px));
+  }
+  #sidebarWrapper :deep(.v-navigation-drawer__content) {
+    padding-top: calc(clamp(8px, 2vh, 16px) + clamp(8px, 2vw, 12px));
+  }
+}
+@media (max-width: $screen-xs) {
+  .sidebar-zone {
+    margin-top: calc(-1 * (clamp(4px, 1vh, 8px) + clamp(4px, 1vw, 8px)));
+    height: calc(100% + clamp(4px, 1vh, 8px) + clamp(4px, 1vw, 8px));
+  }
+  #sidebarWrapper :deep(.v-navigation-drawer__content) {
+    padding-top: calc(clamp(4px, 1vh, 8px) + clamp(4px, 1vw, 8px));
+  }
 }
 
 .scroll-container {
@@ -255,53 +251,25 @@
   align-items: center;
   justify-content: center;
 }
-.searchBar {
-  width: 360px;
-  border-radius: 28px;
-  border: none;
-  background-color: #2d3531;
-  height: 48px;
-  overflow: hidden;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  min-width: 360px;
-}
-#search-small {
-  display: none;
-}
-.searchBarWrapper {
-  position: relative;
-  margin-top: 10px;
-  left: 247px;
-  border: none;
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: start;
-  width: fit-content;
-  max-width: calc(100% - 247px);
-  box-sizing: border-box;
-}
-.btn-search {
-  display: none;
-}
+/* Altura fija del header (64px, alineada con el header del sidebar) */
+$header-bar-height: 64px;
+/* Logo más arriba en vertical */
+$header-logo-top: calc(5vh + 16px - 8px);
+$header-logo-left: calc(5vh + 16px + 44px); /* después del hamburger en el sidebar */
 
 .top-bar-wrapper {
   position: fixed;
-  top: -17px;
+  top: 0;
   right: 0;
   width: 100%;
+  min-height: $header-bar-height;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  padding: 20px 16px 10px 0;
+  padding: 0 16px 0 0;
   z-index: 1000;
-  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, background-color 0.3s ease;
   #iconButtonParent {
     position: relative;
     right: 0;
@@ -314,31 +282,48 @@
   }
 }
 .top-bar-wrapper.scrolling {
-  padding: 20px 16px 10px 0;
+  padding: 0 16px 0 0;
   background-color: rgba(10, 17, 14, 0.86);
   backdrop-filter: blur(4px);
   transform: translateY(0);
 }
-#logoExury.scrolling {
-  top: 26px;
-  z-index: 1000;
-}
-#logoExury {
-  width: 103px;
-  position: absolute;
-  margin: 0 !important;
-  top: 26px;
-  left: 98px;
-  height: 35.2px;
-  object-fit: cover;
-  z-index: 1000;
-  transition: top 0.3s ease;
+/* Logo siempre fijo y del mismo tamaño en el header (no se encoje con el sidebar) */
+.header-logo-fixed {
+  position: fixed;
+  top: $header-logo-top;
+  left: $header-logo-left;
+  transform: translateY(-50%);
+  height: 34px;
+  width: auto;
+  object-fit: contain;
+  z-index: 1001;
+  pointer-events: none;
 }
 #maskGroupIcon {
   width: 24px;
   position: relative;
   height: 24px;
   object-fit: contain;
+}
+/* Mobile: header más compacto y logo dentro sin cortarse */
+@media (max-width: $screen-md) {
+  .top-bar-wrapper {
+    min-height: 48px;
+    padding: 0 12px 0 0;
+  }
+  .top-bar-wrapper.scrolling {
+    padding: 0 12px 0 0;
+  }
+  .top-bar-wrapper #iconButtonParent {
+    gap: 10px;
+  }
+  .header-logo-fixed {
+    top: calc(clamp(8px, 2vh, 16px) + 16px - 4px);
+    left: calc(clamp(8px, 2vh, 16px) + 44px);
+    height: 22px;
+    max-width: min(100px, calc(100vw - 44px - 160px));
+    object-fit: contain;
+  }
 }
 @media (min-width: $screen-md) {
   .listInner::-webkit-scrollbar {
@@ -357,11 +342,6 @@
 
   .listInner::-webkit-scrollbar-thumb:hover {
     background-color: #8c8c8c;
-  }
-}
-@media (max-width: $screen-md) {
-  #logoExury {
-    left: 74px;
   }
 }
 
@@ -393,20 +373,6 @@
           background-color: rgba(10, 17, 14, 0.86);
           backdrop-filter: blur(4px);
           transform: translateY(0);
-        }
-        .top-bar-wrapper {
-          .searchBarWrapper {
-            width: 56px;
-            max-width: 56px;
-            .searchBar{
-              display: none;
-            }
-            .btn-search {
-              display: block;
-              background: transparent;
-              box-shadow: none;
-            }
-          }
         }
       }
     }
@@ -448,18 +414,6 @@
           justify-content: flex-end;
           padding-right: 16px;
           transition: padding 0.3s ease;
-          .searchBarWrapper {
-            width: 56px;
-            max-width: 56px;
-            .searchBar{
-              display: none;
-            }
-            .btn-search {
-              display: block;
-              background: transparent;
-              box-shadow: none;
-            }
-          }
         }
       }
     }
@@ -494,17 +448,6 @@
           align-items: center;
           justify-content: flex-end;
           padding-right: 16px;
-          .searchBarWrapper {
-            display: none;
-            .searchBar{
-              display: none;
-            }
-            .btn-search {
-              display: block;
-              background: transparent;
-              box-shadow: none;
-            }
-          }
         }
         .footer-wrapper{
           width: 100%;
@@ -581,18 +524,6 @@
     }
   }
 }
-@media (max-width: 879px) {
-  #search-small {
-    display: block;
-  }
-  .searchBarWrapper {
-    display: none;
-
-    .searchBar {
-      display: none;
-    }
-  }
-}
 </style>
 
 <script lang="ts" setup>
@@ -600,23 +531,27 @@
 import AvatarMenu from "@/components/AvatarMenu.vue";
 import LanguageSelector from "@/components/LanguageSelector.vue";
 import Footer from "@/components/Footer.vue";
-import { ref, computed, onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { isFocusedRoute } from "@/domain/constants/sidebar.constant";
+import { isFocusedRoute, isFocusedWhenLoggedInRoute } from "@/domain/constants/sidebar.constant";
 import { useAppStore } from "@/infraestructure/stores/app";
+import { useAuthStore } from "@/infraestructure/stores/auth";
 
 const route = useRoute();
 const appStore = useAppStore();
-const showFooter = computed(() => !isFocusedRoute(route.path));
+const authStore = useAuthStore();
+const isProductMode = computed(
+  () =>
+    isFocusedRoute(route.path) ||
+    (authStore.isLoggedIn && isFocusedWhenLoggedInRoute(route.path))
+);
+const showFooter = computed(() => !isProductMode.value);
 const sidebarWidthPx = computed(() => (appStore.getSidebarCollapsed ? "90px" : "216px"));
 
-const searchQuery = ref("");
 const whatsappNumber = '+34604117851';
 const message = 'Hola quiero saber más detalles de vuestro servicio';
 const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-const onSearch = (value: string) => {
-  console.log(value);
-};
+
 onMounted(() => {
   console.log("Default layout mounted");
   
@@ -664,14 +599,11 @@ onMounted(() => {
     if (listInnerElement) {
       listInnerElement.addEventListener("scroll", () => {
         const topBarWrapper = document.querySelector(".top-bar-wrapper");
-        const logoExury = document.querySelector("#logoExury");
-        if (topBarWrapper && logoExury) {
+        if (topBarWrapper) {
           if (listInnerElement.scrollTop > 10) {
             topBarWrapper.classList.add("scrolling");
-            logoExury.classList.add("scrolling");
           } else {
             topBarWrapper.classList.remove("scrolling");
-            logoExury.classList.remove("scrolling");
           }
         }
       });

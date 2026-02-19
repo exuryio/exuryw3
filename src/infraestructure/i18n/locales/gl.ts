@@ -23,6 +23,7 @@ export default {
     faq: 'FAQ',
     contact: 'Contacto',
     buyCrypto: 'Buy Crypto',
+    logout: 'Pechar sesión',
   },
   home: {
     vaspRegulated: 'VASP Rexulado na UE',
@@ -102,7 +103,7 @@ export default {
     whatsappDesc: 'Necesitas axuda ou queres facer unha operación? Escríbenos e asistiremoste ao instante.',
     whatsappButton: 'Chata connosco!',
     emailTitle: 'Email',
-    emailDesc: 'Para consultas escríbenos a direccion@exury.io. Responderemos rápido coa información solicitada.',
+    emailDesc: 'Para consultas escríbenos a direccion{\'@\'}exury.io. Responderemos rápido coa información solicitada.',
     emailButton: 'Escríbenos agora!',
     whatsappMessage: 'Ola, estou interesado en saber máis',
   },

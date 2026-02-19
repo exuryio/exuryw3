@@ -165,63 +165,125 @@ meta:
           </template>
         </section>
 
-        <!-- Step 2: Payment instructions -->
+        <!-- Step 2: Payment instructions (UX: 1 Importe → 2 IBAN → 3 Referencia) -->
         <section class="order-section payment-section">
           <h2 class="section-title">
             <span class="step-badge">2</span>
             Instrucciones de pago
           </h2>
-          <p class="section-desc">Realiza una transferencia SEPA con estos datos. Incluye la referencia en el concepto del pago.</p>
+          <p class="section-desc">Realiza una transferencia SEPA en este orden: importe exacto, al IBAN indicado, con la referencia en el concepto.</p>
 
-          <div class="payment-details">
-            <div class="detail-row">
-              <span class="detail-label">Importe a transferir</span>
-              <span class="detail-value amount">{{ formatEur(Number(order.amount_eur ?? order.fiat_amount ?? 0)) }} EUR</span>
-              <v-btn
-                class="copy-btn"
-                variant="tonal"
-                size="small"
-                @click="onCopy(formatEur(Number(order.amount_eur ?? order.fiat_amount ?? 0)) + ' EUR')"
-              >
-                <v-icon start size="18">mdi-content-copy</v-icon>
-                Copiar
-              </v-btn>
-            </div>
-
-            <!-- Reference: main CTA - copy first so user doesn't miss it -->
-            <div class="detail-block reference-block">
-              <span class="detail-label">Referencia (obligatoria)</span>
-              <p class="reference-desc">Cópiala e inclúyela exactamente en el concepto de la transferencia.</p>
-              <div class="reference-value-row">
-                <span class="detail-value mono reference-value">{{ order.reference || order.payment_reference || orderId }}</span>
-                <v-btn
-                  class="copy-reference-btn"
-                  color="primary"
-                  variant="flat"
-                  @click="onCopy(String(order.reference || order.payment_reference || orderId))"
-                >
-                  <v-icon start size="18">mdi-content-copy</v-icon>
-                  Copiar referencia
-                </v-btn>
+          <div class="payment-cards">
+            <!-- 1. Importe (máxima prioridad visual) -->
+            <div class="payment-card payment-card-amount">
+              <span class="payment-card-step" aria-hidden="true">1</span>
+              <div class="payment-card-body">
+                <span class="payment-card-label">Importe a transferir</span>
+                <div class="payment-card-value-row">
+                  <span class="payment-card-value payment-card-amount-value">{{ formatEur(Number(order.amount_eur ?? order.fiat_amount ?? 0)) }} EUR</span>
+                  <v-btn
+                    class="copy-card-btn"
+                    color="primary"
+                    variant="flat"
+                    size="small"
+                    @click="onCopy(formatEur(Number(order.amount_eur ?? order.fiat_amount ?? 0)) + ' EUR')"
+                  >
+                    <v-icon start size="18">mdi-content-copy</v-icon>
+                    Copiar importe
+                  </v-btn>
+                </div>
+                <p class="payment-card-hint">Transfiere exactamente esta cantidad.</p>
               </div>
             </div>
 
-            <div class="detail-row">
-              <span class="detail-label">IBAN</span>
-              <span class="detail-value mono">{{ order.iban && order.iban !== '—' ? order.iban : '—' }}</span>
-              <v-btn
-                v-if="order.iban && order.iban !== '—'"
-                class="copy-btn"
-                variant="tonal"
-                size="small"
-                @click="onCopy(String(order.iban ?? ''))"
-              >
-                <v-icon start size="18">mdi-content-copy</v-icon>
-                Copiar
-              </v-btn>
+            <!-- 2. IBAN (datos bancarios ocultos hasta que el usuario haga clic; datos desde env, no en repo) -->
+            <div class="payment-card payment-card-iban">
+              <span class="payment-card-step" aria-hidden="true">2</span>
+              <div class="payment-card-body">
+                <span class="payment-card-label">Datos bancarios de destino</span>
+                <template v-if="!bankDetailsRevealed">
+                  <p class="payment-card-pending">Los datos bancarios están ocultos por seguridad.</p>
+                  <v-btn
+                    class="reveal-bank-btn"
+                    color="primary"
+                    variant="flat"
+                    size="small"
+                    @click="bankDetailsRevealed = true"
+                  >
+                    <v-icon start size="18">mdi-eye</v-icon>
+                    Ver datos bancarios
+                  </v-btn>
+                </template>
+                <template v-else>
+                  <div v-if="bankBeneficiary || bankIban || bankName" class="bank-details-revealed">
+                    <div v-if="bankBeneficiary" class="bank-detail-row">
+                      <span class="bank-detail-label">Beneficiario</span>
+                      <div class="payment-card-value-row">
+                        <span class="payment-card-value">{{ bankBeneficiary }}</span>
+                        <v-btn class="copy-card-btn" variant="tonal" size="small" @click="onCopy(bankBeneficiary)">
+                          <v-icon start size="18">mdi-content-copy</v-icon>
+                          Copiar
+                        </v-btn>
+                      </div>
+                    </div>
+                    <div v-if="bankIban" class="bank-detail-row">
+                      <span class="bank-detail-label">IBAN</span>
+                      <div class="payment-card-value-row">
+                        <span class="payment-card-value payment-card-value-mono">{{ bankIban }}</span>
+                        <v-btn class="copy-card-btn" variant="tonal" size="small" @click="onCopy(bankIban)">
+                          <v-icon start size="18">mdi-content-copy</v-icon>
+                          Copiar IBAN
+                        </v-btn>
+                      </div>
+                    </div>
+                    <div v-if="bankName" class="bank-detail-row">
+                      <span class="bank-detail-label">Banco</span>
+                      <div class="payment-card-value-row">
+                        <span class="payment-card-value">{{ bankName }}</span>
+                        <v-btn class="copy-card-btn" variant="tonal" size="small" @click="onCopy(bankName)">
+                          <v-icon start size="18">mdi-content-copy</v-icon>
+                          Copiar
+                        </v-btn>
+                      </div>
+                    </div>
+                  </div>
+                  <p v-else class="payment-card-pending">
+                    <template v-if="isDev">
+                      Añade en la raíz del proyecto un archivo <strong>.env</strong> con:<br>
+                      <code class="env-hint">VITE_BANK_BENEFICIARY=...</code>,<br>
+                      <code class="env-hint">VITE_BANK_IBAN=...</code>,<br>
+                      <code class="env-hint">VITE_BANK_NAME=...</code><br>
+                      Luego reinicia el servidor (<code>npm run dev</code>).
+                    </template>
+                    <template v-else>Los datos bancarios no están configurados. Contacta con soporte.</template>
+                  </p>
+                </template>
+              </div>
             </div>
-            <p v-if="!order.iban || order.iban === '—'" class="iban-pending">El IBAN se mostrará cuando esté disponible para esta orden.</p>
+
+            <!-- 3. Referencia (concepto de la transferencia) -->
+            <div class="payment-card payment-card-reference">
+              <span class="payment-card-step" aria-hidden="true">3</span>
+              <div class="payment-card-body">
+                <span class="payment-card-label">Referencia (obligatoria)</span>
+                <p class="payment-card-desc">Cópiala e inclúyela exactamente en el concepto de la transferencia.</p>
+                <div class="payment-card-value-row">
+                  <span class="payment-card-value payment-card-value-mono payment-card-reference-value">{{ order.reference || order.payment_reference || orderId }}</span>
+                  <v-btn
+                    class="copy-card-btn"
+                    color="primary"
+                    variant="flat"
+                    size="small"
+                    @click="onCopy(String(order.reference || order.payment_reference || orderId))"
+                  >
+                    <v-icon start size="18">mdi-content-copy</v-icon>
+                    Copiar referencia
+                  </v-btn>
+                </div>
+              </div>
+            </div>
           </div>
+
           <p class="payment-note">Realiza la transferencia desde una cuenta a tu nombre para agilizar la verificación.</p>
           <p class="payment-step-complete">
             Cuando hayas realizado la transferencia, el <strong>Estado del depósito</strong> (abajo) se actualizará solo al recibir tu pago. No hace falta pulsar ningún botón; pasas al paso 3 cuando el sistema confirme la recepción.
@@ -477,6 +539,14 @@ const formatEur = (n: number) => {
 };
 
 const snackbar = ref({ show: false, text: '', color: 'success' });
+
+// Datos bancarios desde variables de entorno (nunca en el código para no exponer en el repo)
+const env = import.meta.env as Record<string, string | undefined>;
+const bankBeneficiary = (env?.VITE_BANK_BENEFICIARY ?? '').trim();
+const bankIban = (env?.VITE_BANK_IBAN ?? '').trim();
+const bankName = (env?.VITE_BANK_NAME ?? '').trim();
+const bankDetailsRevealed = ref(false);
+const isDev = import.meta.env.DEV === true;
 
 const showSnackbar = (text: string, color: 'success' | 'primary' = 'success') => {
   snackbar.value = { show: true, text, color };
@@ -833,96 +903,165 @@ watch(statusStep, () => {
   margin: 12px 0 0 0;
 }
 
-.payment-details {
+/* Paso 2: cards en orden 1 Importe → 2 IBAN → 3 Referencia */
+.payment-cards {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+  margin-top: 8px;
 }
 
-.detail-row {
+.payment-card {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 0.2s, background 0.2s;
 }
 
-.detail-label {
-  flex: 0 0 140px;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
+.payment-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
-.detail-value {
-  flex: 1;
-  font-size: 15px;
-  color: #fff;
-  word-break: break-all;
-}
-
-.detail-value.mono { font-family: ui-monospace, monospace; }
-
-.detail-value.amount {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.copy-btn {
-  text-transform: none;
+.payment-card-step {
   flex-shrink: 0;
-}
-
-.detail-block {
-  margin-top: 16px;
-}
-
-.reference-block {
-  padding: 16px;
-  background: rgba(28, 202, 117, 0.08);
-  border: 1px solid rgba(28, 202, 117, 0.2);
-  border-radius: 12px;
-}
-
-.reference-block .detail-label {
-  flex: none;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.reference-desc {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.75);
-  margin: 0 0 12px 0;
-  line-height: 1.4;
-}
-
-.reference-value-row {
-  display: flex;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.12);
 }
 
-.reference-value {
-  font-weight: 600;
-  color: #1cba75;
-  font-family: ui-monospace, monospace;
-  font-size: 15px;
-  word-break: break-all;
+.payment-card-amount .payment-card-step { background: rgba(28, 202, 117, 0.25); color: #1cba75; }
+.payment-card-iban .payment-card-step { background: rgba(255, 255, 255, 0.12); }
+.payment-card-reference .payment-card-step { background: rgba(28, 202, 117, 0.15); color: #9ee6c3; }
+
+.payment-card-body {
   flex: 1;
   min-width: 0;
 }
 
-.copy-reference-btn {
-  text-transform: none;
+.payment-card-label {
+  display: block;
+  font-size: 12px;
   font-weight: 600;
-  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 8px;
 }
 
-.iban-pending {
+.payment-card-value-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.payment-card-value {
+  flex: 1;
+  min-width: 0;
+  word-break: break-all;
+  font-size: 15px;
+  color: #fff;
+}
+
+.payment-card-value-mono {
+  font-family: ui-monospace, monospace;
+  font-size: 14px;
+}
+
+.payment-card-amount-value {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.payment-card-reference-value {
+  font-weight: 600;
+  color: #1cba75;
+  font-size: 15px;
+}
+
+.payment-card-amount {
+  border-color: rgba(28, 202, 117, 0.2);
+  background: rgba(28, 202, 117, 0.06);
+}
+
+.payment-card-amount:hover {
+  border-color: rgba(28, 202, 117, 0.35);
+  background: rgba(28, 202, 117, 0.08);
+}
+
+.payment-card-desc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+
+.payment-card-hint {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
-  margin: 8px 0 0 0;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.payment-card-pending {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
   font-style: italic;
+  margin: 4px 0 0 0;
+}
+
+.reveal-bank-btn {
+  text-transform: none;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.payment-card-pending code.env-hint {
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.bank-details-revealed {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.bank-detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bank-detail-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.copy-card-btn {
+  text-transform: none;
+  flex-shrink: 0;
+  font-weight: 600;
 }
 
 .payment-note {

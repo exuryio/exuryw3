@@ -188,8 +188,9 @@ const openLink = (platform: "x" | "instagram" | "whatsapp") => {
 @import "@/styles/variables.scss";
 .footer-wrapper {
   width: 100%;
-  padding: 0 16px 0 0;
+  padding: 0 16px 0 24px; /* margen izquierdo para no pegar a la línea del sidebar */
   margin-top: 32px;
+  box-sizing: border-box;
   .footer-top {
     padding: 14px 16px;
     background: #373f3c;
