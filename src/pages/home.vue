@@ -591,7 +591,7 @@ const handleSignup = () => {
       }
       
       .content-wrapper {
-        margin-top: clamp(60px, 8vw, 80px);
+        margin-top: clamp(16px, 3vw, 24px);
         
         .title-wrapper {
           padding: 0;
@@ -798,7 +798,7 @@ const handleSignup = () => {
       .content-wrapper {
         top: 0;
         padding: 0 clamp(4px, 1vw, 8px);
-        margin-top: clamp(50px, 7vw, 70px) !important;
+        margin-top: clamp(12px, 2vw, 20px) !important;
         
         .title-wrapper {
           padding: 0 clamp(4px, 1vw, 8px);
