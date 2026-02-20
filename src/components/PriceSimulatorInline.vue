@@ -768,8 +768,8 @@ const handleContinue = async () => {
         /* ignore */
       }
       try {
-        const response = await apiService.createOrder(quoteId) as { order_id?: string; id?: string; [key: string]: unknown };
-        orderId = response?.order_id ?? response?.id ?? null;
+        const response = await apiService.createOrder(quoteId) as { order_id?: string; orderId?: string; id?: string; [key: string]: unknown };
+        orderId = response?.order_id ?? response?.orderId ?? response?.id ?? null;
         if (orderId) console.log('✅ Order created:', response);
       } catch (err: any) {
         console.warn('Create order failed:', err);
