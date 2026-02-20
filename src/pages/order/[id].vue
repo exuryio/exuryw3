@@ -995,6 +995,12 @@ watch(statusStep, () => {
   font-weight: 600;
   color: #1cba75;
   font-size: 15px;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 .payment-card-amount {
@@ -1007,9 +1013,10 @@ watch(statusStep, () => {
   background: rgba(28, 202, 117, 0.08);
 }
 
-/* Móvil: importe arriba y botón abajo para evitar que se monten */
+/* Móvil: importe y referencia arriba, botón abajo; sección uniforme */
 @media (max-width: 600px) {
-  .payment-card-amount .payment-card-value-row {
+  .payment-card-amount .payment-card-value-row,
+  .payment-card-reference .payment-card-value-row {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
@@ -1018,8 +1025,14 @@ watch(statusStep, () => {
     font-size: 20px;
     line-height: 1.2;
   }
-  .payment-card-amount .copy-card-btn {
+  .payment-card-amount .copy-card-btn,
+  .payment-card-reference .copy-card-btn {
     align-self: flex-start;
+  }
+  .payment-card-reference-value {
+    font-size: 14px;
+    line-height: 1.3;
+    padding-right: 4px;
   }
   /* Datos bancarios: filas uniformes, IBAN en una línea con scroll */
   .bank-details-revealed .payment-card-value-row {
