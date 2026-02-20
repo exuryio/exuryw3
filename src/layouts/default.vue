@@ -2,8 +2,8 @@
   <div class="main" :key="route.fullPath">
     <div id="mainContainer" class="rounded-circle" />
     <div class="list">
-        <!-- Zona fija 216px: el área de contenido no cambia al colapsar el sidebar -->
-        <div class="sidebar-zone">
+        <!-- En desktop ocupa espacio; en móvil (media query) es overlay y usa --sidebar-zone-width -->
+        <div class="sidebar-zone" :style="{ '--sidebar-zone-width': sidebarWidthPx }">
           <div id="sidebarWrapper" class="sidebar-in-flow" :style="{ width: sidebarWidthPx }">
             <SideBar />
           </div>
@@ -16,7 +16,18 @@
           <div class="page-view flex fill-width">
             <transition name="scroll-x-transition" mode="out-in">
               <div>
-                <div class="top-bar-wrapper">
+                <div
+                  class="top-bar-wrapper"
+                  :class="{ 'sidebar-open': !appStore.getSidebarCollapsed }"
+                >
+                  <div class="top-bar-logo-wrap">
+                    <img
+                      id="logoExury"
+                      alt="Exury"
+                      src="/LogoExury1.png"
+                      class="header-logo-in-topbar"
+                    />
+                  </div>
                   <div id="iconButtonParent" :class="{ 'iconButtonParent-no-search': !showFooter }">
                     <LanguageSelector />
                     <AvatarMenu />
@@ -36,13 +47,6 @@
             </div>
           </a>
         </div>
-        <!-- Logo fijo en el header: mismo tamaño siempre, no depende del estado del sidebar -->
-        <img
-          id="logoExury"
-          alt="Exury"
-          src="/LogoExury1.png"
-          class="header-logo-fixed"
-        />
       </div>
     <div v-if="showFooter" class="footer-space"></div>
   </div>
@@ -173,11 +177,24 @@
 
 @media (max-width: $screen-md) {
   .sidebar-zone {
-    margin-top: calc(-1 * (clamp(8px, 2vh, 16px) + clamp(8px, 2vw, 12px)));
-    height: calc(100% + clamp(8px, 2vh, 16px) + clamp(8px, 2vw, 12px));
+    /* En móvil el sidebar es overlay: no ocupa espacio, el contenido usa todo el ancho */
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    width: var(--sidebar-zone-width, 90px);
+    min-width: 0;
+    z-index: 1100;
+    margin-top: 0;
+    pointer-events: auto;
+  }
+  .scroll-container {
+    position: relative;
+    z-index: 0;
   }
   #sidebarWrapper :deep(.v-navigation-drawer__content) {
-    padding-top: calc(clamp(8px, 2vh, 16px) + clamp(8px, 2vw, 12px));
+    padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
   }
 }
 @media (max-width: $screen-xs) {
@@ -186,11 +203,14 @@
     height: calc(100% + clamp(4px, 1vh, 8px) + clamp(4px, 1vw, 8px));
   }
   #sidebarWrapper :deep(.v-navigation-drawer__content) {
-    padding-top: calc(clamp(4px, 1vh, 8px) + clamp(4px, 1vw, 8px));
+    padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
   }
 }
 
 .scroll-container {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -200,11 +220,11 @@
   max-width: 100%;
   
   @media (max-width: $screen-md) {
-    padding-top: clamp(8px, 2vh, 16px);
+    padding-top: calc(72px + env(safe-area-inset-top, 0px));
   }
   
   @media (max-width: $screen-xs) {
-    padding-top: clamp(4px, 1vh, 8px);
+    padding-top: calc(72px + env(safe-area-inset-top, 0px));
   }
 }
 
@@ -251,25 +271,42 @@
   align-items: center;
   justify-content: center;
 }
-/* Altura fija del header (64px, alineada con el header del sidebar) */
+/* Altura fija del header/topbar (64px desktop, 48px móvil) */
 $header-bar-height: 64px;
-/* Logo más arriba en vertical */
-$header-logo-top: calc(5vh + 16px - 8px);
-$header-logo-left: calc(5vh + 16px + 44px); /* después del hamburger en el sidebar */
 
 .top-bar-wrapper {
   position: fixed;
   top: 0;
+  left: 0;
   right: 0;
   width: 100%;
   min-height: $header-bar-height;
+  margin: 0;
+  padding: 0 16px 0 0;
+  z-index: 1200;
+  box-sizing: border-box;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  padding: 0 16px 0 0;
-  z-index: 1000;
-  transition: transform 0.5s ease, background-color 0.3s ease;
+  flex-shrink: 0;
+  overflow: hidden;
+  .top-bar-logo-wrap {
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    padding-left: 72px;
+  }
+  .header-logo-in-topbar {
+    height: 42px;
+    max-height: 42px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
+  }
   #iconButtonParent {
     position: relative;
     right: 0;
@@ -283,21 +320,16 @@ $header-logo-left: calc(5vh + 16px + 44px); /* después del hamburger en el side
 }
 .top-bar-wrapper.scrolling {
   padding: 0 16px 0 0;
-  background-color: rgba(10, 17, 14, 0.86);
+  background-color: #141218;
   backdrop-filter: blur(4px);
   transform: translateY(0);
 }
-/* Logo siempre fijo y del mismo tamaño en el header (no se encoje con el sidebar) */
-.header-logo-fixed {
-  position: fixed;
-  top: $header-logo-top;
-  left: $header-logo-left;
-  transform: translateY(-50%);
-  height: 34px;
-  width: auto;
-  object-fit: contain;
-  z-index: 1001;
-  pointer-events: none;
+/* Desktop: bajar un poco el logo del top bar y desplazarlo a la derecha */
+@media (min-width: $screen-md) {
+  .top-bar-wrapper .top-bar-logo-wrap {
+    padding-top: 28px;
+    padding-left: 84px;
+  }
 }
 #maskGroupIcon {
   width: 24px;
@@ -305,24 +337,48 @@ $header-logo-left: calc(5vh + 16px + 44px); /* después del hamburger en el side
   height: 24px;
   object-fit: contain;
 }
-/* Mobile: header más compacto y logo dentro sin cortarse */
+/* Ocultar logo del top bar cuando el sidebar está abierto (expandido) para no duplicar con el logo del sidebar */
+.top-bar-wrapper.sidebar-open .top-bar-logo-wrap {
+  visibility: hidden;
+  pointer-events: none;
+}
 @media (max-width: $screen-md) {
   .top-bar-wrapper {
-    min-height: 48px;
-    padding: 0 12px 0 0;
+    height: calc(72px + env(safe-area-inset-top, 0px));
+    min-height: calc(72px + env(safe-area-inset-top, 0px));
+    max-height: calc(72px + env(safe-area-inset-top, 0px));
+    padding: env(safe-area-inset-top, 0px) 12px 0 0;
+    flex-shrink: 0;
+    /* Topbar en móvil: más alto y sube un poco para cubrir todo el menú hamburguesa */
+    top: -12px !important;
+    left: -24px !important;
+    right: -24px !important;
+    width: calc(100% + 48px) !important;
+    margin-top: 0 !important;
+    border-radius: 0;
+  }
+  .top-bar-wrapper .top-bar-logo-wrap {
+    padding-left: 92px;
+    padding-top: 12px;
+  }
+  .top-bar-wrapper .header-logo-in-topbar {
+    height: 28px;
+    max-height: 72px;
+    max-width: min(120px, calc(100vw - 80px - 100px));
   }
   .top-bar-wrapper.scrolling {
-    padding: 0 12px 0 0;
+    padding: env(safe-area-inset-top, 0px) 12px 0 0;
   }
   .top-bar-wrapper #iconButtonParent {
     gap: 10px;
   }
-  .header-logo-fixed {
-    top: calc(clamp(8px, 2vh, 16px) + 16px - 4px);
-    left: calc(clamp(8px, 2vh, 16px) + 44px);
-    height: 22px;
-    max-width: min(100px, calc(100vw - 44px - 160px));
-    object-fit: contain;
+}
+@media (max-width: $screen-xs) {
+  .top-bar-wrapper .top-bar-logo-wrap {
+    padding-left: 84px;
+  }
+  .top-bar-wrapper .header-logo-in-topbar {
+    max-height: 72px;
   }
 }
 @media (min-width: $screen-md) {
@@ -350,8 +406,8 @@ $header-logo-left: calc(5vh + 16px + 44px); /* después del hamburger en el side
     .list {
       .listInner {
         position: relative;
-        left: -220px;
-        min-width: calc(100% - 16px);
+        left: 0;
+        min-width: 0;
         max-width: 100%;
         width: 100%;
         box-sizing: border-box;
@@ -370,7 +426,7 @@ $header-logo-left: calc(5vh + 16px + 44px); /* después del hamburger en el side
         }
         .top-bar-wrapper.scrolling {
           padding: 20px 16px 10px 0;
-          background-color: rgba(10, 17, 14, 0.86);
+          background-color: #141218;
           backdrop-filter: blur(4px);
           transform: translateY(0);
         }
@@ -384,24 +440,26 @@ $header-logo-left: calc(5vh + 16px + 44px); /* después del hamburger en el side
     padding: 16px !important;
     margin: 0;
     .list {
-      display: block;
+      display: flex;
+      flex-direction: row;
       width: 100%;
       max-width: 100%;
       height: 100%;
       margin: 0;
-      left: 16px;
-      top: 16px;
+      left: 0;
+      top: 0;
       overflow-x: hidden;
-      overflow-y: hidden;
-      padding: 0;
+      overflow-y: visible;
+      padding: 4px 6px 0 6px;
       box-sizing: border-box;
       .listInner {
         position: relative;
         left: 0;
-        min-width: 100%;
+        min-width: 0;
+        max-width: 100%;
         .top-bar-wrapper.scrolling {
           padding: 20px 16px 10px 0;
-          background-color: rgba(10, 17, 14, 0.86);
+          background-color: #141218;
           backdrop-filter: blur(4px);
           transform: translateY(0);
         }
@@ -425,21 +483,23 @@ $header-logo-left: calc(5vh + 16px + 44px); /* después del hamburger en el side
     padding: 16px !important;
     margin: 0;
     .list {
-      display: block;
+      display: flex;
+      flex-direction: row;
       width: 100%;
       max-width: 100%;
       height: 100%;
       margin: 0;
-      left: 16px;
-      top: 16px;
+      left: 0;
+      top: 0;
       overflow-x: hidden;
-      overflow-y: hidden;
-      padding: 0;
+      overflow-y: visible;
+      padding: 4px 6px 0 6px;
       box-sizing: border-box;
       .listInner {
         position: relative;
         left: 0;
-        min-width: 100%;
+        min-width: 0;
+        max-width: 100%;
         .top-bar-wrapper {
           margin-top: 16px;
           width: 100%;
