@@ -134,10 +134,22 @@ const handleLogout = async (): Promise<void> => {
     :rail="isCollapsed"
     permanent
   >
-    <v-list-item class="btn-menu-wrapper align-center ml-2">
+    <div class="btn-menu-wrapper align-center">
       <v-btn icon="mdi-menu" @click="toggle" class="menu-fab">
       </v-btn>
-    </v-list-item>
+      <router-link
+        v-if="!isCollapsed"
+        to="/"
+        class="sidebar-logo-wrap"
+        aria-label="Exury"
+      >
+        <img
+          src="/LogoExury1.png"
+          alt="Exury"
+          class="sidebar-logo-img"
+        />
+      </router-link>
+    </div>
 
     <div class="scrollable-content">
       <v-list dense>
@@ -318,7 +330,7 @@ const handleLogout = async (): Promise<void> => {
   overflow-y: auto;
 }
 
-/* Header del sidebar: más altura para que el hamburger quede bien dentro y no solape el logo */
+/* Header del sidebar: hamburger + logo en la misma posición que en el top bar */
 .btn-menu-wrapper {
   position: sticky;
   top: 0;
@@ -328,9 +340,30 @@ const handleLogout = async (): Promise<void> => {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 8px 0;
+  padding: 8px 12px;
   margin-bottom: 0;
+  margin-left: 8px;
   gap: 12px;
+}
+.sidebar-logo-wrap {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+.sidebar-logo-img {
+  height: 28px;
+  max-height: 72px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Desktop: mismo tamaño que el logo del top bar para alineación visual */
+@media (min-width: $screen-md) {
+  .sidebar-logo-img {
+    height: 42px;
+    max-height: 42px;
+  }
 }
 .extended-fab {
   width: 56px;
@@ -389,6 +422,10 @@ const handleLogout = async (): Promise<void> => {
 @media (max-width: $screen-md) {
   .sidebar {
     background-color: rgba(13, 21, 19, 0.98);
+  }
+  .btn-menu-wrapper {
+    min-height: 48px;
+    padding: 0;
   }
   .options-bar.item-group {
     display: none;

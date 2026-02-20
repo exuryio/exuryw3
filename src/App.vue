@@ -1,6 +1,6 @@
 <template>
-  <v-app class="fill-width" style="height: fit-content">
-    <v-main>
+  <v-app class="fill-width" style="min-height: 100vh; height: 100%;">
+    <v-main style="min-height: 100vh;">
       <router-view :key="locale" />
     </v-main>
   </v-app>
@@ -29,12 +29,15 @@ body, html {
 /* Evitar que v-main cambie de tamaño al desplegar el sidebar (Vuetify inyecta --v-layout-left) */
 .v-main {
   --v-layout-left: 0 !important;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 .main {
   overflow-x: hidden;
   overflow-y: auto;
   width: 100%;
   max-width: 100%;
+  min-height: 100vh;
   box-sizing: border-box;
 }
 .v-navigation-drawer__content::-webkit-scrollbar {
