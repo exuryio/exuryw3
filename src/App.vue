@@ -1,6 +1,6 @@
 <template>
-  <v-app class="fill-width" style="min-height: 100vh; height: 100%;">
-    <v-main style="min-height: 100vh;">
+  <v-app class="fill-width app-root">
+    <v-main class="app-main">
       <router-view :key="locale" />
     </v-main>
   </v-app>
@@ -16,16 +16,38 @@ const { locale } = useI18n();
 .v-list-item__prepend {
   display: block !important;
 }
-body, html {
-  overflow-x: hidden;
-  overflow-y: auto;
+html {
+  height: 100%;
+  margin: 0;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+body {
   height: 100%;
   margin: 0;
   width: 100%;
   max-width: 100%;
+  overflow: hidden;
   box-sizing: border-box;
 }
 
+/* Frame fijo: app ocupa todo el viewport y no hace scroll */
+.app-root {
+  height: 100%;
+  min-height: 100dvh;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.app-main {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
 /* Evitar que v-main cambie de tamaño al desplegar el sidebar (Vuetify inyecta --v-layout-left) */
 .v-main {
   --v-layout-left: 0 !important;
@@ -33,11 +55,14 @@ body, html {
   min-height: 0;
 }
 .main {
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   width: 100%;
   max-width: 100%;
-  min-height: 100vh;
+  height: 100%;
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
 }
 .v-navigation-drawer__content::-webkit-scrollbar {

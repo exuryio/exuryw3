@@ -15,6 +15,7 @@ jobs:
       - uses: actions/checkout@v4
       - run: yarn install --frozen-lockfile && yarn build && ls -la dist/assets/
         env:
+          VITE_API_BASE_URL: https://exury-backend-production.up.railway.app
           VITE_INVEST_LEADS_EMAIL: ${{ secrets.VITE_INVEST_LEADS_EMAIL }}
           VITE_SCHEDULING_URL: ${{ secrets.VITE_SCHEDULING_URL }}
           VITE_BANK_BENEFICIARY: ${{ secrets.VITE_BANK_BENEFICIARY }}

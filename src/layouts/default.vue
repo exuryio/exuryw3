@@ -61,7 +61,7 @@
   color: #c7d4cf;
   margin: 0 !important;
   padding: 5vh !important;
-  height: 100vh;
+  min-height: 0;
   flex-direction: column;
   display: flex;
   
@@ -347,7 +347,7 @@ $header-bar-height: 64px;
     height: calc(72px + env(safe-area-inset-top, 0px));
     min-height: calc(72px + env(safe-area-inset-top, 0px));
     max-height: calc(72px + env(safe-area-inset-top, 0px));
-    padding: env(safe-area-inset-top, 0px) 12px 0 0;
+    padding: env(safe-area-inset-top, 0px) 20px 0 0;
     flex-shrink: 0;
     /* Topbar en móvil: más alto y sube un poco para cubrir todo el menú hamburguesa */
     top: -12px !important;
@@ -367,10 +367,11 @@ $header-bar-height: 64px;
     max-width: min(120px, calc(100vw - 80px - 100px));
   }
   .top-bar-wrapper.scrolling {
-    padding: env(safe-area-inset-top, 0px) 12px 0 0;
+    padding: env(safe-area-inset-top, 0px) 20px 0 0;
   }
   .top-bar-wrapper #iconButtonParent {
     gap: 10px;
+    padding-right: 4px;
   }
 }
 @media (max-width: $screen-xs) {
