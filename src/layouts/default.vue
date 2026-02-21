@@ -61,7 +61,7 @@
   color: #c7d4cf;
   margin: 0 !important;
   padding: 5vh !important;
-  height: 100vh;
+  min-height: 0;
   flex-direction: column;
   display: flex;
   
