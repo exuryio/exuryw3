@@ -31,6 +31,7 @@
           :to="`/order/${ord.order_id || ord.id}`"
           class="order-item"
         >
+          <span class="order-date">{{ formatDate(ord) }}</span>
           <span class="order-id">{{ ord.order_id || ord.id }}</span>
           <span class="order-amount">{{ formatEur(Number(ord.amount_eur ?? ord.fiat_amount ?? 0)) }} EUR → {{ ord.asset || 'USDC' }}</span>
           <span class="order-status" :class="statusClass(ord)">{{ statusLabel(ord) }}</span>
@@ -58,22 +59,90 @@ const orders = ref<Record<string, unknown>[]>([]);
 const formatEur = (n: number) =>
   new Intl.NumberFormat('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(n));
 
-const statusLabel = (o: Record<string, unknown>) => {
+/** Mismo mapeo que en la página de detalle de orden: backend status → paso 1-4 */
+function getStatusStep(o: Record<string, unknown>): number {
   const s = ((o.status ?? o.payment_status) as string) || '';
   const lower = s.toLowerCase();
-  if (lower === 'completed' || lower === 'delivered') return t('orders.statusCompleted');
-  if (lower === 'usdc_sent' || lower === 'sent') return t('orders.statusInTransit');
-  if (lower === 'received' || lower === 'verifying') return t('orders.statusVerifying');
-  return t('orders.statusPending');
+  if (lower === 'completed' || lower === 'delivered' || lower === 'funds_in_wallet') return 4;
+  if (lower === 'usdc_sent' || lower === 'sent' || lower === 'processing') return 3;
+  if (lower === 'received' || lower === 'verifying' || lower === 'confirmed') return 2;
+  return 1;
+}
+
+const statusLabel = (o: Record<string, unknown>) => {
+  const step = getStatusStep(o);
+  if (step === 4) return t('orders.statusCompleted');
+  return t(`orders.statusStep${step}`);
 };
 
 const statusClass = (o: Record<string, unknown>) => {
-  const s = ((o.status ?? o.payment_status) as string) || '';
-  const lower = s.toLowerCase();
-  if (lower === 'completed' || lower === 'delivered') return 'done';
-  if (lower === 'usdc_sent' || lower === 'sent' || lower === 'received' || lower === 'verifying') return 'progress';
+  const step = getStatusStep(o);
+  if (step === 4) return 'done';
+  if (step >= 2) return 'progress';
   return 'pending';
 };
+
+function formatDate(o: Record<string, unknown>): string {
+  const raw = o.created_at ?? o.updated_at ?? o.createdAt ?? o.updatedAt;
+  if (raw == null) return '—';
+  const date = new Date(raw as string | number);
+  if (Number.isNaN(date.getTime())) return '—';
+  return new Intl.DateTimeFormat('es-ES', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
+}
+
+const PENDING_ORDER_KEY = 'exury_pending_order';
+
+/** Órdenes en proceso o completadas (pasos 1-4) con importe > 0; ordenadas por fecha descendente */
+function normalizeOrders(raw: unknown): Record<string, unknown>[] {
+  const list = Array.isArray(raw) ? raw : (raw as Record<string, unknown>)?.orders ?? [];
+  const arr = (list as Record<string, unknown>[]).filter((o) => {
+    const step = getStatusStep(o);
+    const amount = Number(o.amount_eur ?? o.fiat_amount ?? 0);
+    return step >= 1 && step <= 4 && amount > 0;
+  });
+  const byDate = (a: Record<string, unknown>, b: Record<string, unknown>) => {
+    const ta = new Date((a.created_at ?? a.updated_at ?? 0) as string | number).getTime();
+    const tb = new Date((b.created_at ?? b.updated_at ?? 0) as string | number).getTime();
+    return tb - ta;
+  };
+  let result = [...arr].sort(byDate);
+
+  // Incluir orden pendiente del simulador (sessionStorage) si el backend no la devolvió
+  if (typeof window !== 'undefined') {
+    try {
+      const rawStored = sessionStorage.getItem(PENDING_ORDER_KEY);
+      const stored = rawStored ? (JSON.parse(rawStored) as Record<string, unknown>) : null;
+      if (stored?.order_id && Number(stored.amount_eur ?? 0) > 0) {
+        const id = String(stored.order_id);
+        const alreadyInList = result.some((o) => (o.order_id ?? o.id) === id);
+        if (!alreadyInList) {
+          const pendingOrder: Record<string, unknown> = {
+            ...stored,
+            id: stored.order_id,
+            order_id: stored.order_id,
+            amount_eur: stored.amount_eur,
+            fiat_amount: stored.amount_eur,
+            amount_crypto: stored.amount_crypto,
+            asset: stored.asset ?? 'USDC',
+            status: stored.status ?? 'pending',
+            payment_status: stored.payment_status ?? stored.status ?? 'pending',
+            created_at: stored.created_at ?? new Date().toISOString(),
+          };
+          result = [pendingOrder, ...result].sort(byDate);
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+  return result;
+}
 
 onMounted(async () => {
   if (typeof window !== 'undefined') authStore.loadFromStorage();
@@ -85,10 +154,11 @@ onMounted(async () => {
   error.value = null;
   try {
     const data = await apiService.getOrders();
-    orders.value = Array.isArray(data) ? data : (data as any)?.orders ?? [];
+    orders.value = normalizeOrders(data);
   } catch (e: any) {
     error.value = e?.message || t('orders.errorLoading');
-    orders.value = [];
+    // Aunque falle la API (ej. localhost vs backend en preview), mostrar orden pendiente de sessionStorage
+    orders.value = normalizeOrders([]);
   } finally {
     loading.value = false;
   }
@@ -136,8 +206,9 @@ onMounted(async () => {
   &:hover { background: rgba(255,255,255,0.08); border-color: rgba(28,202,117,0.25); }
 }
 
-.order-id { font-size: 13px; color: rgba(255,255,255,0.6); flex: 0 0 140px; }
-.order-amount { flex: 1; font-weight: 500; color: #fff; }
+.order-date { font-size: 12px; color: rgba(255,255,255,0.5); flex: 0 0 100px; }
+.order-id { font-size: 13px; color: rgba(255,255,255,0.6); flex: 0 0 140px; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.order-amount { flex: 1; font-weight: 500; color: #fff; min-width: 0; }
 .order-status {
   font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 8px;
   &.pending { background: rgba(255,193,7,0.2); color: #ffc107; }
