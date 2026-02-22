@@ -348,20 +348,27 @@ const handleLogout = async (): Promise<void> => {
 .sidebar-logo-wrap {
   display: flex;
   align-items: center;
+  align-self: center;
   flex-shrink: 0;
   text-decoration: none;
+  margin-top: 6px;
 }
+/* Mismo tamaño que el logo del header; block para alinear en el eje horizontal con el hamburger */
 .sidebar-logo-img {
+  display: block;
   height: 28px;
-  max-height: 72px;
+  min-height: 28px;
+  max-height: 28px;
   width: auto;
   object-fit: contain;
+  flex-shrink: 0;
+  vertical-align: middle;
 }
 
-/* Desktop: mismo tamaño que el logo del top bar para alineación visual */
 @media (min-width: $screen-md) {
   .sidebar-logo-img {
     height: 42px;
+    min-height: 42px;
     max-height: 42px;
   }
 }
