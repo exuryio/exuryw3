@@ -1,13 +1,25 @@
 <template>
   <div class="main" :key="route.fullPath">
     <div id="mainContainer" class="rounded-circle" />
-    <div class="list">
-        <!-- En desktop ocupa espacio; en móvil (media query) es overlay y usa --sidebar-zone-width -->
-        <div class="sidebar-zone" :style="{ '--sidebar-zone-width': sidebarWidthPx }">
-          <div id="sidebarWrapper" class="sidebar-in-flow" :style="{ width: sidebarWidthPx }">
-            <SideBar />
+    <div class="list" :class="{ 'list--frame-visible': isMobile && !appStore.getSidebarCollapsed }">
+        <!-- Sidebar siempre en body: en desktop queda por encima del header al hacer scroll (z 1300); en móvil con estilo in-frame -->
+        <Teleport to="body">
+          <div
+            class="sidebar-zone"
+            :class="{
+              'sidebar-zone--in-frame': isMobile,
+              'sidebar-zone--desktop': !isMobile,
+              'sidebar-zone--open': !appStore.getSidebarCollapsed
+            }"
+            :style="{ '--sidebar-zone-width': sidebarWidthPx }"
+          >
+            <div id="sidebarWrapper" class="sidebar-in-flow" :style="{ width: sidebarWidthPx }">
+              <SideBar />
+            </div>
           </div>
-        </div>
+        </Teleport>
+        <!-- Placeholder en desktop para reservar el ancho del sidebar (el sidebar real está en body) -->
+        <div v-if="!isMobile" class="sidebar-zone sidebar-zone-placeholder" :style="{ width: sidebarWidthPx }" aria-hidden="true" />
         <!-- Main content area -->
         <div class="scroll-container">
            <div
@@ -16,23 +28,26 @@
           <div class="page-view flex fill-width">
             <transition name="scroll-x-transition" mode="out-in">
               <div>
-                <div
-                  class="top-bar-wrapper"
-                  :class="{ 'sidebar-open': !appStore.getSidebarCollapsed }"
-                >
-                  <div class="top-bar-logo-wrap">
-                    <img
-                      id="logoExury"
-                      alt="Exury"
-                      src="/LogoExury1.png"
-                      class="header-logo-in-topbar"
-                    />
+                <!-- Teleport a body: los iconos (idioma/avatar) solo se ven correctamente fuera de .main; el hamburger sigue siendo clicable por margin-left del logo. -->
+                <Teleport to="body">
+                  <div
+                    class="top-bar-wrapper"
+                    :class="{ 'sidebar-open': !appStore.getSidebarCollapsed }"
+                  >
+                    <div class="top-bar-logo-wrap">
+                      <img
+                        id="logoExury"
+                        alt="Exury"
+                        src="/LogoExury1.png"
+                        class="header-logo-in-topbar"
+                      />
+                    </div>
+                    <div id="iconButtonParent" :class="{ 'iconButtonParent-no-search': !showFooter }">
+                      <LanguageSelector />
+                      <AvatarMenu />
+                    </div>
                   </div>
-                  <div id="iconButtonParent" :class="{ 'iconButtonParent-no-search': !showFooter }">
-                    <LanguageSelector />
-                    <AvatarMenu />
-                  </div>
-                </div>
+                </Teleport>
                 <router-view />
               </div>
             </transition>
@@ -54,6 +69,8 @@
 
 <style lang="scss" scoped>
 @import "@/styles/variables.scss";
+
+$header-bar-height: 64px;
 
 .main {
   background-color: #141218;
@@ -99,7 +116,7 @@
   justify-content: flex-start;
   padding: 16px 16px 0 0;
   gap: 0;
-  z-index: 0;
+  /* Sin z-index para que el sidebar (1300) compita con el header (1200) en .main y los iconos sigan visibles a la derecha */
   overflow-x: hidden;
   overflow-y: visible;
   width: 100%;
@@ -109,6 +126,10 @@
   @media (max-width: $screen-md) {
     padding: clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) 0 clamp(8px, 2vw, 12px);
     gap: 0;
+    /* Con el sidebar desplegado, reforzar línea de contorno del marco (derecha y abajo) */
+    &.list--frame-visible {
+      box-shadow: inset -1px 0 0 0 #2d4740, inset 0 -1px 0 0 #2d4740;
+    }
   }
   
   @media (max-width: $screen-xs) {
@@ -154,6 +175,44 @@
   height: calc(100% + 5vh + 16px);
   box-sizing: border-box;
 }
+/* Desktop: sidebar teleportado a body, fijo y por encima del header (z 1300); mismo marco que el header (borde, radius) */
+@media (min-width: $screen-md) {
+  .sidebar-zone.sidebar-zone--desktop {
+    position: fixed;
+    left: 5vh;
+    top: 5vh;
+    bottom: 5vh;
+    width: var(--sidebar-zone-width, 216px);
+    height: auto;
+    margin-top: 0;
+    z-index: 1300;
+    min-width: 0;
+    pointer-events: auto;
+    border-radius: 16px 0 0 16px;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  .sidebar-zone.sidebar-zone--desktop.sidebar-zone--open {
+    border: 1px solid #2d4740;
+  }
+  /* Alinear hamburger y logo con la barra del header (misma altura 64px, misma línea horizontal) */
+  .sidebar-zone.sidebar-zone--desktop #sidebarWrapper :deep(.v-navigation-drawer__content) {
+    padding-top: 0;
+  }
+  .sidebar-zone.sidebar-zone--desktop #sidebarWrapper :deep(.btn-menu-wrapper) {
+    min-height: $header-bar-height;
+    display: flex;
+    align-items: center;
+  }
+  .sidebar-zone-placeholder {
+    flex-shrink: 0;
+    min-width: 0;
+    width: var(--sidebar-zone-width, 216px);
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+}
 #sidebarWrapper.sidebar-in-flow {
   flex: 1;
   min-height: 0;
@@ -178,6 +237,7 @@
 @media (max-width: $screen-md) {
   .sidebar-zone {
     /* En móvil el sidebar es overlay: no ocupa espacio, el contenido usa todo el ancho */
+    /* z-index > header (1200) para que el hamburger reciba el clic aunque el header cubra la zona */
     position: fixed;
     left: 0;
     top: 0;
@@ -185,9 +245,24 @@
     height: 100%;
     width: var(--sidebar-zone-width, 90px);
     min-width: 0;
-    z-index: 1100;
+    z-index: 1300;
     margin-top: 0;
     pointer-events: auto;
+  }
+  /* Sidebar teleportado a body: alineado al frame (mismo inset y border-radius que el header) */
+  .sidebar-zone.sidebar-zone--in-frame {
+    top: clamp(8px, 2vh, 16px);
+    left: clamp(8px, 2vh, 16px);
+    bottom: clamp(8px, 2vh, 16px);
+    margin-top: 0;
+    height: auto;
+    border-radius: 16px 0 0 16px;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  /* Borde del marco solo cuando el sidebar está abierto (evita línea vertical cuando está colapsado) */
+  .sidebar-zone.sidebar-zone--in-frame.sidebar-zone--open {
+    border: 1px solid #2d4740;
   }
   .scroll-container {
     position: relative;
@@ -201,6 +276,19 @@
   .sidebar-zone {
     margin-top: calc(-1 * (clamp(4px, 1vh, 8px) + clamp(4px, 1vw, 8px)));
     height: calc(100% + clamp(4px, 1vh, 8px) + clamp(4px, 1vw, 8px));
+  }
+  .sidebar-zone.sidebar-zone--in-frame {
+    top: clamp(4px, 1vh, 8px);
+    left: clamp(4px, 1vh, 8px);
+    bottom: clamp(4px, 1vh, 8px);
+    margin-top: 0;
+    height: auto;
+    border-radius: 12px 0 0 12px;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  .sidebar-zone.sidebar-zone--in-frame.sidebar-zone--open {
+    border: 1px solid #2d4740;
   }
   #sidebarWrapper :deep(.v-navigation-drawer__content) {
     padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
@@ -228,14 +316,16 @@
   }
 }
 
+/* Safari: overflow en listInner “recorta” el header fijo; visible evita iconos fantasmas */
 .listInner {
   position: relative !important;
   width: 100% !important;
   max-width: 100% !important;
   height: 100% !important;
   z-index: 1 !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
+  overflow: visible !important;
+  -webkit-transform: none !important;
+  transform: none !important;
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -271,15 +361,14 @@
   align-items: center;
   justify-content: center;
 }
-/* Altura fija del header/topbar (64px desktop, 48px móvil) */
-$header-bar-height: 64px;
-
+/* Altura fija del header/topbar (64px desktop, 48px móvil) - variable definida arriba */
+/* Header teleportado a body: alineado al frame de contenido (.main padding + borde redondo) */
 .top-bar-wrapper {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
+  top: 5vh;
+  left: 5vh;
+  right: 5vh;
+  width: auto;
   min-height: $header-bar-height;
   margin: 0;
   padding: 0 16px 0 0;
@@ -292,43 +381,68 @@ $header-bar-height: 64px;
   align-items: center;
   justify-content: flex-end;
   flex-shrink: 0;
-  overflow: hidden;
+  overflow: visible;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
+  border-radius: 16px 16px 0 0;
+  border: 1px solid #2d4740;
+  border-bottom: none;
+  /* Dejar pasar clics al sidebar (hamburger); solo logo e iconos reciben clic */
+  pointer-events: none;
+  /* Logo: desktop lo sobrescribe a 60px; móvil usa su propio valor */
   .top-bar-logo-wrap {
+    pointer-events: auto;
     margin-right: auto;
+    margin-left: 72px;
     display: flex;
     align-items: center;
-    padding-left: 72px;
+    padding-left: 0;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
+  /* Mismo tamaño que el logo del sidebar (SideBar.vue .sidebar-logo-img) en todas las resoluciones */
   .header-logo-in-topbar {
     height: 42px;
+    min-height: 42px;
     max-height: 42px;
     width: auto;
     object-fit: contain;
     display: block;
+    flex-shrink: 0;
     pointer-events: none;
   }
   #iconButtonParent {
+    pointer-events: auto;
     position: relative;
+    z-index: 10;
     right: 0;
-    width: fit-content;
+    width: fit-content !important;
+    width: -webkit-fit-content !important;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: end;
     gap: 16px;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    isolation: isolate;
   }
 }
 .top-bar-wrapper.scrolling {
   padding: 0 16px 0 0;
   background-color: #141218;
   backdrop-filter: blur(4px);
-  transform: translateY(0);
+  -webkit-transform: translateY(0) translateZ(0);
+  transform: translateY(0) translateZ(0);
+  border-bottom: 1px solid #2d4740;
 }
-/* Desktop: bajar un poco el logo del top bar y desplazarlo a la derecha */
+/* Desktop: logo en margin-left 66px; un poco más abajo */
 @media (min-width: $screen-md) {
   .top-bar-wrapper .top-bar-logo-wrap {
-    padding-top: 28px;
-    padding-left: 84px;
+    margin-left: 66px;
+    padding-left: 0;
+    padding-top: 6px;
   }
 }
 #maskGroupIcon {
@@ -349,22 +463,32 @@ $header-bar-height: 64px;
     max-height: calc(72px + env(safe-area-inset-top, 0px));
     padding: env(safe-area-inset-top, 0px) 20px 0 0;
     flex-shrink: 0;
-    /* Topbar en móvil: más alto y sube un poco para cubrir todo el menú hamburguesa */
-    top: -12px !important;
-    left: -24px !important;
-    right: -24px !important;
-    width: calc(100% + 48px) !important;
+    /* Alineado al frame de contenido (mismo padding que .main en md) */
+    top: clamp(8px, 2vh, 16px) !important;
+    left: clamp(8px, 2vh, 16px) !important;
+    right: clamp(8px, 2vh, 16px) !important;
+    width: auto !important;
     margin-top: 0 !important;
-    border-radius: 0;
+    border-radius: 16px 16px 0 0;
   }
+  /* Logo más a la izquierda en móvil (34px desde el borde) */
   .top-bar-wrapper .top-bar-logo-wrap {
-    padding-left: 92px;
-    padding-top: 12px;
+    margin-left: 34px;
+    padding-left: 0;
+    padding-top: 0;
+    display: flex;
+    align-items: center;
+    align-self: center;
+    transform: translateY(-4px);
   }
   .top-bar-wrapper .header-logo-in-topbar {
+    display: block;
     height: 28px;
-    max-height: 72px;
-    max-width: min(120px, calc(100vw - 80px - 100px));
+    min-height: 28px;
+    max-height: 28px;
+    width: auto;
+    flex-shrink: 0;
+    vertical-align: middle;
   }
   .top-bar-wrapper.scrolling {
     padding: env(safe-area-inset-top, 0px) 20px 0 0;
@@ -373,13 +497,32 @@ $header-bar-height: 64px;
     gap: 10px;
     padding-right: 4px;
   }
+  /* Safari: forzar GPU en iconos del header para que se pinten */
+  .top-bar-wrapper #iconButtonParent :deep(.language-selector),
+  .top-bar-wrapper #iconButtonParent :deep(.avatar-menu),
+  .top-bar-wrapper #iconButtonParent :deep(.v-icon),
+  .top-bar-wrapper #iconButtonParent :deep(img) {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: visible;
+    backface-visibility: visible;
+  }
 }
 @media (max-width: $screen-xs) {
+  .top-bar-wrapper {
+    top: clamp(4px, 1vh, 8px) !important;
+    left: clamp(4px, 1vh, 8px) !important;
+    right: clamp(4px, 1vh, 8px) !important;
+    border-radius: 12px 12px 0 0;
+  }
   .top-bar-wrapper .top-bar-logo-wrap {
-    padding-left: 84px;
+    margin-left: 34px;
+    padding-left: 0;
   }
   .top-bar-wrapper .header-logo-in-topbar {
-    max-height: 72px;
+    height: 28px;
+    min-height: 28px;
+    max-height: 28px;
   }
 }
 @media (min-width: $screen-md) {
@@ -592,7 +735,7 @@ $header-bar-height: 64px;
 import AvatarMenu from "@/components/AvatarMenu.vue";
 import LanguageSelector from "@/components/LanguageSelector.vue";
 import Footer from "@/components/Footer.vue";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { isFocusedRoute, isFocusedWhenLoggedInRoute } from "@/domain/constants/sidebar.constant";
 import { useAppStore } from "@/infraestructure/stores/app";
@@ -609,13 +752,28 @@ const isProductMode = computed(
 const showFooter = computed(() => !isProductMode.value);
 const sidebarWidthPx = computed(() => (appStore.getSidebarCollapsed ? "90px" : "216px"));
 
+const MOBILE_BREAKPOINT = 768;
+const isMobile = ref(typeof window !== "undefined" && window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches);
+let mobileQuery: MediaQueryList | null = null;
+
 const whatsappNumber = '+34604117851';
 const message = 'Hola quiero saber más detalles de vuestro servicio';
 const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
 onMounted(() => {
+  mobileQuery = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
+  isMobile.value = mobileQuery.matches;
+  mobileQuery.addEventListener("change", onMobileChange);
+});
+onUnmounted(() => mobileQuery?.removeEventListener("change", onMobileChange));
+
+function onMobileChange(e: MediaQueryListEvent) {
+  isMobile.value = e.matches;
+}
+
+onMounted(() => {
   console.log("Default layout mounted");
-  
+
   // Function to ensure listInner is visible
   const ensureListInnerVisible = () => {
     const listInnerElements = document.querySelectorAll(".listInner");

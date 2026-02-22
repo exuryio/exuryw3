@@ -16,7 +16,7 @@
           >
             <span class="avatar-text">{{ userInitials }}</span>
           </v-avatar>
-          <v-icon v-else>mdi-account-circle</v-icon>
+          <img v-else src="/icons/profile.svg" alt="" class="avatar-icon-img" width="24" height="24" aria-hidden="true" />
         </v-btn>
       </template>
 
@@ -127,6 +127,12 @@ const handleLogout = async () => {
     &:hover {
       color: #1cba75 !important;
     }
+  }
+  .avatar-icon-img {
+    display: block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
   }
 }
 

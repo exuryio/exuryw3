@@ -6,10 +6,10 @@
           v-bind="props"
           icon
           variant="text"
-          class="lang-btn"
+          class="lang-btn lang-btn-img"
           :aria-label="t('language.label')"
         >
-          <v-icon color="rgba(255,255,255,0.9)">mdi-translate</v-icon>
+          <img src="/icons/lang.svg" alt="" class="lang-icon-img" width="24" height="24" aria-hidden="true" />
         </v-btn>
       </template>
       <v-list class="lang-menu-list">
@@ -48,6 +48,12 @@ function setLocale(code: LocaleCode) {
   }
   .lang-btn:hover {
     color: #1cba75 !important;
+  }
+  .lang-btn-img .lang-icon-img {
+    display: block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
   }
 }
 
