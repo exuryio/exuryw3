@@ -110,6 +110,7 @@ $header-bar-height: 64px;
   border-radius: 16px;
   background-color: rgba(13, 21, 19, 0.5);
   border: 1px solid #2d4740;
+  border-top: none; /* Evita doble borde: el header ya dibuja el borde superior del frame */
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -381,13 +382,13 @@ $header-bar-height: 64px;
   align-items: center;
   justify-content: flex-end;
   flex-shrink: 0;
-  overflow: visible;
+  overflow: hidden;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   will-change: transform;
   border-radius: 16px 16px 0 0;
-  border: 1px solid #2d4740;
-  border-bottom: none;
+  /* box-shadow en lugar de border para esquinas redondeadas sin puntas; solo top + lados */
+  box-shadow: -1px 0 0 0 #2d4740, 1px 0 0 0 #2d4740, 0 -1px 0 0 #2d4740;
   /* Dejar pasar clics al sidebar (hamburger); solo logo e iconos reciben clic */
   pointer-events: none;
   /* Logo: desktop lo sobrescribe a 60px; móvil usa su propio valor */
@@ -435,7 +436,7 @@ $header-bar-height: 64px;
   backdrop-filter: blur(4px);
   -webkit-transform: translateY(0) translateZ(0);
   transform: translateY(0) translateZ(0);
-  border-bottom: 1px solid #2d4740;
+  box-shadow: -1px 0 0 0 #2d4740, 1px 0 0 0 #2d4740, 0 -1px 0 0 #2d4740, 0 1px 0 0 #2d4740;
 }
 /* Desktop: logo en margin-left 66px; un poco más abajo */
 @media (min-width: $screen-md) {
@@ -811,22 +812,32 @@ onMounted(() => {
   setTimeout(ensureListInnerVisible, 500);
   setTimeout(ensureListInnerVisible, 1000);
   
-  // Setup scroll listener
-  setTimeout(() => {
-    const listInnerElement = document.querySelector(".listInner");
-    console.log('listInner element for scroll:', listInnerElement);
-    if (listInnerElement) {
-      listInnerElement.addEventListener("scroll", () => {
-        const topBarWrapper = document.querySelector(".top-bar-wrapper");
-        if (topBarWrapper) {
-          if (listInnerElement.scrollTop > 10) {
-            topBarWrapper.classList.add("scrolling");
-          } else {
-            topBarWrapper.classList.remove("scrolling");
-          }
-        }
-      });
+  // Detectar scroll en cualquier contenedor (layout o vistas como dashboard/producto) para marcar header
+  const updateHeaderScrolling = (scrollEl: Element) => {
+    const topBarWrapper = document.querySelector(".top-bar-wrapper");
+    if (!topBarWrapper) return;
+    const el = scrollEl as HTMLElement;
+    const scrollTop = el.scrollTop ?? 0;
+    if (scrollTop > 10) {
+      topBarWrapper.classList.add("scrolling");
+    } else {
+      topBarWrapper.classList.remove("scrolling");
     }
+  };
+  const onScroll = (e: Event) => {
+    const target = e.target;
+    if (target instanceof HTMLElement) updateHeaderScrolling(target);
+  };
+  // Capture: el scroll no hace bubble, así capturamos el scroll de cualquier contenedor (incl. dentro de producto)
+  document.addEventListener("scroll", onScroll, true);
+  setTimeout(() => {
+    const scrollContainer = document.querySelector(".scroll-container");
+    const listInnerElement = document.querySelector(".listInner");
+    if (scrollContainer) updateHeaderScrolling(scrollContainer);
+    if (listInnerElement && listInnerElement !== scrollContainer) updateHeaderScrolling(listInnerElement);
   }, 500);
+  onUnmounted(() => {
+    document.removeEventListener("scroll", onScroll, true);
+  });
 });
 </script>
