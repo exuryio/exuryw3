@@ -110,6 +110,7 @@ $header-bar-height: 64px;
   border-radius: 16px;
   background-color: rgba(13, 21, 19, 0.5);
   border: 1px solid #2d4740;
+  border-top: none; /* Evita doble borde: el header ya dibuja el borde superior del frame */
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -381,13 +382,13 @@ $header-bar-height: 64px;
   align-items: center;
   justify-content: flex-end;
   flex-shrink: 0;
-  overflow: visible;
+  overflow: hidden;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   will-change: transform;
   border-radius: 16px 16px 0 0;
-  border: 1px solid #2d4740;
-  border-bottom: none;
+  /* box-shadow en lugar de border para esquinas redondeadas sin puntas; solo top + lados */
+  box-shadow: -1px 0 0 0 #2d4740, 1px 0 0 0 #2d4740, 0 -1px 0 0 #2d4740;
   /* Dejar pasar clics al sidebar (hamburger); solo logo e iconos reciben clic */
   pointer-events: none;
   /* Logo: desktop lo sobrescribe a 60px; móvil usa su propio valor */
@@ -435,7 +436,7 @@ $header-bar-height: 64px;
   backdrop-filter: blur(4px);
   -webkit-transform: translateY(0) translateZ(0);
   transform: translateY(0) translateZ(0);
-  border-bottom: 1px solid #2d4740;
+  box-shadow: -1px 0 0 0 #2d4740, 1px 0 0 0 #2d4740, 0 -1px 0 0 #2d4740, 0 1px 0 0 #2d4740;
 }
 /* Desktop: logo en margin-left 66px; un poco más abajo */
 @media (min-width: $screen-md) {
