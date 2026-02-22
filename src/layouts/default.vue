@@ -811,22 +811,32 @@ onMounted(() => {
   setTimeout(ensureListInnerVisible, 500);
   setTimeout(ensureListInnerVisible, 1000);
   
-  // Setup scroll listener
-  setTimeout(() => {
-    const listInnerElement = document.querySelector(".listInner");
-    console.log('listInner element for scroll:', listInnerElement);
-    if (listInnerElement) {
-      listInnerElement.addEventListener("scroll", () => {
-        const topBarWrapper = document.querySelector(".top-bar-wrapper");
-        if (topBarWrapper) {
-          if (listInnerElement.scrollTop > 10) {
-            topBarWrapper.classList.add("scrolling");
-          } else {
-            topBarWrapper.classList.remove("scrolling");
-          }
-        }
-      });
+  // Detectar scroll en cualquier contenedor (layout o vistas como dashboard/producto) para marcar header
+  const updateHeaderScrolling = (scrollEl: Element) => {
+    const topBarWrapper = document.querySelector(".top-bar-wrapper");
+    if (!topBarWrapper) return;
+    const el = scrollEl as HTMLElement;
+    const scrollTop = el.scrollTop ?? 0;
+    if (scrollTop > 10) {
+      topBarWrapper.classList.add("scrolling");
+    } else {
+      topBarWrapper.classList.remove("scrolling");
     }
+  };
+  const onScroll = (e: Event) => {
+    const target = e.target;
+    if (target instanceof HTMLElement) updateHeaderScrolling(target);
+  };
+  // Capture: el scroll no hace bubble, así capturamos el scroll de cualquier contenedor (incl. dentro de producto)
+  document.addEventListener("scroll", onScroll, true);
+  setTimeout(() => {
+    const scrollContainer = document.querySelector(".scroll-container");
+    const listInnerElement = document.querySelector(".listInner");
+    if (scrollContainer) updateHeaderScrolling(scrollContainer);
+    if (listInnerElement && listInnerElement !== scrollContainer) updateHeaderScrolling(listInnerElement);
   }, 500);
+  onUnmounted(() => {
+    document.removeEventListener("scroll", onScroll, true);
+  });
 });
 </script>
