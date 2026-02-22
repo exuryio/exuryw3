@@ -25,11 +25,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Exury</title>
 
-    <script id="Cookiebot"
-    src="https://consent.cookiebot.com/uc.js"
-    data-cbid="85e40a95-9a9c-473a-9775-bdd34899ef02"
-    data-blockingmode="auto" 
-    type="text/javascript">
+    <!-- Cookiebot solo en producción: en preview/desarrollo puede bloquear la app y ocultar hero/simulador -->
+    <script>
+    (function() {
+      var h = typeof location !== 'undefined' && location.hostname ? location.hostname : '';
+      if (h === 'exury.io' || h === 'www.exury.io') {
+        var s = document.createElement('script');
+        s.id = 'Cookiebot';
+        s.src = 'https://consent.cookiebot.com/uc.js';
+        s.setAttribute('data-cbid', '85e40a95-9a9c-473a-9775-bdd34899ef02');
+        s.setAttribute('data-blockingmode', 'auto');
+        s.type = 'text/javascript';
+        document.head.appendChild(s);
+      }
+    })();
     </script>
   </head>
 
@@ -78,14 +87,14 @@
   </script>
   
 
-  <body class="h-screen overflow-hidden">
+  <body class="h-screen" style="overflow: hidden; height: 100%;">
 
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N4RFKRQC"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-    <div id="app" class="fill-width" style="height: fit-content"></div>
+    <div id="app" class="fill-width" style="height: 100%; min-height: 100vh; overflow: hidden;"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

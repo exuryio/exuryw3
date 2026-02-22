@@ -9,12 +9,24 @@ import { setupLayouts } from "virtual:generated-layouts";
 import type { RouteRecordRaw } from "vue-router";
 import type { RouteLocationNormalized } from "vue-router";
 
+/** Quita la ruta order del auto-generado para evitar doble layout (parent+child aplican layout dos veces) */
+function withoutOrderRoutes(routes: RouteRecordRaw[]): RouteRecordRaw[] {
+  return routes.filter((r) => {
+    const p = (r.path ?? '').toString();
+    return p !== 'order' && p !== '/order';
+  });
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   extendRoutes: (routes: RouteRecordRaw[]) => {
+    const rest = withoutOrderRoutes(routes);
     return setupLayouts([
-      { path: '/', redirect: '/home' }, // Redirigir la raíz a /home
-      ...routes,
+      { path: '/', redirect: '/home' },
+      { path: '/dashboard', name: 'dashboard', component: () => import('@/pages/dashboard.vue') },
+      { path: '/orders', name: 'orders', component: () => import('@/pages/orders.vue') },
+      { path: '/order/:id', name: 'order-id', component: () => import('@/pages/order/[id].vue'), meta: { layout: 'default' }, props: true },
+      ...rest,
     ]);
   },
 });

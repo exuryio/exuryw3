@@ -1,55 +1,134 @@
 <template>
-  <div class="discover-us-wrapper">
-    <div class="title-wrapper">
-      <h2 class="title">Discover us</h2>
-      <p class="paragraph">Explora cómo EXURY transforma el intercambio de criptomonedas con seguridad respaldada por el Banco de España y un toque humano inigualable. Únete a la 1ra plataforma SIN CUSTODIA del mercado.</p>
-    </div>
-    <div class="discover-content-wrapper">
-      <div v-for="(content, index) in contents" :key="index" class="box-wrapper">
-        <div class="image">
-          <img :src="content.image" :alt="content.image" />
+  <div class="discover-shell relative w-full font-exury font-medium text-exury-offwhite">
+    <!-- TECHNIQUE: Depth & Layering - Gradientes sutiles para profundidad premium -->
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0 -z-10"
+      style="
+        background:
+          radial-gradient(800px circle at 20% 8%, rgba(0, 187, 114, 0.12), transparent 60%),
+          radial-gradient(700px circle at 80% 20%, rgba(5, 70, 41, 0.22), transparent 58%),
+          radial-gradient(700px circle at 50% 90%, rgba(2, 50, 28, 0.18), transparent 62%);
+      "
+    />
+
+    <!-- TECHNIQUE: Visual Hierarchy + 8pt Grid System -->
+    <section class="discover-section hero-animate mx-auto w-full max-w-7xl px-4 pt-8 sm:px-6 sm:pt-10 lg:px-8 lg:pt-16">
+      <div class="mb-10 lg:mb-14">
+        <h2 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">Discover us</h2>
+        <!-- TECHNIQUE: Gestalt Continuity - Línea divisoria -->
+        <div class="mt-4 h-px w-20 bg-exury-green/40 sm:mt-5" />
+        <!-- TECHNIQUE: Scannable Content -->
+        <p class="mt-6 text-sm leading-relaxed text-exury-offwhite/80 sm:text-base">
+          Explora cómo EXURY transforma el intercambio de criptomonedas con seguridad respaldada por el Banco de España y un toque humano inigualable. Únete a la 1ra plataforma SIN CUSTODIA del mercado.
+        </p>
+      </div>
+    </section>
+
+    <!-- TECHNIQUE: Chunking + Card-based Design -->
+    <section 
+      v-for="(content, index) in contents" 
+      :key="index" 
+      class="discover-section mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16"
+    >
+      <div 
+        :class="[
+          'group rounded-2xl border border-white/10 bg-gradient-to-br from-black/50 via-black/40 to-exury-greenDeep/30 p-6 backdrop-blur-xl transition-all duration-300 sm:rounded-3xl sm:p-12 lg:p-16',
+          'hover:border-exury-green/25 hover:bg-gradient-to-br hover:from-black/60 hover:via-black/50 hover:to-exury-greenDeep/40 hover:shadow-[0_0_0_1px_rgba(0,187,114,0.15),0_8px_24px_rgba(0,187,114,0.08)]',
+          index % 2 === 0 ? 'flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-12' : 'flex flex-col lg:flex-row-reverse lg:items-center gap-8 lg:gap-12'
+        ]"
+      >
+        <!-- TECHNIQUE: Visual Support - Imagen -->
+        <div class="flex-shrink-0 lg:w-1/2">
+          <div class="relative h-64 w-full overflow-hidden rounded-xl sm:h-80 lg:h-96">
+            <img 
+              :src="content.image" 
+              :alt="content.title"
+              class="h-full w-full object-contain"
+              loading="lazy"
+            />
+          </div>
         </div>
-        <div class="box-text-wrapper">
-          <h3>{{ content.title }}</h3>
-          <p v-html="formatText(content.description)"></p>
-          <ul v-if="content.listDescription.length">
-            <li v-for="(item, index) in content.listDescription" :key="index">
-              <v-icon class="icon">mdi-check-circle-outline</v-icon>
-              <p>{{ item }}</p>
+
+        <!-- TECHNIQUE: Scannable Content -->
+        <div class="flex-1 lg:w-1/2">
+          <h3 class="text-xl font-bold text-exury-green transition-colors duration-300 sm:text-2xl lg:text-3xl group-hover:text-exury-green/90 mb-4">
+            {{ content.title }}
+          </h3>
+          <p 
+            class="text-sm leading-relaxed text-exury-offwhite/80 transition-colors duration-300 sm:text-base group-hover:text-exury-offwhite/90 mb-6"
+            v-html="formatText(content.description)"
+          ></p>
+          
+          <!-- TECHNIQUE: Chunking - Lista con iconos -->
+          <ul v-if="content.listDescription.length" class="space-y-3 mb-6">
+            <li 
+              v-for="(item, itemIndex) in content.listDescription" 
+              :key="itemIndex"
+              class="flex items-start gap-3"
+            >
+              <v-icon class="text-exury-green flex-shrink-0 mt-0.5" size="20">mdi-check-circle-outline</v-icon>
+              <p class="text-sm leading-relaxed text-exury-offwhite/75 sm:text-base">{{ item }}</p>
             </li>
           </ul>
+
+          <!-- TECHNIQUE: Affordances - Botones con hover effects -->
           <template v-if="content.button === 'How it works'">
             <router-link to="/how-it-works" custom v-slot="{ href, navigate }">
-              <v-btn rounded variant="outlined" class="box-btn-action text-capitalize" :href="href" @click="navigate">
+              <v-btn 
+                rounded 
+                variant="outlined" 
+                class="group/btn border border-white/20 bg-white/[0.03] text-exury-green transition-all duration-300 hover:border-exury-green/40 hover:bg-exury-green/10 hover:shadow-[0_0_0_1px_rgba(0,187,114,0.2),0_4px_12px_rgba(0,187,114,0.1)] active:scale-95 text-capitalize" 
+                :href="href" 
+                @click="navigate"
+              >
                 {{ content.button }}
               </v-btn>
             </router-link>
           </template>
           <template v-else-if="content.button === 'Buy Crypto'">
             <router-link to="/home" custom v-slot="{ href, navigate }">
-              <v-btn rounded variant="outlined" class="box-btn-action text-capitalize" :href="href" @click="navigate">
+              <v-btn 
+                rounded 
+                variant="outlined" 
+                class="group/btn border border-white/20 bg-white/[0.03] text-exury-green transition-all duration-300 hover:border-exury-green/40 hover:bg-exury-green/10 hover:shadow-[0_0_0_1px_rgba(0,187,114,0.2),0_4px_12px_rgba(0,187,114,0.1)] active:scale-95 text-capitalize" 
+                :href="href" 
+                @click="navigate"
+              >
                 {{ content.button }}
               </v-btn>
             </router-link>
           </template>
           <template v-else-if="content.button === 'Register now'">
             <router-link to="/home" custom v-slot="{ href, navigate }">
-              <v-btn rounded variant="outlined" class="box-btn-action text-capitalize" :href="href" @click="navigate">
+              <v-btn 
+                rounded 
+                variant="outlined" 
+                class="group/btn border border-white/20 bg-white/[0.03] text-exury-green transition-all duration-300 hover:border-exury-green/40 hover:bg-exury-green/10 hover:shadow-[0_0_0_1px_rgba(0,187,114,0.2),0_4px_12px_rgba(0,187,114,0.1)] active:scale-95 text-capitalize" 
+                :href="href" 
+                @click="navigate"
+              >
                 {{ content.button }}
               </v-btn>
             </router-link>
           </template>
           <template v-else>
-            <v-btn rounded variant="outlined" class="box-btn-action text-capitalize">
+            <v-btn 
+              rounded 
+              variant="outlined" 
+              class="group/btn border border-white/20 bg-white/[0.03] text-exury-green transition-all duration-300 hover:border-exury-green/40 hover:bg-exury-green/10 hover:shadow-[0_0_0_1px_rgba(0,187,114,0.2),0_4px_12px_rgba(0,187,114,0.1)] active:scale-95 text-capitalize"
+            >
               {{ content.button }}
             </v-btn>
           </template>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 <script setup lang="ts">
+import { onMounted, nextTick } from "vue";
+
 const contents = [
   {
     title: '¡Libertad Financiera Total!',
@@ -102,185 +181,128 @@ const contents = [
 const formatText = (text: string) => {
   return text.replace(/\n/g, '<br />');
 }
+
+// TECHNIQUE: Progressive Enhancement - Animaciones scroll-triggered
+onMounted(() => {
+  nextTick(() => {
+    const observerOptions = {
+      threshold: 0.05,
+      rootMargin: "0px 0px -30px 0px",
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate-in-view");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      observerOptions
+    );
+
+    const sections = document.querySelectorAll(".discover-section");
+    sections.forEach((section, index) => {
+      if (section instanceof HTMLElement) {
+        section.style.setProperty("--animation-delay", `${index * 0.1}s`);
+      }
+      observer.observe(section);
+    });
+
+    // Show first section immediately if already visible
+    if (sections.length > 0 && sections[0] instanceof HTMLElement) {
+      const firstSection = sections[0];
+      const rect = firstSection.getBoundingClientRect();
+      if (rect.top < window.innerHeight) {
+        firstSection.classList.add("animate-in-view");
+      }
+    }
+  });
+});
 </script>
-<style lang="scss">
-@import "@/styles/variables.scss";
-  .discover-us-wrapper {
-    display: flex;
-    flex-direction: column;
-    margin-top: 30px;
-    padding-bottom: 48px;
-    gap: 48px;
-    
-    @media (max-width: $screen-md) {
-      margin-top: clamp(60px, 8vw, 80px);
-    }
-    
-    @media (max-width: $screen-xs) {
-      margin-top: clamp(50px, 7vw, 70px);
-    }
-    .title-wrapper {
-      .title {
-        font-size: 40px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: normal;
-        letter-spacing: -0.8px;
-      }
-      .paragraph {
-        font-size: 20px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-        margin-top: 8px;
-      }
-    }
-    .discover-content-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 120px;
-      padding: 0 16px 0 0;
-      .box-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 104px;
-        .box-text-wrapper {
-          h3 {
-            color: #1CBA75;
-            font-size: 28px;
-            font-style: normal;
-            font-weight: 700;
-            line-height: normal;
-            letter-spacing: -0.56px;
-            margin-bottom: 16px;
-          }
-          p {
-            font-size: 18px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: normal;
-          }
-          ul {
-            margin-top: 24px;
-            list-style-type: none;
-            padding-left: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            li {
-              display: flex;
-              gap: 8px;
-              align-items: flex-start;
-              .icon {
-                color: #1CBA75;
-                font-size: 24px;
-              }
-              p {
-                font-size: 18px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: normal;
-              }
-            }
-          }
-          .box-btn-action {
-            margin-top: 24px;
-            border: 0.1px solid white;
-            color: #1cba75;
-          }
-        }
-        .image {
-          display: block;
-          height: 332px;
-          min-width: 332px;
-          overflow: hidden;
-          position: relative;
-          img {
-            position: absolute;
-            top: -41%;
-            left: -31%;
-            width: 565px;
-          }
-        }
-      }
-      .box-wrapper:nth-child(even) {
-        flex-direction: row-reverse;
-      }
-    }
+<style scoped>
+.discover-shell {
+  overflow: visible;
+  height: auto;
+  min-height: 100%;
+}
+
+.discover-shell a {
+  text-decoration: none;
+}
+
+.discover-shell a:hover {
+  text-decoration: none;
+}
+
+/* TECHNIQUE: Progressive Enhancement - Animaciones suaves */
+.discover-section {
+  opacity: 0;
+  transform: translateY(40px) scale(0.96);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--animation-delay, 0s);
+  will-change: opacity, transform;
+}
+
+.discover-section.animate-in-view {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  will-change: auto;
+}
+
+/* Mobile-specific animations */
+@media (max-width: 640px) {
+  .discover-section {
+    transform: translateY(50px) scale(0.94);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  @media (max-width: $screen-sm) {
-    .discover-us-wrapper {
-      gap: 48px;
-      padding: 0 16px;
-      margin-top: clamp(60px, 8vw, 80px);
-      
-      .title-wrapper {
-        margin-top: 0;
-        
-        .title {
-          font-size: 24px;
-          font-style: normal;
-          font-weight: 700;
-          line-height: normal;
-          letter-spacing: -0.48px;
-        }
-        .paragraph {
-          font-size: 16px;
-          font-style: normal;
-          font-weight: 400;
-          line-height: normal;
-        }
-      }
-      .discover-content-wrapper {
-        gap: 104px;
-        padding: 0;
-        .box-wrapper {
-          flex-direction: column;
-          gap: 32px;
-          .box-text-wrapper {
-            h3 {
-              font-size: 24px;
-              margin-bottom: 16px;
-              text-align: center;
-              width: 100%;
-            }
-            p {
-              font-size: 16px;
-              ul {
-                margin-top: 16px;
-                li {
-                  .icon {
-                    font-size: 20px;
-                  }
-                  p {
-                    font-size: 16px;
-                  }
-                }
-              }
-            }
-            .box-btn-action {
-              margin-top: 24px;
-              width: 100%;
-            }
-          }
-          .image {
-            display: block;
-            height: 142px;
-            min-width: 142px;
-            overflow: hidden;
-            position: relative;
-            img {
-              position: absolute;
-              top: -42%;
-              left: -31%;
-              width: 243px;
-            }
-          }
-        }
-        .box-wrapper:nth-child(even) {
-          flex-direction: column;
-        }
-      }
-    }
+  
+  .discover-section.animate-in-view {
+    transform: translateY(0) scale(1);
   }
+}
+
+/* Hero animation - always visible */
+.hero-animate {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile spacing to avoid header overlap */
+@media (max-width: 768px) {
+  .discover-section.hero-animate {
+    margin-top: clamp(60px, 8vw, 80px);
+  }
+}
+
+@media (max-width: 380px) {
+  .discover-section.hero-animate {
+    margin-top: clamp(50px, 7vw, 70px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .discover-section {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  
+  .hero-animate {
+    animation: none;
+  }
+}
 </style>

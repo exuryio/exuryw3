@@ -216,13 +216,106 @@
       </div>
     </v-card-text>
   </v-card>
+
+  <!-- Dialog: Conectar wallet (dirección, red, nombre) -->
+  <v-dialog
+    v-model="showWalletDialog"
+    max-width="460"
+    persistent
+    content-class="wallet-dialog"
+    transition="dialog-transition"
+    @click:outside="closeWalletDialog"
+  >
+    <v-card class="wallet-dialog-card">
+      <div class="wallet-dialog-header">
+        <div class="wallet-dialog-icon-wrap">
+          <v-icon size="28" color="#1cba75">mdi-wallet-outline</v-icon>
+        </div>
+        <h2 class="wallet-dialog-title">Conectar wallet</h2>
+        <p class="wallet-dialog-desc">Indica dónde quieres recibir los fondos. Te pediremos la red y la dirección para enviarte USDC, ETH u otro activo de forma segura.</p>
+      </div>
+      <v-card-text class="wallet-dialog-body">
+        <div class="wallet-field-group">
+          <label class="wallet-field-label">Nombre (opcional)</label>
+          <v-text-field
+            v-model="walletNameInput"
+            placeholder="Ej. MetaMask, Binance, Wallet principal"
+            variant="outlined"
+            density="comfortable"
+            hide-details
+            class="wallet-field"
+            bg-color="rgba(255,255,255,0.04)"
+          />
+        </div>
+        <div class="wallet-field-group">
+          <label class="wallet-field-label">Red</label>
+          <v-select
+            v-model="walletNetworkInput"
+            :items="walletNetworkItems"
+            item-title="label"
+            item-value="value"
+            placeholder="Selecciona la red"
+            variant="outlined"
+            density="comfortable"
+            hide-details
+            class="wallet-field"
+            bg-color="rgba(255,255,255,0.04)"
+          />
+        </div>
+        <div class="wallet-field-group">
+          <label class="wallet-field-label">Dirección de wallet <span class="required">*</span></label>
+          <v-text-field
+            v-model="walletAddressInput"
+            placeholder="0x... o pega aquí tu dirección"
+            variant="outlined"
+            density="comfortable"
+            hide-details
+            class="wallet-field"
+            bg-color="rgba(255,255,255,0.04)"
+            :error-messages="walletDialogError"
+            @keyup.enter="saveWalletAddress"
+          />
+        </div>
+      </v-card-text>
+      <v-card-actions class="wallet-dialog-actions">
+        <v-btn
+          variant="outlined"
+          class="wallet-btn-cancel"
+          @click="closeWalletDialog"
+        >
+          Cancelar
+        </v-btn>
+        <v-btn
+          color="primary"
+          class="wallet-btn-save"
+          :disabled="!walletAddressInput?.trim()"
+          @click="saveWalletAddress"
+        >
+          Guardar dirección
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- Snackbar éxito al guardar wallet -->
+  <v-snackbar
+    v-model="walletSaveSuccess"
+    color="success"
+    :timeout="3000"
+    location="bottom"
+  >
+    Wallet guardada ({{ walletNameInput || 'Sin nombre' }}{{ walletNetworkInput ? ` · ${walletNetworkLabel}` : '' }}). Se usará para enviarte los fondos.
+  </v-snackbar>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/infraestructure/stores/auth';
+import { WALLET_ADDRESS_STORAGE_KEY, WALLET_NETWORKS } from '@/domain/constants/storage.constant';
 import apiService from '@/services/api';
+
+const walletNetworkItems = WALLET_NETWORKS;
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -644,10 +737,10 @@ const getEstimatedReverseRate = (): string => {
   return afterFee.toFixed(2);
 };
 
+const PENDING_ORDER_KEY = 'exury_pending_order';
+
 const handleContinue = async () => {
-  // Check if user is authenticated
   if (!authStore.isLoggedIn) {
-    // User not authenticated, redirect to register
     router.push('/register');
     return;
   }
@@ -657,58 +750,122 @@ const handleContinue = async () => {
     return;
   }
 
+  const quoteId = quote.value.quote_id;
+  const amountEur = direction.value === 'eur-to-crypto' ? eurAmount.value : (quote.value.eur_amount ?? 0);
+  const amountCrypto = direction.value === 'eur-to-crypto' ? (quote.value.crypto_amount ?? 0) : cryptoAmount.value;
+  const asset = selectedAsset.value;
+
   try {
     isLoading.value = true;
     error.value = null;
 
-    // Lock quote first
-    await apiService.lockQuote(quote.value.quote_id);
+    let orderId: string | null = null;
 
-    // Create order
-    const response = await apiService.createOrder(quote.value.quote_id) as {
-      order_id: string;
-      [key: string]: unknown;
-    };
-    
-    // Show success and redirect or show order details
-    console.log('✅ Order created:', response);
-    
-    // If we're already on /exchange, show success message
-    // Otherwise, redirect to /exchange with order info
-    if (router.currentRoute.value.path === '/exchange') {
-      // Emit event or use a store to show success message
-      // For now, just show a success alert
-      alert(`¡Orden creada exitosamente! ID: ${response.order_id}`);
-      // Refresh quote to get a new one
-      if (direction.value === 'eur-to-crypto' && eurAmount.value > 0) {
-        await fetchQuote();
+    if (quoteId) {
+      try {
+        await apiService.lockQuote(quoteId);
+      } catch {
+        /* ignore */
       }
-    } else {
-      router.push({
-        path: '/exchange',
-        query: {
-          order_id: response.order_id,
-          success: 'true',
-        },
-      });
+      try {
+        const response = await apiService.createOrder(quoteId) as { order_id?: string; orderId?: string; id?: string; [key: string]: unknown };
+        orderId = response?.order_id ?? response?.orderId ?? response?.id ?? null;
+        if (orderId) console.log('✅ Order created:', response);
+      } catch (err: any) {
+        console.warn('Create order failed:', err);
+      }
     }
+
+    if (orderId) {
+      router.push(`/order/${orderId}`);
+      return;
+    }
+
+    // Backend falló o no hay quote_id: igual pasamos a los siguientes pasos con datos del simulador
+    const tempId = `temp-${Date.now()}`;
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(PENDING_ORDER_KEY, JSON.stringify({
+        order_id: tempId,
+        amount_eur: amountEur,
+        amount_crypto: amountCrypto,
+        asset,
+        status: 'pending',
+      }));
+    }
+    router.push(`/order/${tempId}`);
   } catch (err: any) {
-    console.error('Error creating order:', err);
-    error.value = err.message || 'Error al crear la orden. Por favor, intenta de nuevo.';
+    console.error('Error:', err);
+    error.value = err?.message || 'Error inesperado. Intenta de nuevo.';
   } finally {
     isLoading.value = false;
   }
 };
 
+const showWalletDialog = ref(false);
+const walletAddressInput = ref('');
+const walletNetworkInput = ref<string>('');
+const walletNameInput = ref('');
+const walletDialogError = ref('');
+const walletSaveSuccess = ref(false);
+
+const walletNetworkLabel = computed(() => {
+  const n = WALLET_NETWORKS.find((x) => x.value === walletNetworkInput.value);
+  return n?.label || walletNetworkInput.value || '—';
+});
+
 const connectWallet = () => {
-  // Redirect to register if user is not authenticated
   if (!authStore.isLoggedIn) {
     router.push('/register');
     return;
   }
-  
-  // TODO: Implement wallet connection for authenticated users
-  console.log('Connect wallet');
+  walletDialogError.value = '';
+  if (typeof window !== 'undefined') {
+    const raw = localStorage.getItem(WALLET_ADDRESS_STORAGE_KEY) || '';
+    try {
+      if (raw.startsWith('{')) {
+        const data = JSON.parse(raw) as { address?: string; network?: string; name?: string };
+        walletAddressInput.value = data.address || '';
+        walletNetworkInput.value = data.network || '';
+        walletNameInput.value = data.name || '';
+      } else {
+        walletAddressInput.value = raw;
+        walletNetworkInput.value = '';
+        walletNameInput.value = '';
+      }
+    } catch {
+      walletAddressInput.value = raw;
+      walletNetworkInput.value = '';
+      walletNameInput.value = '';
+    }
+  }
+  showWalletDialog.value = true;
+};
+
+const closeWalletDialog = () => {
+  showWalletDialog.value = false;
+  walletDialogError.value = '';
+};
+
+const saveWalletAddress = () => {
+  const address = walletAddressInput.value?.trim() || '';
+  if (!address) {
+    walletDialogError.value = 'Introduce una dirección de wallet';
+    return;
+  }
+  if (address.length < 20) {
+    walletDialogError.value = 'La dirección parece demasiado corta. Comprueba que sea correcta.';
+    return;
+  }
+  if (typeof window !== 'undefined') {
+    const data = {
+      address,
+      network: walletNetworkInput.value || '',
+      name: walletNameInput.value?.trim() || '',
+    };
+    localStorage.setItem(WALLET_ADDRESS_STORAGE_KEY, JSON.stringify(data));
+  }
+  closeWalletDialog();
+  walletSaveSuccess.value = true;
 };
 
 // Fetch quote on mount
@@ -741,7 +898,15 @@ onUnmounted(() => {
   min-width: 0;
   box-sizing: border-box;
   
-  @media (max-width: 768px) {
+  @media (min-width: 600px) {
+    max-width: 480px;
+  }
+  
+  @media (min-width: 900px) {
+    max-width: 520px;
+  }
+  
+  @media (max-width: 599px) {
     max-width: 100%;
     width: 100%;
   }
@@ -1087,6 +1252,129 @@ onUnmounted(() => {
 
 :deep(.v-card-text) {
   color: white;
+}
+
+.wallet-dialog-card {
+  background: rgba(20, 18, 24, 0.98) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.wallet-dialog-header {
+  padding: 24px 24px 16px;
+}
+
+.wallet-dialog-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(28, 202, 117, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.wallet-dialog-title {
+  color: #fff !important;
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
+.wallet-dialog-desc {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.wallet-dialog-body {
+  padding: 8px 24px 20px !important;
+}
+
+.wallet-field-group {
+  margin-bottom: 16px;
+}
+
+.wallet-field-group:last-of-type {
+  margin-bottom: 0;
+}
+
+.wallet-field-label {
+  display: block;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.wallet-field-label .required {
+  color: #1cba75;
+}
+
+.wallet-field :deep(.v-field) {
+  border-radius: 10px;
+}
+
+.wallet-dialog-card .v-select :deep(.v-field),
+.wallet-dialog-card .v-text-field :deep(.v-field) {
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.wallet-dialog-card .v-select :deep(.v-field):hover,
+.wallet-dialog-card .v-text-field :deep(.v-field):hover {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.wallet-dialog-card .v-select :deep(.v-field--focused),
+.wallet-dialog-card .v-text-field :deep(.v-field--focused) {
+  border-color: #1cba75;
+  box-shadow: 0 0 0 1px #1cba75;
+}
+
+.wallet-dialog-card .v-select :deep(.v-field__input),
+.wallet-dialog-card .v-text-field :deep(.v-field__input) {
+  color: #fff;
+}
+
+.wallet-dialog-actions {
+  padding: 16px 24px 24px !important;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+.wallet-btn-cancel {
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  text-transform: none;
+  font-weight: 500;
+}
+
+.wallet-btn-cancel:hover {
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.wallet-btn-save {
+  background: #1cba75 !important;
+  color: #fff !important;
+  text-transform: none;
+  font-weight: 600;
+  flex: 1;
+  min-height: 44px;
+}
+
+.wallet-btn-save:hover:not(:disabled) {
+  background: #18a866 !important;
+  color: #fff !important;
+}
+
+.wallet-btn-save:disabled {
+  opacity: 0.5;
 }
 </style>
 

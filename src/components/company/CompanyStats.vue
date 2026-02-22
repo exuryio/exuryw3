@@ -1,43 +1,25 @@
 <script setup lang="ts">
-const stats = [
-  {
-    label: "Usuarios",
-    value: "+1,000",
-    description: "Traders confían en Exury",
-    icon: "mdi-account-group",
-  },
-  {
-    label: "Transacciones",
-    value: "+100,000",
-    description: "Intercambios realizados",
-    icon: "mdi-swap-horizontal",
-  },
-  {
-    label: "Países",
-    value: "Unión Europea",
-    description: "Cobertura en toda la UE",
-    icon: "mdi-earth",
-  },
-  {
-    label: "Regulación",
-    value: "Banco de España",
-    description: "Instituciones financieras reguladas",
-    icon: "mdi-shield-check",
-  },
-] as const;
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
+const stats = computed(() => [
+  { label: t('company.stats.users'), value: t('company.stats.usersValue'), description: t('company.stats.usersDesc'), icon: 'mdi-account-group' },
+  { label: t('company.stats.transactions'), value: t('company.stats.transactionsValue'), description: t('company.stats.transactionsDesc'), icon: 'mdi-swap-horizontal' },
+  { label: t('company.stats.countries'), value: t('company.stats.countriesValue'), description: t('company.stats.countriesDesc'), icon: 'mdi-earth' },
+  { label: t('company.stats.regulation'), value: t('company.stats.regulationValue'), description: t('company.stats.regulationDesc'), icon: 'mdi-shield-check' },
+]);
 </script>
 
 <template>
-  <!-- TECHNIQUE: F-Pattern + White Space - Título izquierda, contenido derecha con espaciado generoso (8pt grid: py-14 = 56px) -->
   <section class="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
     <div class="grid gap-10 lg:grid-cols-12 lg:items-start">
-      <!-- TECHNIQUE: Visual Hierarchy - Título más grande para jerarquía clara -->
       <div class="lg:col-span-5">
-        <h2 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">En números</h2>
-        <!-- TECHNIQUE: Gestalt Continuity - Línea divisoria para continuidad visual -->
+        <h2 class="text-2xl tracking-tight text-exury-offwhite sm:text-3xl lg:text-4xl">{{ t('company.stats.title') }}</h2>
         <div class="mt-4 h-0.5 w-24 bg-exury-green/40 sm:mt-5" />
         <p class="mt-6 text-sm leading-relaxed text-exury-offwhite/70 sm:text-base">
-          Datos clave que reflejan nuestro compromiso con la excelencia y la innovación.
+          {{ t('company.stats.intro') }}
         </p>
       </div>
 

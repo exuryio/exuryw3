@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useHead } from "@vueuse/head";
-import { onMounted, nextTick } from "vue";
+import { onMounted, nextTick, computed } from "vue";
+import { useI18n } from "vue-i18n";
 import CompanyHero from "@/components/company/CompanyHero.vue";
 import CompanyAbout from "@/components/company/CompanyAbout.vue";
 import CompanyStats from "@/components/company/CompanyStats.vue";
@@ -12,15 +13,17 @@ import CompanyRegulation from "@/components/company/CompanyRegulation.vue";
 import CompanyCareers from "@/components/company/CompanyCareers.vue";
 import CompanyCTA from "@/components/company/CompanyCTA.vue";
 
-const description =
-  "Exury es una institución financiera regulada por el Banco de España que presta servicios de intercambio entre criptomonedas y euros para millones de personas en Europa.";
+const { t } = useI18n();
+
+const metaTitle = computed(() => t("company.metaTitle"));
+const metaDescription = computed(() => t("company.metaDescription"));
 
 useHead({
-  title: "Acerca de Exury | Exury",
+  title: metaTitle,
   meta: [
-    { name: "description", content: description },
-    { property: "og:title", content: "Acerca de Exury | Exury" },
-    { property: "og:description", content: description },
+    { name: "description", content: metaDescription },
+    { property: "og:title", content: metaTitle },
+    { property: "og:description", content: metaDescription },
     { property: "og:type", content: "website" },
   ],
 });

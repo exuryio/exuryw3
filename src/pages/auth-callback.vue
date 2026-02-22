@@ -133,10 +133,10 @@ onMounted(async () => {
       // Force navigation using current origin to prevent localhost redirects
       if (typeof window !== 'undefined' && currentOrigin && !currentOrigin.includes('localhost')) {
         // If we're on preview/production, ensure we stay on that domain
-        await router.replace('/exchange');
+        await router.replace('/dashboard');
       } else {
         // Fallback to router navigation
-        await router.replace('/exchange');
+        await router.replace('/dashboard');
       }
       
       // After navigation, ensure visibility one more time
@@ -176,14 +176,14 @@ onMounted(async () => {
       const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
       console.log('🔀 Redirecting to /exchange on origin:', currentOrigin);
       await new Promise(resolve => setTimeout(resolve, 100));
-      router.push('/exchange');
+      router.push('/dashboard');
     } else {
       // If no success property but no error either, assume success
       console.log('✅ Authentication successful (no explicit success flag)');
       const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
       console.log('🔀 Redirecting to /exchange on origin:', currentOrigin);
       await new Promise(resolve => setTimeout(resolve, 100));
-      router.push('/exchange');
+      router.push('/dashboard');
     }
   } catch (err: any) {
     console.error('❌ Auth callback error:', err);

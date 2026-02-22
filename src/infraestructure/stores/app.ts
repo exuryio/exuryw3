@@ -7,10 +7,12 @@ export const useAppStore = defineStore("app", {
       {
         activePage: string;
         pageIcon: string;
+        sidebarCollapsed: boolean;
       }
     >{
       activePage: RoutesEnum.DISCOVER,
       pageIcon: "mdi-home",
+      sidebarCollapsed: false,
     },
   actions: {
     setActivePage(page: string) {
@@ -19,6 +21,9 @@ export const useAppStore = defineStore("app", {
     setPageIcon(icon: string) {
       this.pageIcon = icon;
     },
+    setSidebarCollapsed(collapsed: boolean) {
+      this.sidebarCollapsed = collapsed;
+    },
   },
   getters: {
     getActivePage(): string {
@@ -26,6 +31,9 @@ export const useAppStore = defineStore("app", {
     },
     getPageIcon(): string {
       return this.pageIcon;
+    },
+    getSidebarCollapsed(): boolean {
+      return this.sidebarCollapsed;
     },
   },
 });

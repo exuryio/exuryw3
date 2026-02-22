@@ -16,7 +16,7 @@
           >
             <span class="avatar-text">{{ userInitials }}</span>
           </v-avatar>
-          <v-icon v-else>mdi-account-circle</v-icon>
+          <img v-else src="/icons/profile.svg" alt="" class="avatar-icon-img" width="24" height="24" aria-hidden="true" />
         </v-btn>
       </template>
 
@@ -34,22 +34,7 @@
 
         <v-divider v-if="isLoggedIn" class="my-2" />
 
-        <!-- Menu Items -->
-        <v-list-item
-          v-if="isLoggedIn"
-          prepend-icon="mdi-account"
-          title="Mi Perfil"
-          @click="goToProfile"
-        />
-        
-        <v-list-item
-          v-if="isLoggedIn"
-          prepend-icon="mdi-cog"
-          title="Configuración"
-          @click="goToSettings"
-        />
-
-        <v-divider v-if="isLoggedIn" class="my-2" />
+        <!-- Mi Perfil y Configuración ocultos de momento (desarrollar más adelante) -->
 
         <!-- Logout -->
         <v-list-item
@@ -107,14 +92,6 @@ const userInitials = computed(() => {
   return email[0].toUpperCase();
 });
 
-const goToProfile = () => {
-  router.push('/profile');
-};
-
-const goToSettings = () => {
-  router.push('/settings');
-};
-
 const goToLogin = () => {
   router.push('/login');
 };
@@ -150,6 +127,12 @@ const handleLogout = async () => {
     &:hover {
       color: #1cba75 !important;
     }
+  }
+  .avatar-icon-img {
+    display: block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
   }
 }
 

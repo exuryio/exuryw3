@@ -1,18 +1,31 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useHead } from "@vueuse/head";
-import { SIDEBAR_LINKS } from "@/domain/constants/sidebar.constant";
+import {
+  SIDEBAR_LINKS,
+  SIDEBAR_LINKS_FOCUSED,
+  SIDEBAR_LINKS_MORE,
+  isFocusedRoute,
+  isFocusedWhenLoggedInRoute,
+} from "@/domain/constants/sidebar.constant";
 import { useAppStore } from "@/infraestructure/stores/app";
 import { useAuthStore } from "@/infraestructure/stores/auth";
 import { SidebarItem } from "@/domain/models/sidebar-item";
 import { linksToShow } from "@/application/mappers/sidebar-mapper";
+import { useI18n } from "vue-i18n";
 
 const router = useRouter();
 const route = useRoute();
 
 const appStore = useAppStore();
 const authStore = useAuthStore();
+const { t } = useI18n();
+
+function sidebarTitle(link: SidebarItem | { titleKey?: string; title?: string }): string {
+  if (link.titleKey) return t(`sidebar.${link.titleKey}`);
+  return (link as SidebarItem).title ?? "";
+}
 
 // Check if mobile on mount and set initial state
 const isMobile = () => {
@@ -21,6 +34,20 @@ const isMobile = () => {
 };
 
 const isCollapsed = ref(isMobile());
+const moreExpanded = ref(false);
+appStore.setSidebarCollapsed(isCollapsed.value);
+
+const isFocusedMode = computed(
+  () =>
+    isFocusedRoute(route.path) ||
+    (authStore.isLoggedIn && isFocusedWhenLoggedInRoute(route.path))
+);
+const primaryLinks = computed(() =>
+  isFocusedMode.value ? SIDEBAR_LINKS_FOCUSED : linksToShow
+);
+const showMoreSection = computed(
+  () => isFocusedMode.value && SIDEBAR_LINKS_MORE.length > 0
+);
 
 watch(route, (newRoute) => {
   const currentLink = SIDEBAR_LINKS.find(
@@ -49,10 +76,11 @@ onMounted(() => {
   resizeHandler = () => {
     if (isMobile()) {
       isCollapsed.value = true;
+      appStore.setSidebarCollapsed(true);
     }
   };
-  
   window.addEventListener('resize', resizeHandler);
+  appStore.setSidebarCollapsed(isCollapsed.value);
 });
 
 onUnmounted(() => {
@@ -63,6 +91,7 @@ onUnmounted(() => {
 
 const toggle = () => {
   isCollapsed.value = !isCollapsed.value;
+  appStore.setSidebarCollapsed(isCollapsed.value);
 };
 
 const handleItem = (item: SidebarItem): void => {
@@ -80,6 +109,21 @@ const handleBuyCrypto = (): void => {
   }
 };
 
+const showLogoutButton = computed(
+  () => isFocusedMode.value && authStore.isLoggedIn
+);
+
+const handleLogout = async (): Promise<void> => {
+  try {
+    await authStore.logout();
+    router.push('/home');
+  } catch (error) {
+    console.error('Error during logout:', error);
+    authStore.clearAuth();
+    router.push('/home');
+  }
+};
+
 
 </script>
 
@@ -90,10 +134,22 @@ const handleBuyCrypto = (): void => {
     :rail="isCollapsed"
     permanent
   >
-    <v-list-item class="btn-menu-wrapper justify-center pt-2 pb-3 ml-2 mb-6">
+    <div class="btn-menu-wrapper align-center">
       <v-btn icon="mdi-menu" @click="toggle" class="menu-fab">
       </v-btn>
-    </v-list-item>
+      <router-link
+        v-if="!isCollapsed"
+        to="/"
+        class="sidebar-logo-wrap"
+        aria-label="Exury"
+      >
+        <img
+          src="/LogoExury1.png"
+          alt="Exury"
+          class="sidebar-logo-img"
+        />
+      </router-link>
+    </div>
 
     <div class="scrollable-content">
       <v-list dense>
@@ -105,15 +161,15 @@ const handleBuyCrypto = (): void => {
         >
           <v-list-item
             rounded="xl"
-            v-for="(link, index) in linksToShow"
-            :key="link.title"
+            v-for="(link, index) in primaryLinks"
+            :key="`primary-${link.route}`"
             @click="handleItem(link)"
-            :title="link.title"
+            :title="sidebarTitle(link)"
             :class="[
-                        'nav-item',
-                        { 'active-link': route.path === link.route },
-                        { 'mb-2': index === 4 },
-                    ]"
+              'nav-item',
+              { 'active-link': route.path === link.route },
+              { 'mb-2': showMoreSection && index === primaryLinks.length - 1 },
+            ]"
           >
             <template v-slot:prepend>
               <v-icon
@@ -130,10 +186,54 @@ const handleBuyCrypto = (): void => {
               />
             </template>
             <hr
-              v-if="index === 4"
+              v-if="showMoreSection && index === primaryLinks.length - 1"
               class="position-absolute left-0 mt-4 w-100 opacity-20"
             />
           </v-list-item>
+          <template v-if="showMoreSection">
+            <v-list-item
+              rounded="xl"
+              class="nav-item more-trigger"
+              :class="{ 'active-link': moreExpanded }"
+              @click="moreExpanded = !moreExpanded"
+              :title="isCollapsed ? undefined : sidebarTitle({ titleKey: 'mas' })"
+            >
+              <template v-slot:prepend>
+                <v-icon
+                  class="mr-3"
+                  :color="moreExpanded ? '#1CBA75' : 'white'"
+                >{{ moreExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+              </template>
+            </v-list-item>
+            <template v-if="moreExpanded">
+              <v-list-item
+                rounded="xl"
+                v-for="link in SIDEBAR_LINKS_MORE"
+                :key="`more-${link.route}`"
+                @click="handleItem(link)"
+                :title="sidebarTitle(link)"
+                :class="[
+                  'nav-item',
+                  { 'active-link': route.path === link.route },
+                ]"
+              >
+                <template v-slot:prepend>
+                  <v-icon
+                    v-if="link.icon"
+                    :color="route.path === link.route ? '#1CBA75' : 'white'"
+                    class="mr-3"
+                  >{{ link.icon }}</v-icon>
+                  <img
+                    v-else-if="link.svg"
+                    :src="link.svg"
+                    :alt="link.title"
+                    class="custom-svg-icon mr-3 mt-2"
+                    :class="{ active: route.path === link.route }"
+                  />
+                </template>
+              </v-list-item>
+            </template>
+          </template>
         </v-list-item-group>
       </v-list>
     </div>
@@ -141,6 +241,18 @@ const handleBuyCrypto = (): void => {
     <template v-slot:append>
       <div class="pa-3">
         <v-btn
+          v-if="showLogoutButton"
+          elevation="0"
+          block
+          class="justify-center extended-fab py-6"
+          :class="{ 'button-buy-crypto': isCollapsed }"
+          @click="handleLogout"
+        >
+          <v-icon :class="{ 'mr-2': !isCollapsed }">mdi-logout</v-icon>
+          <span v-if="!isCollapsed" class="text-capitalize">{{ t('sidebar.logout') }}</span>
+        </v-btn>
+        <v-btn
+          v-else
           elevation="0"
           block
           class="justify-center extended-fab py-6"
@@ -148,7 +260,7 @@ const handleBuyCrypto = (): void => {
           @click="handleBuyCrypto"
         >
           <v-icon :class="{ 'mr-2': !isCollapsed }">mdi-currency-btc</v-icon>
-          <span v-if="!isCollapsed" class="text-capitalize">Buy Crypto</span>
+          <span v-if="!isCollapsed" class="text-capitalize">{{ t('sidebar.buyCrypto') }}</span>
         </v-btn>
       </div>
     </template>
@@ -165,6 +277,9 @@ const handleBuyCrypto = (): void => {
   background-color: $nav-background-color;
   color: $nav-default-text-color;
   border-radius: 16px;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
   .v-list-item {
     padding: 0 12px;
     white-space: nowrap;
@@ -198,16 +313,64 @@ const handleBuyCrypto = (): void => {
   box-shadow: none !important;
   border: none !important;
 }
+/* Contenido central con scroll: el append (Buy Crypto) queda fijo abajo */
+.sidebar :deep(.v-navigation-drawer__content) {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sidebar :deep(.v-navigation-drawer__append) {
+  flex-shrink: 0;
+}
 .scrollable-content {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  max-height: calc(100vh - 20px);
 }
 
+/* Header del sidebar: hamburger + logo en la misma posición que en el top bar */
 .btn-menu-wrapper {
   position: sticky;
-  top: 10px;
+  top: 0;
   z-index: 1;
   background-color: inherit;
+  min-height: 64px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 12px;
+  margin-bottom: 0;
+  margin-left: 8px;
+  gap: 12px;
+}
+.sidebar-logo-wrap {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  flex-shrink: 0;
+  text-decoration: none;
+  margin-top: 6px;
+}
+/* Mismo tamaño que el logo del header; block para alinear en el eje horizontal con el hamburger */
+.sidebar-logo-img {
+  display: block;
+  height: 28px;
+  min-height: 28px;
+  max-height: 28px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+@media (min-width: $screen-md) {
+  .sidebar-logo-img {
+    height: 42px;
+    min-height: 42px;
+    max-height: 42px;
+  }
 }
 .extended-fab {
   width: 56px;
@@ -266,6 +429,10 @@ const handleBuyCrypto = (): void => {
 @media (max-width: $screen-md) {
   .sidebar {
     background-color: rgba(13, 21, 19, 0.98);
+  }
+  .btn-menu-wrapper {
+    min-height: 48px;
+    padding: 0;
   }
   .options-bar.item-group {
     display: none;
