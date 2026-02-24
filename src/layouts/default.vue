@@ -268,6 +268,11 @@ $header-bar-height: 64px;
   .scroll-container {
     position: relative;
     z-index: 0;
+    -webkit-overflow-scrolling: touch; /* Scroll suave en iOS y contenido contenido en la capa */
+  }
+  /* En móvil, el contenido debe quedar debajo del header fijo al hacer scroll */
+  .main {
+    z-index: 0;
   }
   #sidebarWrapper :deep(.v-navigation-drawer__content) {
     padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
@@ -389,6 +394,7 @@ $header-bar-height: 64px;
   border-radius: 16px 16px 0 0;
   /* box-shadow en lugar de border para esquinas redondeadas sin puntas; solo top + lados */
   box-shadow: -1px 0 0 0 #2d4740, 1px 0 0 0 #2d4740, 0 -1px 0 0 #2d4740;
+  isolation: isolate; /* Evita que el contenido al hacer scroll se dibuje por encima del header */
   /* Dejar pasar clics al sidebar (hamburger); solo logo e iconos reciben clic */
   pointer-events: none;
   /* Logo: desktop lo sobrescribe a 60px; móvil usa su propio valor */
