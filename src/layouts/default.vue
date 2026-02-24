@@ -268,11 +268,20 @@ $header-bar-height: 64px;
   .scroll-container {
     position: relative;
     z-index: 0;
-    -webkit-overflow-scrolling: touch; /* Scroll suave en iOS y contenido contenido en la capa */
+    -webkit-overflow-scrolling: touch;
+    /* Contener el scroll en su propia capa para que no se dibuje por encima del header (iOS/Safari) */
+    isolation: isolate;
+    contain: paint; /* Evita que el contenido se dibuje fuera del contenedor (p. ej. sobre el header) */
   }
   /* En móvil, el contenido debe quedar debajo del header fijo al hacer scroll */
   .main {
     z-index: 0;
+  }
+  .top-bar-wrapper {
+    z-index: 10000; /* Por encima de capas de scroll/composición en móvil */
+  }
+  .sidebar-zone {
+    z-index: 10001; /* Por encima del header para que el hamburger siga siendo clicable */
   }
   #sidebarWrapper :deep(.v-navigation-drawer__content) {
     padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
