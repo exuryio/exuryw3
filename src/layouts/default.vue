@@ -72,22 +72,25 @@
 
 $header-bar-height: 64px;
 
+/* Borde superior de .list = borde superior del header: .main usa padding-top = top del header para que el contenido (y .list) empiece ahí; la altura del header se reserva en .scroll-container */
 .main {
   background-color: #141218;
   font-size: 16px;
   color: #c7d4cf;
   margin: 0 !important;
   padding: 5vh !important;
+  padding-top: 5vh !important;
   min-height: 0;
   flex-direction: column;
   display: flex;
   
   @media (max-width: $screen-md) {
     padding: clamp(8px, 2vh, 16px) !important;
+    padding-top: clamp(8px, 2vh, 16px) !important;
   }
-  
   @media (max-width: $screen-xs) {
     padding: clamp(4px, 1vh, 8px) !important;
+    padding-top: clamp(4px, 1vh, 8px) !important;
   }
 }
 #mainContainer {
@@ -102,6 +105,7 @@ $header-bar-height: 64px;
   transform-origin: 0 0;
   mix-blend-mode: normal;
 }
+/* Borde superior de .list coincide con borde superior del header ( .main padding-top = header top ) */
 .list {
   position: relative;
   flex: 1;
@@ -116,6 +120,7 @@ $header-bar-height: 64px;
   align-items: stretch;
   justify-content: flex-start;
   padding: 16px 16px 0 0;
+  padding-top: 0; /* Para que el borde superior de .list quede alineado con el header */
   gap: 0;
   /* Sin z-index para que el sidebar (1300) compita con el header (1200) en .main y los iconos sigan visibles a la derecha */
   overflow-x: hidden;
@@ -126,6 +131,7 @@ $header-bar-height: 64px;
   
   @media (max-width: $screen-md) {
     padding: clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) 0 clamp(8px, 2vw, 12px);
+    padding-top: 0;
     gap: 0;
     /* Con el sidebar desplegado, reforzar línea de contorno del marco (derecha y abajo) */
     &.list--frame-visible {
@@ -135,6 +141,7 @@ $header-bar-height: 64px;
   
   @media (max-width: $screen-xs) {
     padding: clamp(4px, 1vw, 8px) clamp(4px, 1vw, 8px) 0 clamp(4px, 1vw, 8px);
+    padding-top: 0;
     border-radius: 12px;
   }
   #whatsapp-wrapper {
@@ -317,16 +324,11 @@ $header-bar-height: 64px;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-top: 5vh;
+  padding-top: $header-bar-height;
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
-  
   @media (max-width: $screen-md) {
-    padding-top: calc(72px + env(safe-area-inset-top, 0px));
-  }
-  
-  @media (max-width: $screen-xs) {
     padding-top: calc(72px + env(safe-area-inset-top, 0px));
   }
 }
