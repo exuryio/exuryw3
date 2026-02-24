@@ -84,13 +84,14 @@ $header-bar-height: 64px;
   flex-direction: column;
   display: flex;
   
+  /* Móvil: sumar safe-area-inset-top para que .list coincida con el header en Android (notch/barra de estado) */
   @media (max-width: $screen-md) {
     padding: clamp(8px, 2vh, 16px) !important;
-    padding-top: clamp(8px, 2vh, 16px) !important;
+    padding-top: calc(clamp(8px, 2vh, 16px) + env(safe-area-inset-top, 0px)) !important;
   }
   @media (max-width: $screen-xs) {
     padding: clamp(4px, 1vh, 8px) !important;
-    padding-top: clamp(4px, 1vh, 8px) !important;
+    padding-top: calc(clamp(4px, 1vh, 8px) + env(safe-area-inset-top, 0px)) !important;
   }
 }
 #mainContainer {
