@@ -21,6 +21,9 @@ jobs:
           VITE_BANK_BENEFICIARY: ${{ secrets.VITE_BANK_BENEFICIARY }}
           VITE_BANK_IBAN: ${{ secrets.VITE_BANK_IBAN }}
           VITE_BANK_NAME: ${{ secrets.VITE_BANK_NAME }}
+          VITE_AUTH0_DOMAIN: ${{ secrets.VITE_AUTH0_DOMAIN }}
+          VITE_AUTH0_CLIENT_ID: ${{ secrets.VITE_AUTH0_CLIENT_ID }}
+          VITE_AUTH0_REDIRECT_URI: ${{ secrets.VITE_AUTH0_REDIRECT_URI }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
