@@ -10,20 +10,14 @@ const props = defineProps<{
   index: number;
   currentFrame: number;
 }>();
-const emit = defineEmits(["select"]);
-
 const isThisNextCard = computed(() => {
   return props.index === props.currentFrame + 1;
 });
 
-const selectFrame = () => {
-  return;
-  // emit("select", props.index);
-};
 </script>
 
 <template>
-  <div @click="selectFrame" :class="[isSelected ? 'card-selected' : isThisNextCard ? 'card-next' : 'card' ]">
+  <div :class="[isSelected ? 'card-selected' : isThisNextCard ? 'card-next' : 'card' ]">
     <div class="card-content">
       <img class="card-image" :src="frame.image" alt="card image" />
       <div class="card-text-wrapper">

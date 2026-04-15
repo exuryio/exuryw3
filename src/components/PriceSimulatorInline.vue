@@ -107,7 +107,7 @@
           <span class="rate-label">Estimated rate</span>
           <span class="rate-value">
             <span v-if="direction === 'eur-to-crypto'">
-              1,00 EUR - {{ formatExchangeRate(quote.exchange_rate, quote.spread) }} {{ selectedAsset }}
+              1,00 EUR - {{ formatExchangeRate(quote.exchange_rate) }} {{ selectedAsset }}
             </span>
             <span v-else>
               1 {{ selectedAsset }} - {{ formatReverseRate(quote.reverse_rate || 0) }} EUR
@@ -676,7 +676,7 @@ const formatCrypto = (amount: number): string => {
   return amount.toFixed(6);
 };
 
-const formatExchangeRate = (exchangeRate: number, spread: number): string => {
+const formatExchangeRate = (exchangeRate: number): string => {
   // exchange_rate from backend already includes the spread
   // Backend: exchange_rate = 1 / adjustedPrice where adjustedPrice = cryptoPrice + spreadAmount
   // So exchange_rate already has the spread applied - this is the actual rate the user pays
@@ -745,14 +745,15 @@ const handleContinue = async () => {
     return;
   }
 
-  if (!quote.value) {
-    error.value = 'Por favor, espera a que se cargue la cotización';
-    return;
-  }
-
-  const quoteId = quote.value.quote_id;
-  const amountEur = direction.value === 'eur-to-crypto' ? eurAmount.value : (quote.value.eur_amount ?? 0);
-  const amountCrypto = direction.value === 'eur-to-crypto' ? (quote.value.crypto_amount ?? 0) : cryptoAmount.value;
+  const quoteId = quote.value?.quote_id as string | undefined;
+  const fallbackEur = Number.parseFloat(estimatedEur.value) || 0;
+  const fallbackCrypto = Number.parseFloat(estimatedCrypto.value) || 0;
+  const amountEur = direction.value === 'eur-to-crypto'
+    ? eurAmount.value
+    : Number(quote.value?.eur_amount ?? fallbackEur);
+  const amountCrypto = direction.value === 'eur-to-crypto'
+    ? Number(quote.value?.crypto_amount ?? fallbackCrypto)
+    : cryptoAmount.value;
   const asset = selectedAsset.value;
 
   try {
@@ -776,8 +777,11 @@ const handleContinue = async () => {
       }
     }
 
+    const isSellFlow = direction.value === 'crypto-to-eur';
+    const orderRouteBase = isSellFlow ? '/order/sell' : '/order';
+
     if (orderId) {
-      router.push(`/order/${orderId}`);
+      router.push(`${orderRouteBase}/${orderId}`);
       return;
     }
 
@@ -789,10 +793,14 @@ const handleContinue = async () => {
         amount_eur: amountEur,
         amount_crypto: amountCrypto,
         asset,
+        order_side: isSellFlow ? 'sell' : 'buy',
+        is_fallback: true,
+        quote_id: quoteId ?? null,
+        created_at: new Date().toISOString(),
         status: 'pending',
       }));
     }
-    router.push(`/order/${tempId}`);
+    router.push(`${orderRouteBase}/${tempId}`);
   } catch (err: any) {
     console.error('Error:', err);
     error.value = err?.message || 'Error inesperado. Intenta de nuevo.';

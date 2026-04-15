@@ -152,7 +152,7 @@ const emailOrPhoneRules = [
     }
     // Check if it's an email or phone number
     const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-    const isPhone = /^[\d\s\-\+\(\)]+$/.test(v.trim()) && v.trim().length >= 8;
+    const isPhone = /^[\d\s\-+()]+$/.test(v.trim()) && v.trim().length >= 8;
     
     if (!isEmail && !isPhone) {
       return 'Ingresa un correo electrónico o número de teléfono válido';
@@ -167,7 +167,7 @@ const isFormValid = computed(() => {
   }
   const value = emailOrPhone.value.trim();
   const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-  const isPhone = /^[\d\s\-\+\(\)]+$/.test(value) && value.length >= 8;
+  const isPhone = /^[\d\s\-+()]+$/.test(value) && value.length >= 8;
   return isEmail || isPhone;
 });
 
