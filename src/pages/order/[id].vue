@@ -676,7 +676,7 @@ const tryRecoverOrder = async () => {
     } catch {
       /* ignore lock failures, create can still work */
     }
-    const response = await apiService.createOrder(quoteId) as { order_id?: string; orderId?: string; id?: string };
+    const response = await apiService.createOrder(quoteId, 'buy') as { order_id?: string; orderId?: string; id?: string };
     const realOrderId = response?.order_id ?? response?.orderId ?? response?.id;
     if (realOrderId) {
       sessionStorage.removeItem(PENDING_ORDER_KEY);

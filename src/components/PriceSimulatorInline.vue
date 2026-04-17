@@ -761,6 +761,8 @@ const handleContinue = async () => {
     error.value = null;
 
     let orderId: string | null = null;
+    const isSellFlow = direction.value === 'crypto-to-eur';
+    const orderType: 'buy' | 'sell' = isSellFlow ? 'sell' : 'buy';
 
     if (quoteId) {
       try {
@@ -769,7 +771,16 @@ const handleContinue = async () => {
         /* ignore */
       }
       try {
-        const response = await apiService.createOrder(quoteId) as { order_id?: string; orderId?: string; id?: string; [key: string]: unknown };
+        const response = await apiService.createOrder(
+          quoteId,
+          orderType,
+          isSellFlow
+            ? {
+                amount_eur: amountEur,
+                amount_crypto: amountCrypto,
+              }
+            : undefined
+        ) as { order_id?: string; orderId?: string; id?: string; [key: string]: unknown };
         orderId = response?.order_id ?? response?.orderId ?? response?.id ?? null;
         if (orderId) console.log('✅ Order created:', response);
       } catch (err: any) {
@@ -777,7 +788,6 @@ const handleContinue = async () => {
       }
     }
 
-    const isSellFlow = direction.value === 'crypto-to-eur';
     const orderRouteBase = isSellFlow ? '/order/sell' : '/order';
 
     if (orderId) {

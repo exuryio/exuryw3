@@ -252,7 +252,10 @@ const declarationDone = computed(() => {
   return bankFormDone.value && !!sourceWallet.value.trim() && !sourceWalletError.value && walletOwnershipConfirmed.value;
 });
 
-const cryptoAmount = computed(() => String(order.value?.amount_crypto ?? '0'));
+const cryptoAmount = computed(() => {
+  const rawAmount = order.value?.amount_crypto ?? order.value?.crypto_amount ?? 0;
+  return String(rawAmount);
+});
 const fiatAmount = computed(() => {
   const value = Number(order.value?.amount_eur ?? order.value?.fiat_amount ?? 0);
   return new Intl.NumberFormat('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
@@ -363,7 +366,7 @@ const tryRecoverOrder = async () => {
     } catch {
       /* ignore lock failures */
     }
-    const response = await apiService.createOrder(quoteId) as { order_id?: string; orderId?: string; id?: string };
+    const response = await apiService.createOrder(quoteId, 'sell') as { order_id?: string; orderId?: string; id?: string };
     const realOrderId = response?.order_id ?? response?.orderId ?? response?.id;
     if (realOrderId) {
       sessionStorage.removeItem(PENDING_ORDER_KEY);
