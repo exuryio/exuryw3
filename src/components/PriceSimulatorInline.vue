@@ -745,6 +745,11 @@ const handleContinue = async () => {
     return;
   }
 
+  if (!quote.value) {
+    error.value = 'Por favor, espera a que se cargue la cotización';
+    return;
+  }
+
   const quoteId = quote.value?.quote_id as string | undefined;
   const fallbackEur = Number.parseFloat(estimatedEur.value) || 0;
   const fallbackCrypto = Number.parseFloat(estimatedCrypto.value) || 0;

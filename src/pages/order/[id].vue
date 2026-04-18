@@ -28,21 +28,8 @@ meta:
         <v-alert v-if="isDemo" type="info" density="compact" class="demo-alert mb-4">
           Vista de ejemplo. En producción verás los datos reales de tu orden tras hacer clic en Continuar.
         </v-alert>
-        <v-alert v-else-if="isFallbackOrder" type="warning" density="compact" class="demo-alert mb-4">
-          El backend no respondió al crear la orden. Estás en modo temporal con datos del simulador.
-          <v-btn
-            size="small"
-            variant="text"
-            color="warning"
-            class="ml-2"
-            :loading="recoveringOrder"
-            @click="tryRecoverOrder"
-          >
-            Reintentar conexión
-          </v-btn>
-        </v-alert>
         <v-alert v-else-if="isTempOrder" type="warning" density="compact" class="demo-alert mb-4">
-          Estás viendo una orden temporal.
+          El backend no respondió al crear la orden. Estás viendo los siguientes pasos con los datos del simulador. IBAN y referencia reales aparecerán cuando el backend esté conectado.
         </v-alert>
 
         <h1 class="order-title">Tu orden</h1>
@@ -374,12 +361,11 @@ meta:
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, computed, onMounted, watch, nextTick } from 'vue';
+import { useRoute } from 'vue-router';
 import apiService from '@/services/api';
 
 const route = useRoute();
-const router = useRouter();
 const orderId = computed(() => route.params.id as string);
 
 const loading = ref(true);
@@ -590,9 +576,6 @@ const statusSteps = [
 const PENDING_ORDER_KEY = 'exury_pending_order';
 const isDemo = computed(() => orderId.value === 'demo');
 const isTempOrder = computed(() => orderId.value?.startsWith('temp-'));
-const isFallbackOrder = ref(false);
-const recoveringOrder = ref(false);
-let recoveryTimer: ReturnType<typeof setTimeout> | null = null;
 
 const fetchOrder = async () => {
   if (!orderId.value) return;
@@ -618,14 +601,12 @@ const fetchOrder = async () => {
       const raw = sessionStorage.getItem(PENDING_ORDER_KEY);
       const stored = raw ? JSON.parse(raw) : null;
       if (stored && stored.order_id === orderId.value) {
-        isFallbackOrder.value = Boolean(stored.is_fallback);
         order.value = {
           ...stored,
           iban: stored.iban || '—',
           reference: stored.reference || orderId.value,
         };
       } else {
-        isFallbackOrder.value = false;
         order.value = {
           amount_eur: stored?.amount_eur ?? 0,
           amount_crypto: stored?.amount_crypto ?? 0,
@@ -636,7 +617,6 @@ const fetchOrder = async () => {
         };
       }
     } catch {
-      isFallbackOrder.value = false;
       order.value = {
         amount_eur: 0,
         amount_crypto: 0,
@@ -651,7 +631,6 @@ const fetchOrder = async () => {
   }
   loading.value = true;
   error.value = null;
-  isFallbackOrder.value = false;
   try {
     const data = await apiService.getOrder(orderId.value);
     order.value = data as Record<string, unknown>;
@@ -660,32 +639,6 @@ const fetchOrder = async () => {
     order.value = null;
   } finally {
     loading.value = false;
-  }
-};
-
-const tryRecoverOrder = async () => {
-  if (!isTempOrder.value || typeof window === 'undefined') return;
-  recoveringOrder.value = true;
-  try {
-    const raw = sessionStorage.getItem(PENDING_ORDER_KEY);
-    const stored = raw ? JSON.parse(raw) : null;
-    const quoteId = stored?.quote_id as string | undefined;
-    if (!quoteId) return;
-    try {
-      await apiService.lockQuote(quoteId);
-    } catch {
-      /* ignore lock failures, create can still work */
-    }
-    const response = await apiService.createOrder(quoteId, 'buy') as { order_id?: string; orderId?: string; id?: string };
-    const realOrderId = response?.order_id ?? response?.orderId ?? response?.id;
-    if (realOrderId) {
-      sessionStorage.removeItem(PENDING_ORDER_KEY);
-      router.replace(`/order/${realOrderId}`);
-    }
-  } catch {
-    /* keep fallback view, next retry will attempt again */
-  } finally {
-    recoveringOrder.value = false;
   }
 };
 
@@ -705,11 +658,6 @@ const scrollToCurrentStep = () => {
 onMounted(() => {
   loadWallet();
   fetchOrder();
-  if (isTempOrder.value) {
-    recoveryTimer = setTimeout(() => {
-      tryRecoverOrder();
-    }, 2000);
-  }
   nextTick(() => {
     setTimeout(scrollToCurrentStep, 400);
   });
@@ -721,18 +669,6 @@ watch(orderId, () => {
 
 watch(statusStep, () => {
   nextTick(scrollToCurrentStep);
-});
-
-watch(isFallbackOrder, (value) => {
-  if (!value || !isTempOrder.value) return;
-  if (recoveryTimer) clearTimeout(recoveryTimer);
-  recoveryTimer = setTimeout(() => {
-    tryRecoverOrder();
-  }, 8000);
-});
-
-onBeforeUnmount(() => {
-  if (recoveryTimer) clearTimeout(recoveryTimer);
 });
 </script>
 

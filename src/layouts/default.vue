@@ -27,7 +27,7 @@
         >
           <div class="page-view flex fill-width">
             <transition name="scroll-x-transition" mode="out-in">
-              <div v-if="true">
+              <div v-show="true">
                 <!-- Teleport a body: los iconos (idioma/avatar) solo se ven correctamente fuera de .main; el hamburger sigue siendo clicable por margin-left del logo. -->
                 <Teleport to="body">
                   <div
