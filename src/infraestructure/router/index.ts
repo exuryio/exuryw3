@@ -3,7 +3,6 @@
  *
  * Automatic routes for `./src/pages/*.vue`
  */
-// @ts-ignore - vue-router/auto is provided by unplugin-vue-router
 import { createRouter, createWebHistory } from "vue-router/auto";
 import { setupLayouts } from "virtual:generated-layouts";
 import type { RouteRecordRaw } from "vue-router";
@@ -26,6 +25,7 @@ const router = createRouter({
       { path: '/dashboard', name: 'dashboard', component: () => import('@/pages/dashboard.vue') },
       { path: '/orders', name: 'orders', component: () => import('@/pages/orders.vue') },
       { path: '/order/:id', name: 'order-id', component: () => import('@/pages/order/[id].vue'), meta: { layout: 'default' }, props: true },
+      { path: '/order/sell/:id', name: 'order-sell-id', component: () => import('@/pages/order/sell/[id].vue'), meta: { layout: 'default' }, props: true },
       ...rest,
     ]);
   },
