@@ -127,10 +127,14 @@ class ApiService {
   /**
    * Create a new order
    */
-  async createOrder(quoteId: string) {
+  async createOrder(
+    quoteId: string,
+    type: 'buy' | 'sell' = 'buy',
+    amounts?: { amount_eur?: number; amount_crypto?: number }
+  ) {
     return this.request('/orders', {
       method: 'POST',
-      body: JSON.stringify({ quote_id: quoteId }),
+      body: JSON.stringify({ quote_id: quoteId, type, ...amounts }),
     });
   }
 

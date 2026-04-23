@@ -39,8 +39,10 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, nextTick } from "vue";
+import { onBeforeUnmount, onMounted, nextTick } from "vue";
 import OnBoardingCardGroup from "@/components/cards/OnBoardingCardGroup.vue";
+
+let sectionObserver: IntersectionObserver | null = null;
 
 // TECHNIQUE: Progressive Enhancement - Animaciones scroll-triggered
 onMounted(() => {
@@ -50,12 +52,12 @@ onMounted(() => {
       rootMargin: "0px 0px -30px 0px",
     };
 
-    const observer = new IntersectionObserver(
+    sectionObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("animate-in-view");
-            observer.unobserve(entry.target);
+            sectionObserver?.unobserve(entry.target);
           }
         });
       },
@@ -67,7 +69,7 @@ onMounted(() => {
       if (section instanceof HTMLElement) {
         section.style.setProperty("--animation-delay", `${index * 0.1}s`);
       }
-      observer.observe(section);
+      sectionObserver?.observe(section);
     });
 
     // Show first section immediately if already visible
@@ -79,6 +81,11 @@ onMounted(() => {
       }
     }
   });
+});
+
+onBeforeUnmount(() => {
+  sectionObserver?.disconnect();
+  sectionObserver = null;
 });
 </script>
 

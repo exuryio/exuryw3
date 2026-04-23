@@ -165,7 +165,9 @@ onMounted(() => {
       if (typeof window !== "undefined" && window.addEventListener) {
         window.addEventListener("beforeunload", cleanup);
       }
-    } catch (_) {}
+    } catch (_) {
+      // noop: cleanup listeners only when available
+    }
     setTimeout(cleanup, 500);
   });
 });

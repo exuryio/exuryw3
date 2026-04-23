@@ -6,6 +6,7 @@
 
 module.exports = {
   root: true,
+  parser: "vue-eslint-parser",
   env: {
     node: true,
   },
@@ -16,7 +17,10 @@ module.exports = {
     "plugin:@typescript-eslint/recommended", // Agrega esta línea para incluir las reglas recomendadas de TypeScript
   ],
   parserOptions: {
-    parser: "@typescript-eslint/parser", 
+    parser: "@typescript-eslint/parser",
+    extraFileExtensions: [".vue"],
+    ecmaVersion: "latest",
+    sourceType: "module",
   },
   plugins: [
     "@typescript-eslint", // Añade el plugin de TypeScript
@@ -24,6 +28,7 @@ module.exports = {
   rules: {
     "vue/multi-word-component-names": "off",
     "no-unused-vars": "off",
-
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/ban-types": "warn",
   },
 };
