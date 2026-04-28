@@ -900,7 +900,9 @@ const closeWalletDialog = () => {
 const saveWalletAddress = async () => {
   const address = walletAddressInput.value?.trim() || '';
   const network = walletNetworkInput.value || '';
-  const name = walletNameInput.value?.trim() || '';
+  // `undefined` cuando no hay nombre: JSON.stringify lo omite del objeto persistido
+  // y el backend recibe el parámetro opcional sin tener que evaluar truthy/falsy.
+  const name = walletNameInput.value?.trim() || undefined;
   if (!address) {
     walletDialogError.value = 'Introduce una dirección de wallet';
     return;
@@ -918,7 +920,7 @@ const saveWalletAddress = async () => {
   // Requerimos network para upsert: la clave única de user_wallets es (user_id, address, network).
   if (network) {
     try {
-      await apiService.saveUserWallet(address, network, name || undefined);
+      await apiService.saveUserWallet(address, network, name);
     } catch (err) {
       console.warn('No se pudo persistir la wallet en el backend', err);
     }
