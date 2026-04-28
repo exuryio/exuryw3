@@ -771,6 +771,28 @@ const handleContinue = async () => {
         /* ignore */
       }
       try {
+        // Sólo en compra: adjuntamos la wallet de destino que el usuario guardó.
+        // El backend hace upsert en user_wallets (si no existía) y guarda user_wallet_id
+        // en la fila de orders → el operador manual sabrá a qué dirección transferir.
+        // Si el usuario nunca conectó wallet, `extras` queda undefined y el backend
+        // crea la orden sin user_wallet_id; la wallet se añadirá luego en /order/:id.
+        // En venta no aplica: el IBAN no se recoge aquí, sino en el step 1 de /order/sell/:id.
+        let extras: { wallet_address?: string; wallet_network?: string } | undefined;
+        if (!isSellFlow && typeof window !== 'undefined') {
+          try {
+            const raw = localStorage.getItem(WALLET_ADDRESS_STORAGE_KEY) || '';
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              // Requerimos address Y network: sin ambos no podemos upsertar (FK única).
+              if (parsed?.address && parsed?.network) {
+                extras = { wallet_address: parsed.address, wallet_network: parsed.network };
+              }
+            }
+          } catch { /* JSON corrupto en localStorage: no adjuntamos extras y seguimos */ }
+        }
+        // Firma de createOrder: (quoteId, type, amounts?, extras?).
+        //   - amounts: sólo se mandan en venta; en compra se infieren del quote.
+        //   - extras:  wallet_* en compra, iban/bank_account_id en venta (aquí no aplica).
         const response = await apiService.createOrder(
           quoteId,
           orderType,
@@ -779,7 +801,8 @@ const handleContinue = async () => {
                 amount_eur: amountEur,
                 amount_crypto: amountCrypto,
               }
-            : undefined
+            : undefined,
+          extras
         ) as { order_id?: string; orderId?: string; id?: string; [key: string]: unknown };
         orderId = response?.order_id ?? response?.orderId ?? response?.id ?? null;
         if (orderId) console.log('✅ Order created:', response);
@@ -864,8 +887,20 @@ const closeWalletDialog = () => {
   walletDialogError.value = '';
 };
 
-const saveWalletAddress = () => {
+// Guarda la wallet del usuario (destino para el flujo de compra).
+// Doble persistencia intencional:
+//   - localStorage: siempre, para que el simulador recuerde la última wallet sin
+//     depender del backend (ej. visitante anónimo que aún no se ha registrado).
+//   - backend /users/me/wallets: sólo si hay network seleccionada y hay sesión;
+//     este es el único sitio donde queda ligado al user_id, imprescindible para
+//     que el operador sepa a qué dirección transferir en una buy order.
+// Si el backend falla (401 / red), no bloqueamos el diálogo: el usuario ya tiene
+// la wallet en localStorage y su primera compra persistirá el upsert desde el
+// propio createOrder (ver bloque `extras` más abajo).
+const saveWalletAddress = async () => {
   const address = walletAddressInput.value?.trim() || '';
+  const network = walletNetworkInput.value || '';
+  const name = walletNameInput.value?.trim() || '';
   if (!address) {
     walletDialogError.value = 'Introduce una dirección de wallet';
     return;
@@ -875,12 +910,18 @@ const saveWalletAddress = () => {
     return;
   }
   if (typeof window !== 'undefined') {
-    const data = {
-      address,
-      network: walletNetworkInput.value || '',
-      name: walletNameInput.value?.trim() || '',
-    };
-    localStorage.setItem(WALLET_ADDRESS_STORAGE_KEY, JSON.stringify(data));
+    localStorage.setItem(
+      WALLET_ADDRESS_STORAGE_KEY,
+      JSON.stringify({ address, network, name })
+    );
+  }
+  // Requerimos network para upsert: la clave única de user_wallets es (user_id, address, network).
+  if (network) {
+    try {
+      await apiService.saveUserWallet(address, network, name || undefined);
+    } catch (err) {
+      console.warn('No se pudo persistir la wallet en el backend', err);
+    }
   }
   closeWalletDialog();
   walletSaveSuccess.value = true;

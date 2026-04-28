@@ -653,7 +653,7 @@ const fetchOrder = async () => {
   error.value = null;
   isFallbackOrder.value = false;
   try {
-    const data = await apiService.getOrder(orderId.value);
+    const data = await apiService.getOrder(orderId.value, 'buy');
     order.value = data as Record<string, unknown>;
   } catch (e: any) {
     error.value = e?.message || 'No se pudo cargar la orden.';

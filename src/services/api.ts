@@ -69,7 +69,7 @@ class ApiService {
 
     try {
       const response = await fetch(url, config);
-      
+
       if (!response.ok) {
         const error = await response.json().catch(() => ({ error: 'Unknown error' }));
         const errorMessage = error.error || error.message || `HTTP ${response.status}`;
@@ -79,8 +79,8 @@ class ApiService {
           fullError: error
         });
         const apiError = new Error(errorMessage);
-        (apiError as any).response = { 
-          status: response.status, 
+        (apiError as any).response = {
+          status: response.status,
           error: errorMessage,
           data: error
         };
@@ -125,17 +125,105 @@ class ApiService {
   }
 
   /**
-   * Create a new order
+   * Create a new order.
+   * `extras` permite pasar iban (sell) o wallet (buy) para que el backend los persista
+   * y los relacione con la orden vía bank_account_id / user_wallet_id.
    */
   async createOrder(
     quoteId: string,
     type: 'buy' | 'sell' = 'buy',
-    amounts?: { amount_eur?: number; amount_crypto?: number }
+    amounts?: { amount_eur?: number; amount_crypto?: number },
+    extras?: {
+      iban?: string;
+      bank_account_id?: string;
+      user_wallet_id?: string;
+      wallet_address?: string;
+      wallet_network?: string;
+    }
   ) {
     return this.request('/orders', {
       method: 'POST',
-      body: JSON.stringify({ quote_id: quoteId, type, ...amounts }),
+      body: JSON.stringify({ quote_id: quoteId, type, ...amounts, ...extras }),
     });
+  }
+
+  // Dispara la retirada SEPA para una sell order tras el depósito crypto.
+  // El IBAN viaja aquí en claro: el backend lo usa para PayDo y lo persiste
+  // en orders.iban (si no estaba) + upsert del hash en bank_accounts.
+  async initiateSellPayout(orderId: string, iban: string) {
+    return this.request<{
+      payment_id: string;
+      withdrawal_transaction_id: string;
+      crypto_transaction_id: string;
+      binance_order_id: string;
+    }>(`/orders/${orderId}/sell/payout`, {
+      method: 'POST',
+      body: JSON.stringify({ iban }),
+    });
+  }
+
+  // --- Bank accounts (sell flow) -----------------------------------------
+  // El backend sólo guarda hash(IBAN) + bank_name ligados al user_id autenticado.
+  // El IBAN en claro NO se almacena en bank_accounts; vive "per order" en orders.iban.
+  // Por eso getBankAccounts NUNCA devuelve el IBAN: sólo id, bank_name y created_at.
+
+  // Lista cuentas verificadas del usuario. Útil para mostrar "tienes N cuentas guardadas".
+  async getBankAccounts() {
+    return this.request<{ accounts: Array<{ id: string; bank_name: string | null; created_at: string }> }>(
+      '/users/me/bank-accounts'
+    );
+  }
+
+  // Verifica y registra el IBAN del usuario. El backend calcula SHA256 y hace upsert
+  // por (user_id, iban_hash); si la cuenta ya existía, sólo actualiza bank_name.
+  async saveBankAccount(iban: string, bankName?: string) {
+    return this.request<{ id: string; bank_name: string | null; created_at: string }>(
+      '/users/me/bank-accounts',
+      {
+        method: 'POST',
+        body: JSON.stringify({ iban, bank_name: bankName || null }),
+      }
+    );
+  }
+
+  async deleteBankAccount(id: string) {
+    return this.request<void>(`/users/me/bank-accounts/${id}`, { method: 'DELETE' });
+  }
+
+  // --- User wallets (buy flow) -------------------------------------------
+  // A diferencia del IBAN, la address on-chain es pública: se guarda en claro para
+  // poder ejecutar la transferencia al usuario cuando compra. Clave única por
+  // (user_id, address, network): el mismo 0x… en la misma red es una sola wallet,
+  // aunque reciba varios tokens (USDC, ETH, USDT…) — el asset lo lleva la orden.
+
+  async getUserWallets() {
+    return this.request<{ wallets: Array<{ id: string; address: string; network: string; name: string | null; created_at: string }> }>(
+      '/users/me/wallets'
+    );
+  }
+
+  async saveUserWallet(address: string, network: string, name?: string) {
+    return this.request<{ id: string; address: string; network: string; name: string | null; created_at: string }>(
+      '/users/me/wallets',
+      {
+        method: 'POST',
+        body: JSON.stringify({ address, network, name: name || null }),
+      }
+    );
+  }
+
+  async deleteUserWallet(id: string) {
+    return this.request<void>(`/users/me/wallets/${id}`, { method: 'DELETE' });
+  }
+
+  // --- Exury deposit wallets (public) ------------------------------------
+  // Endpoint público (sin JWT): devuelve las direcciones de recepción de Exury
+  // agrupadas por asset y red. La fuente real es la env var EXURY_DEPOSIT_WALLETS_JSON
+  // del backend; el fallback del frontend se usa sólo si el backend no responde.
+  async getDepositWallets() {
+    return this.request<{
+      wallets: Record<string, Array<{ value: string; label: string; address: string }>>;
+    }>('/deposit-wallets');
   }
 
   /**
@@ -146,10 +234,14 @@ class ApiService {
   }
 
   /**
-   * Get order details
+   * Get order details.
+   * Si se pasa `type`, usamos la ruta tipada (/orders/sell/:id o /orders/buy/:id)
+   * para que en Network/logs quede claro de qué flujo estamos hablando.
+   * Sin `type` cae en la ruta genérica /orders/:id (compat hacia atrás).
    */
-  async getOrder(orderId: string) {
-    return this.request(`/orders/${orderId}`);
+  async getOrder(orderId: string, type?: 'buy' | 'sell') {
+    const path = type ? `/orders/${type}/${orderId}` : `/orders/${orderId}`;
+    return this.request(path);
   }
 
   /**
