@@ -16,7 +16,7 @@ const container = ref<HTMLDivElement | null>(null);
 let scene: THREE.Scene;
 let camera: THREE.PerspectiveCamera;
 let renderer: THREE.WebGLRenderer;
-let loadedModels: { object: THREE.Object3D; animation: () => void }[] = [];
+let models: { object: THREE.Object3D; animation: () => void }[] = [];
 const minHeightOffset = -0.3;
 const maxHeightOffset = 0.3;
 const minRotationSpeed = 0.1;
@@ -71,7 +71,7 @@ onMounted(() => {
   const modelsToLoad =
     props.models && props.models.length > 0 ? props.models : [{}];
 
-  modelsToLoad.forEach((modelProps: { initialRotationX?: number; initialRotationY?: number }, index) => {
+  modelsToLoad.forEach((modelProps: any, index) => {
     const baseColorTexture = textureLoader.load(
       index % 2 === 0
         ? "/assets/Textures/DefaultMaterial_Base_Color.png"
@@ -113,7 +113,7 @@ onMounted(() => {
         model.rotation.z += 0.01 * (index + 1) * randomSpeed;
       };
 
-      loadedModels.push({ object: model, animation: animateModel });
+      models.push({ object: model, animation: animateModel });
       scene.add(model);
 
       if (index === modelsToLoad.length - 1) {
@@ -141,7 +141,7 @@ onMounted(() => {
 
   const animate = () => {
     requestAnimationFrame(animate);
-    loadedModels.forEach((modelData) => {
+    models.forEach((modelData) => {
       modelData.animation();
     });
     renderer.render(scene, camera);

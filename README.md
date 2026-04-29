@@ -95,6 +95,5 @@ Collaboration with:
 - https://github.com/yizpuentesc
 - https://github.com/Divisy
 - https://github.com/jruizu
-- https://github.com/tzaward0
 
 Thank you for your interest in contributing to **Exury**!
