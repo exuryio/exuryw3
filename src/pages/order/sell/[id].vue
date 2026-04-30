@@ -107,8 +107,9 @@ meta:
             <div class="sell-card">
               <span class="sell-card-label">Red de depósito</span>
               <v-chip-group v-model="selectedNetwork" mandatory class="network-group">
-                <v-chip value="polygon" class="network-chip" variant="outlined">Polygon</v-chip>
-                <v-chip value="base" class="network-chip" variant="outlined">Base</v-chip>
+                <v-chip v-for="(value, key) in allowedNetworkToShow" :key="key" :value="key" class="network-chip" variant="outlined">
+                  {{ value }}
+                </v-chip>
               </v-chip-group>
             </div>
 
@@ -206,19 +207,65 @@ const bankHolderName = ref('');
 const bankName = ref('');
 const sourceWallet = ref('');
 const walletOwnershipConfirmed = ref(false);
-const selectedNetwork = ref<'polygon' | 'base'>('polygon');
+
+type OrderDepositNetwork = 'BSC' | 'SOL' | 'ETH' | 'POL' | 'ALGO' | 'AVAXC' | 'ARBITRUM' | 'BASE' | 'SEGWITBTC';
+
+const selectedNetwork = ref<OrderDepositNetwork>('BSC');
 
 const snackbar = ref({ show: false, text: '', color: 'success' });
 
 const env = import.meta.env as Record<string, string | undefined>;
-const polygonWallet = (env.VITE_EXURY_USDC_WALLET_POLYGON ?? '').trim();
-const baseWallet = (env.VITE_EXURY_USDC_WALLET_BASE ?? '').trim();
+
+const WALLETS_BY_NETWORK_AND_ASSET: Record<string, Partial<Record<OrderDepositNetwork, string | undefined>>> = {
+  USDC: {
+    BSC: env.VITE_EXURY_USDC_WALLET_BSC,
+    SOL: env.VITE_EXURY_USDC_WALLET_SOL,
+    ETH: env.VITE_EXURY_USDC_WALLET_ETH,
+    POL: env.VITE_EXURY_USDC_WALLET_POL,
+    ALGO: env.VITE_EXURY_USDC_WALLET_ALGO,
+    AVAXC: env.VITE_EXURY_USDC_WALLET_AVAXC,
+  },
+  BTC: {
+    BSC: env.VITE_EXURY_BTC_WALLET_BSC,
+    ETH: env.VITE_EXURY_BTC_WALLET_ETH,
+    SEGWITBTC: env.VITE_EXURY_BTC_WALLET_SEGWIT,
+  },
+  ETH: {
+    BSC: env.VITE_EXURY_ETH_WALLET_BSC,
+    ETH: env.VITE_EXURY_ETH_WALLET_ETH,
+    ARBITRUM: env.VITE_EXURY_ETH_WALLET_ARBITRUM,
+    BASE: env.VITE_EXURY_ETH_WALLET_BASE,
+  },
+  BNB: {
+    BSC: env.VITE_EXURY_BNB_WALLET_BSC,
+  }
+};
+
+const allowedNetworks = computed(() => {
+  const asset = String(order.value?.asset || '').toUpperCase();
+  return WALLETS_BY_NETWORK_AND_ASSET[asset];
+});
+
+const allowedNetworkToShow = computed(() => {
+  return Object.keys(allowedNetworks.value || {}).reduce((acc, network) => {
+    if (!allowedNetworks.value?.[network as OrderDepositNetwork]) return acc;
+
+    const name = network === 'BSC' ? 'BSC (BEP20)' :
+      network === 'SOL' ? 'SOL (SOLANA)' :
+        network === 'ETH' ? 'ETH (ERC20)' :
+          network === 'POL' ? 'POL (POLYGON POS)' :
+            network === 'ALGO' ? 'ALGO (ALGORANT)' :
+              network === 'AVAXC' ? 'AVAXC (AVAX C-CHAIN)' :
+                network === 'ARBITRUM' ? 'ARBITRUM' :
+                  network === 'BASE' ? 'BASE' :
+                    network === 'SEGWITBTC' ? 'SEGWITBTC' : network;
+    return { ...acc, [network]: name };
+  }, {} as Record<OrderDepositNetwork, string>);
+});
 
 const exuryWalletAddress = computed(() => {
-  if (selectedNetwork.value === 'polygon') {
-    return polygonWallet || '0xA5f3b9C2D14E6f7A88A0cD12B44Ef58A9152C7D1';
-  }
-  return baseWallet || '0x6D4c0A1eF53d7B2A49E1D1a3A653fC0b3d90Ce72';
+  const network = selectedNetwork.value;
+  return allowedNetworks.value?.[network] ?? 'N/A';
 });
 
 const ibanError = ref('');
@@ -288,14 +335,14 @@ const loadSellOrderData = () => {
       bankName?: string;
       sourceWallet?: string;
       walletOwnershipConfirmed?: boolean;
-      selectedNetwork?: 'polygon' | 'base';
+      selectedNetwork?: OrderDepositNetwork;
     };
     bankIban.value = saved.bankIban ?? '';
     bankHolderName.value = saved.bankHolderName ?? '';
     bankName.value = saved.bankName ?? '';
     sourceWallet.value = saved.sourceWallet ?? '';
     walletOwnershipConfirmed.value = saved.walletOwnershipConfirmed ?? false;
-    selectedNetwork.value = saved.selectedNetwork ?? 'polygon';
+    selectedNetwork.value = saved.selectedNetwork ?? 'BSC';
   } catch {
     /* ignore corrupted local state */
   }
@@ -391,8 +438,6 @@ const copyWallet = async () => {
     showSnackbar('No se pudo copiar la wallet', 'success');
   }
 };
-
-const statusSectionRef = ref<HTMLElement | null>(null);
 
 onMounted(async () => {
   await fetchOrder();
