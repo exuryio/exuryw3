@@ -185,24 +185,11 @@ onMounted(async () => {
       await new Promise(resolve => setTimeout(resolve, 100));
       router.push('/dashboard');
     }
-  } catch (err: any) {
-    console.error('❌ Auth callback error:', err);
-    console.error('Error details:', err.response || err);
-    console.error('Error stack:', err.stack);
-    
-    // Extract error message
-    let errorMessage = 'Error al procesar la autenticación';
-    if (err.response?.error) {
-      errorMessage = err.response.error;
-    } else if (err.message) {
-      errorMessage = err.message;
-    } else if (typeof err === 'string') {
-      errorMessage = err;
-    }
-    
-    console.error('❌ Setting error message:', errorMessage);
-    error.value = errorMessage;
-    isLoading.value = false;
+  } catch {
+    await router.replace({
+      path: '/login',
+      query: { authError: 'social' },
+    });
   }
 });
 
