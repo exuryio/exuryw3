@@ -2,6 +2,7 @@
  * API Service for Frontend
  * Handles all API calls to the backend
  */
+import { getAuth0RedirectUri } from '@/utils/auth0RedirectUri';
 // Determine API base URL based on environment
 const getApiBaseUrl = (): string => {
   // If explicitly set in env, use it (highest priority)
@@ -211,8 +212,7 @@ class ApiService {
    */
   async handleAuth0Callback(code: string, redirectUri?: string) {
     // Use the redirect_uri from the request, or construct it from window.location
-    const finalRedirectUri = redirectUri || 
-      (typeof window !== 'undefined' ? `${window.location.origin}/auth-callback` : '');
+    const finalRedirectUri = redirectUri || getAuth0RedirectUri();
     
     return this.request('/auth/auth0/callback', {
       method: 'POST',
