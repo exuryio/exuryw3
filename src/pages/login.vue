@@ -76,6 +76,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/infraestructure/stores/auth';
+import { getAuth0RedirectUri } from '@/utils/auth0RedirectUri';
 
 const router = useRouter();
 const route = useRoute();
@@ -104,7 +105,7 @@ const handleSocialLogin = (connection: string) => {
 
   const auth0Domain = import.meta.env.VITE_AUTH0_DOMAIN || 'exury.eu.auth0.com';
   const auth0ClientId = import.meta.env.VITE_AUTH0_CLIENT_ID || '';
-  const redirectUri = `${window.location.origin}/auth-callback`;
+  const redirectUri = getAuth0RedirectUri();
   
   if (auth0ClientId) {
     const auth0Url = `https://${auth0Domain}/authorize?` +

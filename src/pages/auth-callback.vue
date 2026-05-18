@@ -41,6 +41,7 @@ import { ref, onMounted, nextTick } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import apiService from '@/services/api';
 import { useAuthStore } from '@/infraestructure/stores/auth';
+import { getAuth0RedirectUri } from '@/utils/auth0RedirectUri';
 
 const router = useRouter();
 const route = useRoute();
@@ -72,11 +73,7 @@ onMounted(async () => {
     console.log('🔄 Calling backend to exchange code for token...');
     console.log('   Code:', code.substring(0, 10) + '...');
     
-    // Get the redirect_uri that was used in the Auth0 authorization request
-    // This should match what was sent to Auth0
-    const redirectUri = typeof window !== 'undefined' 
-      ? `${window.location.origin}/auth-callback`
-      : '';
+    const redirectUri = getAuth0RedirectUri();
     
     const response = await apiService.handleAuth0Callback(code, redirectUri);
     console.log('✅ Backend response received:', response);
