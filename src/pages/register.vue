@@ -3,7 +3,7 @@
     <div class="register-container">
       <div class="logo-section">
         <img
-          src="/LogoExury1.png"
+          src="/LogoExury.svg"
           alt="Exury"
           class="register-logo"
         />
@@ -190,10 +190,9 @@ meta:
   margin-bottom: 26px;
   
   .register-logo {
-    height: 32px;
+    height: 51px;
     width: auto;
     object-fit: contain;
-    filter: brightness(1);
   }
 }
 

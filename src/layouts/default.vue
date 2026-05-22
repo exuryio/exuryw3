@@ -38,7 +38,7 @@
                       <img
                         id="logoExury"
                         alt="Exury"
-                        src="/LogoExury1.png"
+                        src="/LogoExury.svg"
                         class="header-logo-in-topbar"
                       />
                     </div>
