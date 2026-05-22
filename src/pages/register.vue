@@ -3,7 +3,7 @@
     <div class="register-container">
       <div class="logo-section">
         <img
-          src="/LogoExury1.png"
+          src="/LogoExury.svg"
           alt="Exury"
           class="register-logo"
         />

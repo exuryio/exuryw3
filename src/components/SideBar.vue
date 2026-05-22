@@ -144,7 +144,7 @@ const handleLogout = async (): Promise<void> => {
         aria-label="Exury"
       >
         <img
-          src="/LogoExury1.png"
+          src="/LogoExury.svg"
           alt="Exury"
           class="sidebar-logo-img"
         />
