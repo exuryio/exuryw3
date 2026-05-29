@@ -190,10 +190,9 @@ meta:
   margin-bottom: 26px;
   
   .register-logo {
-    height: 32px;
+    height: 51px;
     width: auto;
     object-fit: contain;
-    filter: brightness(1);
   }
 }
 

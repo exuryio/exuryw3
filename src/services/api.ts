@@ -168,6 +168,13 @@ class ApiService {
   }
 
   /**
+   * Get the current user's KYC status
+   */
+  async getKycStatus() {
+    return this.request('/users/me/kyc-status');
+  }
+
+  /**
    * Register a new user with email
    */
   async registerUser(email: string) {
@@ -225,6 +232,15 @@ class ApiService {
    */
   async logout() {
     return this.request('/auth/logout', {
+      method: 'POST',
+    });
+  }
+
+  /**
+   * Generate a SumSub SDK access token for the current user
+   */
+  async getSumsubAccessToken(): Promise<{ token: string; userId: string }> {
+    return this.request('/kyc/access-token', {
       method: 'POST',
     });
   }
