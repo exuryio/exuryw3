@@ -99,7 +99,7 @@ meta:
               <span>
                 Tienes {{ savedBankAccounts.length }}
                 {{ savedBankAccounts.length === 1 ? 'cuenta guardada' : 'cuentas guardadas' }}.
-                Vuelve a escribir el IBAN para confirmar la que quieras usar.
+                Hemos rellenado la más reciente; puedes editarla antes de guardar.
               </span>
             </div>
             <div class="form-grid">
@@ -140,7 +140,9 @@ meta:
                 Verificar y guardar cuenta
               </v-btn>
             </div>
-            <p class="bank-hint">Verificamos formato del IBAN antes de guardar. Tus datos quedan asociados a esta orden.</p>
+            <p class="bank-hint">
+              Verificamos el IBAN y guardamos la cuenta en tu perfil (cifrada). Solo tú puedes verla al iniciar sesión.
+            </p>
           </template>
         </section>
 
@@ -281,6 +283,10 @@ meta:
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import apiService from '@/services/api';
+import {
+  loadDepositWalletsFromEnv,
+  type DepositNetworkOption,
+} from '@/utils/deposit-wallets-env';
 
 const route = useRoute();
 const router = useRouter();
@@ -316,25 +322,13 @@ const selectedNetwork = ref<string>('');
 const snackbar = ref({ show: false, text: '', color: 'primary' });
 
 // --- Wallets de Exury por activo y red ---
-// Las direcciones ya NO viven en el código del frontend. Fuentes soportadas
-// (por orden de prioridad):
-//   1. GET /v1/deposit-wallets  → backend lee EXURY_DEPOSIT_WALLETS_JSON.
-//   2. VITE_EXURY_DEPOSIT_WALLETS_JSON (opcional, para dev local sin backend).
-// Si ninguna devuelve datos, la sección de "Red de depósito" muestra un aviso
-// y el botón de confirmación queda bloqueado hasta que haya direcciones.
-type NetworkOption = { value: string; label: string; address: string };
+// Fuentes (por prioridad al cargar la página):
+//   1. GET /v1/deposit-wallets → backend EXURY_DEPOSIT_WALLETS_JSON
+//   2. Env Vite: VITE_EXURY_{ASSET}_WALLET_{RED} (secrets de GitHub del front)
+//   3. VITE_EXURY_DEPOSIT_WALLETS_JSON (JSON agrupado, opcional)
+type NetworkOption = DepositNetworkOption;
 
-const parseEnvWallets = (): Record<string, NetworkOption[]> => {
-  const raw = import.meta.env.VITE_EXURY_DEPOSIT_WALLETS_JSON as string | undefined;
-  if (!raw) return {};
-  try {
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === 'object' ? parsed : {};
-  } catch {
-    return {};
-  }
-};
-const depositWallets = ref<Record<string, NetworkOption[]>>(parseEnvWallets());
+const depositWallets = ref<Record<string, NetworkOption[]>>(loadDepositWalletsFromEnv());
 
 const assetSymbol = computed(() => {
   const a = String(order.value?.asset || 'USDC').toUpperCase();
@@ -346,7 +340,14 @@ const availableNetworks = computed<NetworkOption[]>(() => {
 });
 
 // --- Bank accounts guardadas (persistidas en backend) ---
-type SavedBankAccount = { id: string; bank_name: string | null; created_at: string };
+type SavedBankAccount = {
+  id: string;
+  holder_name: string;
+  bank_name: string | null;
+  iban: string;
+  iban_masked: string;
+  created_at: string;
+};
 const savedBankAccounts = ref<SavedBankAccount[]>([]);
 
 const exuryWalletAddress = computed(() => {
@@ -391,36 +392,51 @@ const declarationDone = computed(() => {
   return bankSaved.value && !!sourceWallet.value.trim() && !sourceWalletError.value && walletOwnershipConfirmed.value;
 });
 
-// Click del botón "Verificar y guardar cuenta".
-// Flujo: valida IBAN → POST /users/me/bank-accounts (backend calcula SHA256 y
-// upsertea por user_id+iban_hash) → refresca la lista de cuentas guardadas.
-// Si el backend falla o no hay sesión, no bloqueamos la venta: guardamos los datos
-// sólo en el estado local de la página y avisamos con un snackbar tipo warning,
-// para que el usuario pueda continuar con esta orden aunque sea "anónima en DB".
+const applyBankFields = (iban: string, holder: string, bank: string, markSaved = true) => {
+  bankIban.value = iban;
+  bankHolderName.value = holder;
+  bankName.value = bank;
+  if (markSaved) {
+    savedBankHolderName.value = holder;
+    savedBankName.value = bank;
+    bankSaved.value = true;
+  }
+};
+
+const hydrateBankFromOrder = () => {
+  const o = order.value;
+  if (!o) return;
+  const iban = String(o.iban ?? '').trim();
+  const holder = String(o.holder_name ?? o.holderName ?? '').trim();
+  const bank = String(o.bank_name ?? o.bankName ?? '').trim();
+  if (iban && holder) {
+    applyBankFields(iban, holder, bank, true);
+  }
+};
+
+// POST /users/me/bank-accounts: upsert en bank_accounts (IBAN cifrado) + enlace a esta orden.
 const saveBank = async () => {
   validateIban();
   if (!canSaveBank.value || ibanError.value) return;
   savingBank.value = true;
   const normalized = normalizeIban(bankIban.value);
+  const holder = bankHolderName.value.trim();
+  const bank = bankName.value.trim();
   try {
-    // Backend sólo conoce hash(iban) + bank_name; el holder_name vive en la UI.
-    await apiService.saveBankAccount(normalized, bankName.value.trim());
-    savedBankHolderName.value = bankHolderName.value.trim();
-    savedBankName.value = bankName.value.trim();
-    bankSaved.value = true;
-    showSnackbar('Cuenta bancaria verificada y guardada', 'success');
-    // Rehidratamos para reflejar el +1 en "cuentas guardadas" si el user vuelve a vender.
+    await apiService.saveBankAccount(
+      normalized,
+      holder,
+      bank,
+      orderId.value.startsWith('temp-') ? undefined : orderId.value
+    );
+    applyBankFields(normalized, holder, bank, true);
+    showSnackbar('Cuenta guardada en tu perfil y asociada a esta orden', 'success');
     await loadSavedBankAccounts();
   } catch (err: any) {
-    // Fallback local: mantenemos la experiencia del usuario aunque el backend caiga.
-    // El IBAN igualmente viajará en el request del payout, así que la venta puede
-    // completarse; simplemente no queda huella "verificada" en bank_accounts.
-    savedBankHolderName.value = bankHolderName.value.trim();
-    savedBankName.value = bankName.value.trim();
-    bankSaved.value = true;
-    const msg = err?.status === 401
-      ? 'Sesión requerida para guardar en tu cuenta; los datos valen sólo para esta orden.'
-      : 'No se pudo guardar en el servidor; los datos valen sólo para esta orden.';
+    const msg =
+      err?.status === 401
+        ? 'Inicia sesión para guardar la cuenta de forma permanente en tu perfil.'
+        : 'No se pudo guardar en el servidor. Revisa que el backend esté actualizado.';
     showSnackbar(msg, 'warning');
   } finally {
     savingBank.value = false;
@@ -434,6 +450,10 @@ const loadSavedBankAccounts = async () => {
   try {
     const res = await apiService.getBankAccounts();
     savedBankAccounts.value = res?.accounts || [];
+    if (!bankSaved.value && savedBankAccounts.value.length > 0) {
+      const latest = savedBankAccounts.value[0];
+      applyBankFields(latest.iban, latest.holder_name, latest.bank_name || '', false);
+    }
   } catch {
     savedBankAccounts.value = [];
   }
@@ -618,6 +638,7 @@ const fetchOrder = async () => {
     const data = await apiService.getOrder(orderId.value, 'sell');
     isFallbackOrder.value = false;
     order.value = data as Record<string, unknown>;
+    hydrateBankFromOrder();
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : 'No se pudo cargar la orden de venta.';
     error.value = message;

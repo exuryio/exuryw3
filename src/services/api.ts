@@ -167,27 +167,42 @@ class ApiService {
   }
 
   // --- Bank accounts (sell flow) -----------------------------------------
-  // El backend sólo guarda hash(IBAN) + bank_name ligados al user_id autenticado.
-  // El IBAN en claro NO se almacena en bank_accounts; vive "per order" en orders.iban.
-  // Por eso getBankAccounts NUNCA devuelve el IBAN: sólo id, bank_name y created_at.
+  // Persistencia en bank_accounts (cifrado) + opcionalmente en la orden actual.
 
-  // Lista cuentas verificadas del usuario. Útil para mostrar "tienes N cuentas guardadas".
   async getBankAccounts() {
-    return this.request<{ accounts: Array<{ id: string; bank_name: string | null; created_at: string }> }>(
-      '/users/me/bank-accounts'
-    );
+    return this.request<{
+      accounts: Array<{
+        id: string;
+        holder_name: string;
+        bank_name: string | null;
+        iban: string;
+        iban_masked: string;
+        created_at: string;
+      }>;
+    }>('/users/me/bank-accounts');
   }
 
-  // Verifica y registra el IBAN del usuario. El backend calcula SHA256 y hace upsert
-  // por (user_id, iban_hash); si la cuenta ya existía, sólo actualiza bank_name.
-  async saveBankAccount(iban: string, bankName?: string) {
-    return this.request<{ id: string; bank_name: string | null; created_at: string }>(
-      '/users/me/bank-accounts',
-      {
-        method: 'POST',
-        body: JSON.stringify({ iban, bank_name: bankName || null }),
-      }
-    );
+  async saveBankAccount(
+    iban: string,
+    holderName: string,
+    bankName?: string,
+    orderId?: string
+  ) {
+    return this.request<{
+      id: string;
+      holder_name: string;
+      bank_name: string | null;
+      iban: string;
+      created_at: string;
+    }>('/users/me/bank-accounts', {
+      method: 'POST',
+      body: JSON.stringify({
+        iban,
+        holder_name: holderName,
+        bank_name: bankName || null,
+        order_id: orderId || null,
+      }),
+    });
   }
 
   async deleteBankAccount(id: string) {
