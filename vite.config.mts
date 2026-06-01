@@ -84,5 +84,16 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    // Mismo origen que el frontend → evita CORS con el backend local en :3001
+    proxy: {
+      "/v1": {
+        target: "http://localhost:3001",
+        changeOrigin: true,
+      },
+      "/health": {
+        target: "http://localhost:3001",
+        changeOrigin: true,
+      },
+    },
   },
 });

@@ -4,28 +4,30 @@
  */
 // Determine API base URL based on environment
 const getApiBaseUrl = (): string => {
-  // If explicitly set in env, use it (highest priority)
-  if (import.meta.env.VITE_API_BASE_URL) {
-    return import.meta.env.VITE_API_BASE_URL;
+  const explicit = import.meta.env.VITE_API_BASE_URL?.trim();
+
+  // URL absoluta explícita (Railway, backend en otro host, etc.)
+  if (explicit) {
+    return explicit.replace(/\/$/, "");
   }
-  
-  // If running in browser, detect deployment environment
-  if (typeof window !== 'undefined') {
+
+  // Dev local: peticiones a /v1 (mismo origen) → proxy Vite → localhost:3001
+  if (import.meta.env.DEV) {
+    return "";
+  }
+
+  if (typeof window !== "undefined") {
     const hostname = window.location.hostname;
-    
-    // Production/preview URLs: exurydev--prXX-*.web.app or exury.io
-    if (hostname.includes('exurydev') || hostname.includes('exury.io')) {
-      // Use Railway URL from env, or fallback to Railway domain
-      // Priority: VITE_RAILWAY_API_URL > VITE_API_BASE_URL > Railway default
-      return import.meta.env.VITE_RAILWAY_API_URL || 
-             import.meta.env.VITE_API_BASE_URL || 
-             'https://exury-backend-production.up.railway.app'; // Backend in separate repository
+
+    if (hostname.includes("exurydev") || hostname.includes("exury.io")) {
+      return (
+        import.meta.env.VITE_RAILWAY_API_URL ||
+        "https://exury-backend-production.up.railway.app"
+      );
     }
   }
-  
-  // Default to Railway backend (backend is in separate repository)
-  // To use local backend, set VITE_API_BASE_URL=http://localhost:3001
-  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+
+  return "https://exury-backend-production.up.railway.app";
 };
 
 const API_BASE_URL = getApiBaseUrl();
@@ -45,7 +47,9 @@ class ApiService {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = `${API_BASE_URL}/${API_VERSION}`;
+    this.baseUrl = API_BASE_URL
+      ? `${API_BASE_URL}/${API_VERSION}`
+      : `/${API_VERSION}`;
     console.log('📡 ApiService initialized with baseUrl:', this.baseUrl);
   }
 
@@ -235,13 +239,10 @@ class ApiService {
 
   /**
    * Get order details.
-   * Si se pasa `type`, usamos la ruta tipada (/orders/sell/:id o /orders/buy/:id)
-   * para que en Network/logs quede claro de qué flujo estamos hablando.
-   * Sin `type` cae en la ruta genérica /orders/:id (compat hacia atrás).
+   * El backend expone GET /orders/:id (el `type` es informativo en el cliente).
    */
-  async getOrder(orderId: string, type?: 'buy' | 'sell') {
-    const path = type ? `/orders/${type}/${orderId}` : `/orders/${orderId}`;
-    return this.request(path);
+  async getOrder(orderId: string, _type?: 'buy' | 'sell') {
+    return this.request(`/orders/${orderId}`);
   }
 
   /**

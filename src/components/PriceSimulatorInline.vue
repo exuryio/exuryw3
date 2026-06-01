@@ -808,6 +808,16 @@ const handleContinue = async () => {
         if (orderId) console.log('✅ Order created:', response);
       } catch (err: any) {
         console.warn('Create order failed:', err);
+        const apiMsg =
+          err?.response?.error ||
+          err?.response?.data?.message ||
+          err?.message ||
+          'No se pudo crear la orden en el servidor.';
+        error.value = apiMsg;
+        if (err?.status === 410) {
+          error.value = 'La cotización expiró. Espera un momento y pulsa Continuar de nuevo.';
+        }
+        return;
       }
     }
 
@@ -818,7 +828,15 @@ const handleContinue = async () => {
       return;
     }
 
-    // Backend falló o no hay quote_id: igual pasamos a los siguientes pasos con datos del simulador
+    if (!quoteId) {
+      error.value = 'Introduce un monto válido y espera la cotización antes de continuar.';
+      return;
+    }
+
+    error.value =
+      'No se pudo crear la orden. Comprueba que el backend local está en marcha (yarn dev en exury-backend-1).';
+
+    // Backend falló sin quote utilizable: modo temporal solo como último recurso
     const tempId = `temp-${Date.now()}`;
     if (typeof window !== 'undefined') {
       sessionStorage.setItem(PENDING_ORDER_KEY, JSON.stringify({
