@@ -25,7 +25,7 @@ withDefaults(defineProps<Props>(), {
           class="inline-flex items-center gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-exury-green focus-visible:ring-offset-2 focus-visible:ring-offset-black"
           aria-label="Ir a Exury"
         >
-          <img src="/LogoExury1.png" alt="Exury" class="h-7 w-auto opacity-95" />
+          <img src="/LogoExury.svg" alt="Exury" class="h-7 w-auto opacity-95" />
         </a>
 
         <a
