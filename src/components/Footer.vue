@@ -7,7 +7,7 @@
         <img
           class="logo-footer"
           alt=""
-          src="/LogoExury1.png"
+          src="/LogoExury.svg"
         />
         <p>{{ t('footer.address') }}</p>
         <p>contact@exury.io</p>

@@ -4,7 +4,7 @@
       <!-- Logo Section -->
       <div class="logo-section">
         <img
-          src="/LogoExury1.png"
+          src="/LogoExury.svg"
           alt="Exury"
           class="login-logo"
         />

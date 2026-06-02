@@ -165,7 +165,7 @@ body {
 
 /* 3. Logo: contexto de apilamiento y forzar recurso en Safari */
 #logoExury {
-  content: url("/LogoExury1.png") !important;
+  content: url("/LogoExury.svg") !important;
   width: 150px !important;
   height: auto !important;
   display: block !important;
