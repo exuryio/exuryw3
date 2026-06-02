@@ -30,6 +30,7 @@ declare module 'vue' {
     HowItWorksSteps: typeof import('./components/invest/HowItWorksSteps.vue')['default']
     InvestHero: typeof import('./components/invest/InvestHero.vue')['default']
     InvestorProfile: typeof import('./components/invest/InvestorProfile.vue')['default']
+    KycVerificationModal: typeof import('./components/KycVerificationModal.vue')['default']
     LanguageSelector: typeof import('./components/LanguageSelector.vue')['default']
     OnBoardingCard: typeof import('./components/cards/OnBoardingCard.vue')['default']
     OnBoardingCardGroup: typeof import('./components/cards/OnBoardingCardGroup.vue')['default']

@@ -197,7 +197,7 @@ meta:
             </div>
 
             <!-- 2. IBAN (datos bancarios ocultos hasta que el usuario haga clic; datos desde env, no en repo) -->
-            <div class="payment-card payment-card-iban">
+            <div v-if="kycVerified" class="payment-card payment-card-iban">
               <span class="payment-card-step" aria-hidden="true">2</span>
               <div class="payment-card-body">
                 <span class="payment-card-label">Datos bancarios de destino</span>
@@ -259,6 +259,26 @@ meta:
                   </p>
                 </template>
               </div>
+            </div>
+            <!-- KYC verification banner (shown when user is not yet verified) -->
+            <div v-else class="kyc-banner">
+              <div class="kyc-banner-left">
+                <v-icon size="24" color="#1cba75">mdi-shield-account-outline</v-icon>
+                <div class="kyc-banner-text">
+                  <span class="kyc-banner-title">Termina tu verificación</span>
+                  <span class="kyc-banner-desc">Necesitas verificar tu identidad para desbloquear los datos de pago.</span>
+                </div>
+              </div>
+              <v-btn
+                color="primary"
+                variant="flat"
+                size="small"
+                class="kyc-banner-btn"
+                :loading="kycLoading"
+                @click="openKycModal"
+              >
+                Verificar ahora
+              </v-btn>
             </div>
 
             <!-- 3. Referencia (concepto de la transferencia) -->
@@ -357,6 +377,13 @@ meta:
     >
       <span class="snackbar-text">{{ snackbar.text }}</span>
     </v-snackbar>
+
+    <!-- KYC Verification Modal -->
+    <KycVerificationModal
+      v-model="kycModalOpen"
+      @complete="onKycComplete"
+      @step-completed="onKycStepCompleted"
+    />
   </div>
 </template>
 
@@ -644,6 +671,38 @@ const fetchOrder = async () => {
 
 const statusSectionRef = ref<HTMLElement | null>(null);
 
+// KYC state
+const kycVerified = ref(false);
+const kycLoading = ref(false);
+const kycModalOpen = ref(false);
+
+const checkKycStatus = async () => {
+  try {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('exury_token') : null;
+    if (!token) return;
+    const status = await apiService.getKycStatus() as { kycStatus: boolean };
+    kycVerified.value = status.kycStatus === true;
+  } catch {
+    // Non-fatal — banner stays visible by default
+  }
+};
+
+const openKycModal = () => {
+  kycLoading.value = true;
+  kycModalOpen.value = true;
+  kycLoading.value = false;
+};
+
+const onKycComplete = () => {
+  kycVerified.value = true;
+  showSnackbar('Verificación completada. Estado actualizado.', 'success');
+  fetchOrder();
+};
+
+const onKycStepCompleted = (payload: unknown) => {
+  console.log('[KYC] Step completed', payload);
+};
+
 const scrollToCurrentStep = () => {
   const section = statusSectionRef.value;
   if (!section) return;
@@ -658,6 +717,7 @@ const scrollToCurrentStep = () => {
 onMounted(() => {
   loadWallet();
   fetchOrder();
+  checkKycStatus();
   nextTick(() => {
     setTimeout(scrollToCurrentStep, 400);
   });
@@ -721,6 +781,59 @@ watch(statusStep, () => {
   font-size: 16px;
   color: rgba(255, 255, 255, 0.7);
   margin: 0 0 20px 0;
+}
+
+/* KYC banner */
+.kyc-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: rgba(28, 186, 117, 0.1);
+  border: 1px solid rgba(28, 186, 117, 0.35);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+
+.kyc-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.kyc-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.kyc-banner-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.kyc-banner-desc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.kyc-banner-btn {
+  flex-shrink: 0;
+}
+
+@media (max-width: 500px) {
+  .kyc-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .kyc-banner-btn {
+    width: 100%;
+  }
 }
 
 /* Progress stepper */
