@@ -16,7 +16,8 @@
           </h1>
 
           <p class="pause-message">
-            Due to regulatory adjustments, we need to temporarily suspend our services. But don't worry! We're already working on the final details and will be back very soon.
+            Due to regulatory adjustments, we need to temporarily suspend our services. But don't worry!
+            We're already working on the final details, all our channels are open to you. We will be back very soon.
           </p>
 
           <p class="pause-thanks">
