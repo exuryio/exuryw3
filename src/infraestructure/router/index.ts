@@ -8,20 +8,21 @@ import { setupLayouts } from "virtual:generated-layouts";
 import type { RouteRecordRaw } from "vue-router";
 import type { RouteLocationNormalized } from "vue-router";
 
-/** Quita la ruta order del auto-generado para evitar doble layout (parent+child aplican layout dos veces) */
-function withoutOrderRoutes(routes: RouteRecordRaw[]): RouteRecordRaw[] {
+/** Quita rutas del auto-generado que se definen manualmente en extendRoutes */
+function withoutExcludedRoutes(routes: RouteRecordRaw[]): RouteRecordRaw[] {
   return routes.filter((r) => {
     const p = (r.path ?? '').toString();
-    return p !== 'order' && p !== '/order';
+    return p !== 'order' && p !== '/order' && p !== 'login' && p !== '/login';
   });
 }
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   extendRoutes: (routes: RouteRecordRaw[]) => {
-    const rest = withoutOrderRoutes(routes);
+    const rest = withoutExcludedRoutes(routes);
     return setupLayouts([
       { path: '/', redirect: '/home' },
+      { path: '/login', redirect: '/pause' },
       { path: '/dashboard', name: 'dashboard', component: () => import('@/pages/dashboard.vue') },
       { path: '/orders', name: 'orders', component: () => import('@/pages/orders.vue') },
       { path: '/order/:id', name: 'order-id', component: () => import('@/pages/order/[id].vue'), meta: { layout: 'default' }, props: true },
@@ -34,7 +35,7 @@ const router = createRouter({
 // Navigation guard to clean up styles when leaving empty layout pages
 router.afterEach((to: RouteLocationNormalized, from: RouteLocationNormalized) => {
   // If we're navigating away from a page that uses empty layout, clean up
-  if (from.path === '/register' || from.path === '/verify-email' || from.path === '/auth-callback') {
+  if (from.path === '/register' || from.path === '/verify-email' || from.path === '/auth-callback' || from.path === '/pause') {
     console.log('🧹 Cleaning up styles after leaving empty layout page');
     
     // Force restore all elements that might have been hidden
