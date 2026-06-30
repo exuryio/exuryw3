@@ -7,18 +7,28 @@ permissions:
   checks: write
   contents: read
   pull-requests: write
+
 concurrency:
   group: pr-preview-${{ github.event.pull_request.number }}
-  cancel-in-progress: true  
+  cancel-in-progress: true
+
 jobs:
   build_and_preview:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set API base URL based on target branch
+        id: vars
+        run: |
+          if [ "${{ github.event.pull_request.base.ref }}" = "main" ]; then
+            echo "api_base_url=https://exury-backend-production.up.railway.app" >> "$GITHUB_OUTPUT"
+          else
+            echo "api_base_url=https://exury-backend-develop.up.railway.app" >> "$GITHUB_OUTPUT"
+          fi
       - run: yarn install --frozen-lockfile && yarn build && ls -la dist/assets/
         env:
-          VITE_API_BASE_URL: https://exury-backend-production.up.railway.app
+          VITE_API_BASE_URL: ${{ steps.vars.outputs.api_base_url }}
           VITE_INVEST_LEADS_EMAIL: ${{ secrets.VITE_INVEST_LEADS_EMAIL }}
           VITE_SCHEDULING_URL: ${{ secrets.VITE_SCHEDULING_URL }}
           VITE_BANK_BENEFICIARY: ${{ secrets.VITE_BANK_BENEFICIARY }}
